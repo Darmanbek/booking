@@ -1,4 +1,5 @@
-import { Button, Flex, Layout, Space } from "antd"
+import { Link } from "@tanstack/react-router"
+import { Button, Flex, Layout, Select, Space } from "antd"
 import { type FC } from "react"
 import { useToken } from "src/shared/hooks"
 import { Container, Logo } from "src/shared/ui"
@@ -23,8 +24,43 @@ const Header: FC = () => {
 						height: "100%"
 					}}
 				>
-					<Logo />
+					<Link to={"/"}>
+						<Logo titleProps={{ style: { color: "inherit" } }} />
+					</Link>
 					<Space>
+						<Select
+							variant={"borderless"}
+							popupMatchSelectWidth={false}
+							defaultValue={"ru"}
+							options={[
+								{
+									label: "🇺🇿 Узбекский",
+									value: "uz",
+									emoji: "🇺🇿",
+									desc: "Узбекский (UZ)"
+								},
+								{
+									label: "🇷🇺 Русский",
+									value: "ru",
+									emoji: "🇷🇺",
+									desc: "Русский (RU)"
+								},
+								{
+									label: "🇺🇸 Английский",
+									value: "en",
+									emoji: "🇺🇸",
+									desc: "Английский (EN)"
+								}
+							]}
+							optionRender={(option) => (
+								<Space>
+									<span role={"img"} aria-label={option.data.label}>
+										{option.data.emoji}
+									</span>
+									{option.data.desc}
+								</Space>
+							)}
+						/>
 						<Button type={"primary"}>Зарегистрироваться</Button>
 						<Button type={"link"}>Войти</Button>
 					</Space>
