@@ -3,41 +3,20 @@ import { type FC } from "react"
 import { useToken } from "src/shared/hooks"
 import { Container, Paragraph, Title } from "src/shared/ui"
 import { NavbarSearch } from "./navbar/navbar-search"
-import { useNavbarStyles } from "./navbar/navbar.style"
 
 const Navbar: FC = () => {
 	const { token } = useToken()
-	const { styles } = useNavbarStyles()
 	return (
 		<nav
 			style={{
 				position: "relative",
 				height: 434,
-				backgroundColor: "#000",
+				backgroundColor: token.blue10,
 				padding: `${token.paddingLG}px 0`,
 				color: token.colorWhite,
 				overflow: "hidden"
 			}}
 		>
-			<div
-				style={{
-					backgroundColor: token.colorBgMask,
-					position: "absolute",
-					inset: 0,
-					zIndex: 2
-				}}
-			></div>
-			<img
-				src={"/home/preview.jpeg"}
-				style={{
-					position: "absolute",
-					inset: 0,
-					margin: "0 auto",
-					maxWidth: 1440
-				}}
-				alt={""}
-			/>
-			<div className={styles.navbarBg}></div>
 			<Container
 				style={{
 					display: "flex",
