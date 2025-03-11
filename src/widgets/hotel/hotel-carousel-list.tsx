@@ -1,6 +1,6 @@
-import { LeftOutlined, RightOutlined } from "@ant-design/icons"
-import { Button, Carousel } from "antd"
+import { Carousel } from "antd"
 import { type FC } from "react"
+import { CarouselNextButton, CarouselPrevButton } from "src/shared/ui/carousel"
 import { HotelCard } from "./hotel-card"
 import { useHotelStyles } from "./hotel.style"
 
@@ -17,8 +17,8 @@ const HotelCarouselList: FC = () => {
 			swipeToSlide={true}
 			className={styles.carousel}
 			dots={false}
-			prevArrow={<Button icon={<LeftOutlined />} />}
-			nextArrow={<Button icon={<RightOutlined />} />}
+			prevArrow={<CarouselPrevButton />}
+			nextArrow={<CarouselNextButton />}
 		>
 			{Array.from({ length: 20 }).map((_, index) => (
 				<div key={index} className={styles.item}>

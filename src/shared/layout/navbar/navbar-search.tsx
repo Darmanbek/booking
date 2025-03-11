@@ -98,10 +98,13 @@ const NavbarSearch: FC = () => {
 								}}
 							/>
 						</Form.Item>
-						<Form.Item<SearchChange> name={"date"} noStyle={true}>
+						<Form.Item<SearchChange>
+							name={"date"}
+							noStyle={true}
+							initialValue={[today.day(6), today.day(7)]}
+						>
 							<DatePicker.RangePicker
 								format={"dd, DD MMM"}
-								defaultValue={[today.day(6), today.day(7)]}
 								style={{
 									minWidth: 300,
 									minHeight: 50
