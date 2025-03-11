@@ -22,13 +22,5 @@ export const useHotelStyles = createStyles(({ css, token }) => ({
 	item: css`
 		display: flex !important;
 		justify-content: center;
-	`,
-	split: css`
-		width: 5px;
-		height: 5px;
-		justify-self: center;
-		align-self: center;
-		border-radius: 100%;
-		background-color: ${token.colorText};
 	`
 }))

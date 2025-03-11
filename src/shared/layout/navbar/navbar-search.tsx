@@ -4,15 +4,39 @@ import {
 	SearchOutlined,
 	UserOutlined
 } from "@ant-design/icons"
-import { Button, Card, DatePicker, Flex, Input, Select, Tabs } from "antd"
-import dayjs from "dayjs"
+import {
+	Button,
+	Card,
+	DatePicker,
+	Flex,
+	Form,
+	type FormProps,
+	Input,
+	Select,
+	Space,
+	Tabs
+} from "antd"
+import dayjs, { type Dayjs } from "dayjs"
 import { type FC } from "react"
+import { Text } from "src/shared/ui"
 import { GuestCountList } from "./guest-count/guest-count-list"
 import { useNavbarStyles } from "./navbar.style"
 
+type SearchChange = {
+	search: string
+	date: [string | Dayjs, string | Dayjs]
+	guests: number[]
+}
+
 const NavbarSearch: FC = () => {
+	const [form] = Form.useForm<SearchChange>()
+	const guests = Form.useWatch("guests", form) || []
 	const { styles } = useNavbarStyles()
 	const today = dayjs().startOf("week")
+
+	const onFinish: FormProps["onFinish"] = (values) => {
+		console.log(values)
+	}
 
 	return (
 		<>
@@ -50,51 +74,88 @@ const NavbarSearch: FC = () => {
 					borderTopLeftRadius: 0
 				}}
 			>
-				<Flex
-					gap={8}
-					style={{
-						width: "100%"
-					}}
+				<Form
+					onFinish={onFinish}
+					name={"search-form"}
+					autoComplete={"off"}
+					requiredMark={false}
+					form={form}
 				>
-					<Input
-						prefix={<HomeOutlined />}
-						placeholder={"Куда вы хотите поехать?"}
-						size={"large"}
+					<Flex
+						gap={8}
 						style={{
-							minHeight: 50,
 							width: "100%"
 						}}
-					/>
-					<DatePicker.RangePicker
-						format={"dd, DD MMM"}
-						defaultValue={[today.day(6), today.day(7)]}
-						style={{
-							minWidth: 300,
-							minHeight: 50
-						}}
-						size={"large"}
-					/>
-					<Select
-						style={{
-							minWidth: 300,
-							minHeight: 50
-						}}
-						placement={"bottomLeft"}
-						popupMatchSelectWidth={false}
-						prefix={<UserOutlined />}
-						size={"large"}
-						dropdownRender={() => <GuestCountList />}
-					/>
-					<Button
-						icon={<SearchOutlined />}
-						iconPosition={"end"}
-						style={{ minHeight: 50 }}
-						type={"primary"}
-						size={"large"}
 					>
-						Найти
-					</Button>
-				</Flex>
+						<Form.Item<SearchChange> name={"search"} noStyle={true}>
+							<Input
+								prefix={<HomeOutlined />}
+								placeholder={"Куда вы хотите поехать?"}
+								size={"large"}
+								style={{
+									minHeight: 50,
+									width: "100%"
+								}}
+							/>
+						</Form.Item>
+						<Form.Item<SearchChange> name={"date"} noStyle={true}>
+							<DatePicker.RangePicker
+								format={"dd, DD MMM"}
+								defaultValue={[today.day(6), today.day(7)]}
+								style={{
+									minWidth: 300,
+									minHeight: 50
+								}}
+								size={"large"}
+							/>
+						</Form.Item>
+						<Form.List name={"guests"} initialValue={[1]}>
+							{(fields, { add, remove }) => (
+								<Select
+									style={{
+										minWidth: 300,
+										minHeight: 50
+									}}
+									value={"guests"}
+									options={[
+										{
+											value: "guests",
+											label: (
+												<Space split={"/"}>
+													<Text>
+														Гостей:{" "}
+														{guests?.reduce(
+															(total, guest) => total + (Number(guest) || 0),
+															0
+														)}
+													</Text>
+													<Text>Номеров: {guests?.length}</Text>
+												</Space>
+											)
+										}
+									]}
+									placement={"bottomLeft"}
+									popupMatchSelectWidth={false}
+									prefix={<UserOutlined />}
+									size={"large"}
+									dropdownRender={() => (
+										<GuestCountList fields={fields} add={add} remove={remove} />
+									)}
+								/>
+							)}
+						</Form.List>
+						<Button
+							icon={<SearchOutlined />}
+							iconPosition={"end"}
+							style={{ minHeight: 50 }}
+							type={"primary"}
+							size={"large"}
+							htmlType={"submit"}
+						>
+							Найти
+						</Button>
+					</Flex>
+				</Form>
 			</Card>
 		</>
 	)

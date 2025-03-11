@@ -6,14 +6,17 @@ import {
 	type InputNumberProps,
 	Space
 } from "antd"
-import { forwardRef, useState } from "react"
+import { forwardRef, useEffect, useState } from "react"
 import { useCounterStyles } from "./counter.style"
 
 const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
-	({ value, className, ...rest }, ref) => {
+	({ value, onChange, className, ...rest }, ref) => {
 		const [currentValue, setCurrentValue] = useState(Number(value) || 1)
 		const { styles, cx } = useCounterStyles()
 
+		useEffect(() => {
+			onChange?.(currentValue)
+		}, [currentValue, onChange])
 		return (
 			<ConfigProvider
 				wave={{
@@ -23,8 +26,10 @@ const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
 				<Space.Compact>
 					<Button
 						icon={<MinusOutlined />}
-						disabled={currentValue < 2}
-						onClick={() => setCurrentValue((prev) => prev - 1)}
+						onClick={() => {
+							if (currentValue < 2) return
+							setCurrentValue((prev) => prev - 1)
+						}}
 					/>
 					<InputNumber
 						controls={false}

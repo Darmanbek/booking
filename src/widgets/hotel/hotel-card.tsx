@@ -3,10 +3,8 @@ import { Button, Card, Flex, Image, Space, Tag } from "antd"
 import { type FC } from "react"
 import { useToken } from "src/shared/hooks"
 import { Text, Title } from "src/shared/ui"
-import { useHotelStyles } from "./hotel.style"
 
 const HotelCard: FC = () => {
-	const { styles } = useHotelStyles()
 	const { token } = useToken()
 	return (
 		<Card
@@ -45,7 +43,14 @@ const HotelCard: FC = () => {
 						Дубай, ОАЭ
 					</Text>
 				</Flex>
-				<Space split={<span className={styles.split} />}>
+				<Space
+					size={3}
+					split={
+						<Text type={"secondary"} style={{ fontSize: 12 }}>
+							•
+						</Text>
+					}
+				>
 					<Space size={2}>
 						<Tag color={"blue-inverse"}>8.7</Tag>
 						<Text style={{ fontSize: 12 }}>Потрясающие</Text>

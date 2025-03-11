@@ -9,7 +9,7 @@ const Header: FC = () => {
 	return (
 		<Layout.Header
 			style={{
-				backgroundColor: token.blue8
+				backgroundColor: token.colorBgContainer
 				// borderBottom: `1px solid ${token.colorBorder}`
 			}}
 		>
@@ -23,16 +23,10 @@ const Header: FC = () => {
 						height: "100%"
 					}}
 				>
-					<Logo
-						titleProps={{
-							style: {
-								color: token.colorWhite
-							}
-						}}
-					/>
+					<Logo />
 					<Space>
-						<Button>Зарегистрироваться</Button>
-						<Button>Войти</Button>
+						<Button type={"primary"}>Зарегистрироваться</Button>
+						<Button type={"link"}>Войти</Button>
 					</Space>
 				</Flex>
 			</Container>
