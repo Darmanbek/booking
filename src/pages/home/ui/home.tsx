@@ -11,10 +11,10 @@ const Home: FC = () => {
 			<section>
 				<Container>
 					<Flex vertical={true} gap={20}>
-						<TitleContainer title={"Отели"}>
+						<TitleContainer title={"Рекомендуемые отели"}>
 							<HotelCarouselList />
 						</TitleContainer>
-						<TitleContainer title={"Города"}>
+						<TitleContainer title={"Популярные направления"}>
 							<CityCardList />
 						</TitleContainer>
 					</Flex>

@@ -1,84 +1,98 @@
-import { HeartOutlined } from "@ant-design/icons"
+import {
+	ArrowRightOutlined,
+	HeartOutlined,
+	StarFilled
+} from "@ant-design/icons"
 import { Button, Card, Flex, Image, Space, Tag } from "antd"
 import { type FC } from "react"
+import { type Hotel } from "src/shared/data/hotel.data"
 import { useToken } from "src/shared/hooks"
 import { Text, Title } from "src/shared/ui"
+import { formatPriceWithCurrency } from "src/shared/utils/format.utils"
 
-const HotelCard: FC = () => {
+interface HotelCardProps {
+	data: Hotel
+}
+
+const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 	const { token } = useToken()
 	return (
 		<Card
 			styles={{
 				body: {
-					padding: 8
+					padding: 8,
+					paddingTop: 0
 				}
 			}}
-			style={{ maxWidth: 263, overflow: "hidden", cursor: "pointer" }}
+			hoverable={true}
+			style={{
+				minWidth: 302,
+				maxWidth: 628,
+				width: "100%",
+				overflow: "hidden",
+				cursor: "pointer"
+			}}
 			cover={
-				<Image
-					preview={false}
-					loading={"lazy"}
-					width={263}
-					height={212}
-					style={{
-						objectFit: "cover"
-					}}
-					role={"presentation"}
-					src={"/hotel/delta-hotel.jpg"}
-					alt={""}
-				/>
+				<Flex style={{ width: "100%", padding: 12, position: "relative" }}>
+					<Image
+						preview={false}
+						loading={"lazy"}
+						height={256}
+						width={"100%"}
+						style={{
+							width: "100%",
+							objectFit: "cover",
+							borderRadius: token.borderRadiusLG
+						}}
+						role={"presentation"}
+						src={hotel.image}
+						alt={""}
+					/>
+					<Button
+						icon={<HeartOutlined />}
+						shape={"circle"}
+						style={{ position: "absolute", top: 20, right: 20 }}
+					/>
+				</Flex>
 			}
 		>
-			<Button
-				icon={<HeartOutlined />}
-				shape={"circle"}
-				style={{ position: "absolute", top: 8, right: 8 }}
-			/>
 			<Flex vertical={true} gap={8}>
-				<Flex vertical={true} gap={2}>
-					<Title level={5} style={{ fontSize: 14 }}>
-						Al Khoory Executive Hotel, Al Wasl
-					</Title>
-					<Text type={"secondary"} style={{ fontSize: 12 }}>
-						Дубай, ОАЭ
-					</Text>
+				<Flex align={"start"} justify={"space-between"} gap={12}>
+					<Flex vertical={true} gap={2}>
+						<Title level={4}>{hotel.name}</Title>
+						<Space split={"•"}>
+							<Text type={"secondary"} style={{ fontSize: 12 }}>
+								{hotel.city}
+							</Text>
+							<Text style={{ fontSize: 12 }}>
+								{hotel.distance} км от центра
+							</Text>
+						</Space>
+					</Flex>
+					<Tag color={"blue-inverse"} style={{ fontSize: 16, paddingBlock: 6 }}>
+						{hotel.rating}
+					</Tag>
 				</Flex>
-				<Space
-					size={3}
-					split={
-						<Text type={"secondary"} style={{ fontSize: 12 }}>
-							•
-						</Text>
-					}
-				>
-					<Space size={2}>
-						<Tag color={"blue-inverse"}>8.7</Tag>
-						<Text style={{ fontSize: 12 }}>Потрясающие</Text>
-					</Space>
+				<Space>
+					<StarFilled style={{ color: "orange" }} />
 					<Text type={"secondary"} style={{ fontSize: 12 }}>
 						8 089 отзывов
 					</Text>
 				</Space>
-				<Flex gap={8} align={"center"} justify={"space-between"}>
-					<Text type={"secondary"} style={{ fontSize: 12 }}>
-						2 ночи
-					</Text>
-					<Space>
-						<Title
-							level={5}
-							style={{
-								fontSize: 14,
-								fontWeight: 400,
-								color: token.red,
-								textDecoration: "line-through"
-							}}
-						>
-							UZS 1 800 636
-						</Title>
-						<Title level={5} style={{ fontSize: 14 }}>
-							UZS 1 800 636
-						</Title>
-					</Space>
+				<Flex align={"end"} justify={"space-between"} gap={12}>
+					<Flex vertical={true} justify={"space-between"}>
+						<Title level={5}>{formatPriceWithCurrency(hotel.price)}</Title>
+						<Text type={"secondary"} style={{ fontSize: 12 }}>
+							за ночь для 1 гостя
+						</Text>
+					</Flex>
+					<Button
+						type={"link"}
+						icon={<ArrowRightOutlined />}
+						iconPosition={"end"}
+					>
+						Подробнее
+					</Button>
 				</Flex>
 			</Flex>
 		</Card>

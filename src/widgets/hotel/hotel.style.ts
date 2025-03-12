@@ -18,9 +18,18 @@ export const useHotelStyles = createStyles(({ css, token }) => ({
 				display: none;
 			}
 		}
+
+		.slick-slide {
+			padding: 0 6px;
+		}
+
+		.slick-list {
+			margin: 0 -6px;
+		}
 	`,
 	item: css`
 		display: flex !important;
 		justify-content: center;
+		padding: 12px 0;
 	`
 }))

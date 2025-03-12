@@ -1,7 +1,7 @@
 import { SyncOutlined } from "@ant-design/icons"
 import { Button, Col, Flex, Row } from "antd"
 import { type FC, useState } from "react"
-import { cityData } from "src/shared/data/cityData"
+import { cityData } from "src/shared/data/city.data"
 import { CityCard } from "./city-card"
 
 const CityCardList: FC = () => {
