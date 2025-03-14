@@ -1,5 +1,5 @@
 import { ArrowRightOutlined, HeartOutlined } from "@ant-design/icons"
-import { Link } from "@tanstack/react-router"
+import { Link, useNavigate, useParams, useSearch } from "@tanstack/react-router"
 import { Badge, Button, Card, Flex, Image, List, Space } from "antd"
 import { type FC } from "react"
 import type { Hotel } from "src/shared/data/hotel.data"
@@ -12,6 +12,23 @@ interface HotelListItemProps {
 }
 
 const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
+	const { citySlug = "" } = useParams({ strict: false })
+	const search = useSearch({
+		strict: false
+	})
+	const navigate = useNavigate()
+
+	const onNavigateToHotel = () => {
+		navigate({
+			to: "/hotels/$citySlug/$hotelSlug",
+			params: {
+				citySlug,
+				hotelSlug: hotel.slug
+			},
+			search
+		})
+	}
+
 	const { token } = useToken()
 	return (
 		<Badge.Ribbon text={hotel.rating} style={{ fontSize: 16, paddingBlock: 8 }}>
@@ -47,7 +64,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 						style={{ padding: 20, paddingLeft: 8, flexGrow: 1 }}
 					>
 						<Flex vertical={true} align={"start"}>
-							<Title level={3}>{hotel.name}</Title>
+							<Title level={4}>{hotel.name}</Title>
 							<Link to={"/"}>
 								<Space split={<Text>•</Text>}>
 									{hotel.city}
@@ -58,7 +75,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 						</Flex>
 						<Flex justify={"space-between"} align={"end"}>
 							<Flex vertical={true}>
-								<Title level={4} style={{ margin: 0 }}>
+								<Title level={3} style={{ margin: 0 }}>
 									{formatPriceWithCurrency(hotel.price)}
 								</Title>
 								<Text type={"secondary"}>за ночь для 1 гостя</Text>
@@ -68,6 +85,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 								type={"primary"}
 								icon={<ArrowRightOutlined />}
 								key={"link"}
+								onClick={onNavigateToHotel}
 							>
 								Показать номера
 							</Button>

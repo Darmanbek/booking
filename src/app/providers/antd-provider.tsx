@@ -16,6 +16,12 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 				theme={{
 					token: {
 						fontFamily: `Open Sans,${token.fontFamily}`
+					},
+					components: {
+						Breadcrumb: {
+							linkColor: token.colorLink,
+							linkHoverColor: token.colorLinkHover
+						}
 					}
 				}}
 				typography={{

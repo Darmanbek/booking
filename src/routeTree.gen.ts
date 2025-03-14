@@ -13,7 +13,8 @@
 import { Route as rootRoute } from "./routes/__root"
 import { Route as LayoutImport } from "./routes/_layout"
 import { Route as LayoutIndexImport } from "./routes/_layout/index"
-import { Route as LayoutHotelsCitySlugImport } from "./routes/_layout/hotels/$citySlug"
+import { Route as LayoutHotelsCitySlugIndexImport } from "./routes/_layout/hotels/$citySlug/index"
+import { Route as LayoutHotelsCitySlugHotelSlugImport } from "./routes/_layout/hotels/$citySlug/$hotelSlug"
 
 // Create/Update Routes
 
@@ -28,11 +29,18 @@ const LayoutIndexRoute = LayoutIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutHotelsCitySlugRoute = LayoutHotelsCitySlugImport.update({
-  id: "/hotels/$citySlug",
-  path: "/hotels/$citySlug",
+const LayoutHotelsCitySlugIndexRoute = LayoutHotelsCitySlugIndexImport.update({
+  id: "/hotels/$citySlug/",
+  path: "/hotels/$citySlug/",
   getParentRoute: () => LayoutRoute,
 } as any)
+
+const LayoutHotelsCitySlugHotelSlugRoute =
+  LayoutHotelsCitySlugHotelSlugImport.update({
+    id: "/hotels/$citySlug/$hotelSlug",
+    path: "/hotels/$citySlug/$hotelSlug",
+    getParentRoute: () => LayoutRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -52,11 +60,18 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
     }
-    "/_layout/hotels/$citySlug": {
-      id: "/_layout/hotels/$citySlug"
+    "/_layout/hotels/$citySlug/$hotelSlug": {
+      id: "/_layout/hotels/$citySlug/$hotelSlug"
+      path: "/hotels/$citySlug/$hotelSlug"
+      fullPath: "/hotels/$citySlug/$hotelSlug"
+      preLoaderRoute: typeof LayoutHotelsCitySlugHotelSlugImport
+      parentRoute: typeof LayoutImport
+    }
+    "/_layout/hotels/$citySlug/": {
+      id: "/_layout/hotels/$citySlug/"
       path: "/hotels/$citySlug"
       fullPath: "/hotels/$citySlug"
-      preLoaderRoute: typeof LayoutHotelsCitySlugImport
+      preLoaderRoute: typeof LayoutHotelsCitySlugIndexImport
       parentRoute: typeof LayoutImport
     }
   }
@@ -66,12 +81,14 @@ declare module "@tanstack/react-router" {
 
 interface LayoutRouteChildren {
   LayoutIndexRoute: typeof LayoutIndexRoute
-  LayoutHotelsCitySlugRoute: typeof LayoutHotelsCitySlugRoute
+  LayoutHotelsCitySlugHotelSlugRoute: typeof LayoutHotelsCitySlugHotelSlugRoute
+  LayoutHotelsCitySlugIndexRoute: typeof LayoutHotelsCitySlugIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutIndexRoute: LayoutIndexRoute,
-  LayoutHotelsCitySlugRoute: LayoutHotelsCitySlugRoute,
+  LayoutHotelsCitySlugHotelSlugRoute: LayoutHotelsCitySlugHotelSlugRoute,
+  LayoutHotelsCitySlugIndexRoute: LayoutHotelsCitySlugIndexRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -80,27 +97,35 @@ const LayoutRouteWithChildren =
 export interface FileRoutesByFullPath {
   "": typeof LayoutRouteWithChildren
   "/": typeof LayoutIndexRoute
-  "/hotels/$citySlug": typeof LayoutHotelsCitySlugRoute
+  "/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
+  "/hotels/$citySlug": typeof LayoutHotelsCitySlugIndexRoute
 }
 
 export interface FileRoutesByTo {
   "/": typeof LayoutIndexRoute
-  "/hotels/$citySlug": typeof LayoutHotelsCitySlugRoute
+  "/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
+  "/hotels/$citySlug": typeof LayoutHotelsCitySlugIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   "/_layout": typeof LayoutRouteWithChildren
   "/_layout/": typeof LayoutIndexRoute
-  "/_layout/hotels/$citySlug": typeof LayoutHotelsCitySlugRoute
+  "/_layout/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
+  "/_layout/hotels/$citySlug/": typeof LayoutHotelsCitySlugIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "" | "/" | "/hotels/$citySlug"
+  fullPaths: "" | "/" | "/hotels/$citySlug/$hotelSlug" | "/hotels/$citySlug"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/hotels/$citySlug"
-  id: "__root__" | "/_layout" | "/_layout/" | "/_layout/hotels/$citySlug"
+  to: "/" | "/hotels/$citySlug/$hotelSlug" | "/hotels/$citySlug"
+  id:
+    | "__root__"
+    | "/_layout"
+    | "/_layout/"
+    | "/_layout/hotels/$citySlug/$hotelSlug"
+    | "/_layout/hotels/$citySlug/"
   fileRoutesById: FileRoutesById
 }
 
@@ -129,15 +154,20 @@ export const routeTree = rootRoute
       "filePath": "_layout.tsx",
       "children": [
         "/_layout/",
-        "/_layout/hotels/$citySlug"
+        "/_layout/hotels/$citySlug/$hotelSlug",
+        "/_layout/hotels/$citySlug/"
       ]
     },
     "/_layout/": {
       "filePath": "_layout/index.tsx",
       "parent": "/_layout"
     },
-    "/_layout/hotels/$citySlug": {
-      "filePath": "_layout/hotels/$citySlug.tsx",
+    "/_layout/hotels/$citySlug/$hotelSlug": {
+      "filePath": "_layout/hotels/$citySlug/$hotelSlug.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/hotels/$citySlug/": {
+      "filePath": "_layout/hotels/$citySlug/index.tsx",
       "parent": "/_layout"
     }
   }

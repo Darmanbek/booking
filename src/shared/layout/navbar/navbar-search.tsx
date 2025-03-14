@@ -4,6 +4,7 @@ import {
 	SearchOutlined,
 	UserOutlined
 } from "@ant-design/icons"
+import { useLocation, useNavigate } from "@tanstack/react-router"
 import {
 	Button,
 	Card,
@@ -11,13 +12,13 @@ import {
 	Flex,
 	Form,
 	type FormProps,
-	Input,
 	Select,
 	Space,
 	Tabs
 } from "antd"
 import dayjs, { type Dayjs } from "dayjs"
 import { type FC } from "react"
+import { cityData } from "src/shared/data/city.data"
 import { Text } from "src/shared/ui"
 import { GuestCountList } from "./guest-count/guest-count-list"
 import { useNavbarStyles } from "./navbar.style"
@@ -29,50 +30,76 @@ type SearchChange = {
 }
 
 const NavbarSearch: FC = () => {
+	const { pathname } = useLocation()
+	const isHome = pathname === "/"
+	const navigate = useNavigate()
+
 	const [form] = Form.useForm<SearchChange>()
 	const guests = Form.useWatch("guests", form) || []
 	const { styles } = useNavbarStyles()
 	const today = dayjs().startOf("week")
 
-	const onFinish: FormProps["onFinish"] = (values) => {
-		console.log(values)
+	const onFinish: FormProps<SearchChange>["onFinish"] = (values) => {
+		if (values.date) {
+			values.date = [
+				dayjs(values.date[0]).format("YYYY-MM-DD"),
+				dayjs(values.date[1]).format("YYYY-MM-DD")
+			]
+		}
+		navigate({
+			to: "/hotels/$citySlug",
+			params: {
+				citySlug: values.search
+			},
+			search: {
+				from_date: values.date[0] as string,
+				to_date: values.date[1] as string,
+				guests: values.guests.join("-")
+			}
+		})
 	}
 
 	return (
 		<>
-			<Tabs
-				className={styles.tabBar}
-				type={"card"}
-				activeKey={"hotels"}
-				style={{ width: "auto", margin: 0 }}
-				tabBarStyle={{
-					margin: 0,
-					border: 0
-				}}
-				tabBarExtraContent={
-					<Button
-						size={"large"}
-						style={{
-							marginLeft: 8,
-							marginBottom: 8
-						}}
-						icon={<ArrowRightOutlined rotate={-45} />}
-						iconPosition={"end"}
-					>
-						Для коммандировок
-					</Button>
-				}
-				items={[
-					{
-						key: "hotels",
-						label: "Отели и квартиры"
+			{isHome && (
+				<Tabs
+					className={styles.tabBar}
+					type={"card"}
+					activeKey={"hotels"}
+					style={{ width: "auto", margin: 0 }}
+					tabBarStyle={{
+						margin: 0,
+						border: 0
+					}}
+					tabBarExtraContent={
+						<Button
+							size={"large"}
+							style={{
+								marginLeft: 8,
+								marginBottom: 8
+							}}
+							icon={<ArrowRightOutlined rotate={-45} />}
+							iconPosition={"end"}
+						>
+							Для командировок
+						</Button>
 					}
-				]}
-			/>
+					items={[
+						{
+							key: "hotels",
+							label: "Отели и квартиры"
+						}
+					]}
+				/>
+			)}
 			<Card
-				style={{
-					borderTopLeftRadius: 0
-				}}
+				style={
+					isHome
+						? {
+								borderTopLeftRadius: 0
+							}
+						: {}
+				}
 			>
 				<Form
 					onFinish={onFinish}
@@ -87,8 +114,18 @@ const NavbarSearch: FC = () => {
 							width: "100%"
 						}}
 					>
-						<Form.Item<SearchChange> name={"search"} noStyle={true}>
-							<Input
+						<Form.Item<SearchChange>
+							name={"search"}
+							noStyle={true}
+							initialValue={cityData[0].slug}
+						>
+							<Select
+								options={cityData.map((item) => ({
+									value: item.slug,
+									label: item.city
+								}))}
+								showSearch={true}
+								optionFilterProp={"label"}
 								prefix={<HomeOutlined />}
 								placeholder={"Куда вы хотите поехать?"}
 								size={"large"}

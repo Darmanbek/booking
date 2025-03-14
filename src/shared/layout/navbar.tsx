@@ -1,3 +1,4 @@
+import { useLocation } from "@tanstack/react-router"
 import { Flex, Space } from "antd"
 import { type FC } from "react"
 import { useToken } from "src/shared/hooks"
@@ -6,11 +7,15 @@ import { NavbarSearch } from "./navbar/navbar-search"
 
 const Navbar: FC = () => {
 	const { token } = useToken()
+	const { pathname } = useLocation()
+
+	const isHome = pathname === "/"
+
 	return (
 		<nav
 			style={{
 				position: "relative",
-				height: 434,
+				height: isHome ? 434 : "auto",
 				backgroundColor: token.blue10,
 				padding: `${token.paddingLG}px 0`,
 				color: token.colorWhite,
@@ -32,15 +37,19 @@ const Navbar: FC = () => {
 						size={"large"}
 						style={{ width: "100%" }}
 					>
-						<Title level={1} style={{ color: "inherit" }}>
-							Отели в Узбекистане
-						</Title>
-						<Paragraph
-							style={{ color: "inherit", fontSize: token.fontSizeHeading4 }}
-						>
-							Введите свои даты и выбирайте из 818 отелей и других вариантов
-							жилья!
-						</Paragraph>
+						{isHome && (
+							<>
+								<Title level={1} style={{ color: "inherit" }}>
+									Отели в Узбекистане
+								</Title>
+								<Paragraph
+									style={{ color: "inherit", fontSize: token.fontSizeHeading4 }}
+								>
+									Введите свои даты и выбирайте из 818 отелей и других вариантов
+									жилья!
+								</Paragraph>
+							</>
+						)}
 						<NavbarSearch />
 					</Space>
 				</Flex>

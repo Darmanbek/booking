@@ -7,6 +7,7 @@ export type Hotel = {
 	city: string
 	price: number
 	image: string
+	address: string
 	reviews_count: number
 	rating: number | string
 	distance: number | string
@@ -19,6 +20,7 @@ const hotel: Hotel = {
 	city: "Ташкент",
 	price: 800_351,
 	image: "/hotel/delta-hotel.jpg",
+	address: "Чорсу 21 дом, 100071",
 	reviews_count: 8_123,
 	rating: 8.5,
 	distance: 1.2
