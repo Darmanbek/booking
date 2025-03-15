@@ -3,8 +3,15 @@ import { createStyles } from "antd-style"
 export const useHotelCardStyles = createStyles(({ css, token }) => ({
 	carousel: css`
 		.slick-slide {
-			width: 305px !important;
-			height: 300px;
+			//width: 304px !important;
+			//height: 300px;
+			max-height: 300px;
+			max-width: 302px;
+			padding-left: 2px;
+		}
+
+		.slick-list {
+			margin-left: -2px;
 		}
 
 		.slick-arrow:after {

@@ -1,6 +1,6 @@
 import { HomeOutlined } from "@ant-design/icons"
 import { Link, useParams, useSearch } from "@tanstack/react-router"
-import { Breadcrumb, Flex, Space } from "antd"
+import { Breadcrumb, Card, Flex, Space } from "antd"
 import dayjs from "dayjs"
 import { type FC } from "react"
 import { cityData } from "src/shared/data/city.data"
@@ -11,6 +11,8 @@ import {
 	HotelDescriptionCard,
 	HotelMapCard,
 	HotelPreviewCard,
+	HotelRatingCard,
+	HotelReviewsCard,
 	HotelTopCard
 } from "./cards"
 
@@ -26,48 +28,52 @@ const Hotel: FC = () => {
 		<section>
 			<Container>
 				<Flex vertical={true} gap={20}>
-					<Breadcrumb
-						items={[
-							{
-								title: (
-									<Link to={"/"}>
-										<Space>
-											<HomeOutlined />
-											Главная
-										</Space>
-									</Link>
-								)
-							},
-							{
-								title: (
-									<Link
-										to={"/hotels/$citySlug"}
-										params={{ citySlug: city?.slug || "" }}
-										search={search}
-									>
-										{city?.title}
-									</Link>
-								)
-							},
-							search
-								? {
-										title:
-											search.from_date &&
-											search.to_date &&
-											`${dayjs(search.from_date).format("dd, DD MMM")} — ${dayjs(search.to_date).format("dd, DD MMM")}`
-									}
-								: {},
-							{
-								title: hotel?.name
-							}
-						]}
-					/>
+					<Card>
+						<Breadcrumb
+							items={[
+								{
+									title: (
+										<Link to={"/"}>
+											<Space>
+												<HomeOutlined />
+												Главная
+											</Space>
+										</Link>
+									)
+								},
+								{
+									title: (
+										<Link
+											to={"/hotels/$citySlug"}
+											params={{ citySlug: city?.slug || "" }}
+											search={search}
+										>
+											{city?.title}
+										</Link>
+									)
+								},
+								search
+									? {
+											title:
+												search.from_date &&
+												search.to_date &&
+												`${dayjs(search.from_date).format("dd, DD MMM")} — ${dayjs(search.to_date).format("dd, DD MMM")}`
+										}
+									: {},
+								{
+									title: hotel?.name
+								}
+							]}
+						/>
+					</Card>
 
 					<HotelTopCard data={hotel} city={city} />
 					<HotelPreviewCard data={hotel} />
+					<HotelRatingCard />
 					<HotelComfortCard />
 					<HotelMapCard />
 					<HotelDescriptionCard />
+					<HotelReviewsCard />
 				</Flex>
 			</Container>
 		</section>

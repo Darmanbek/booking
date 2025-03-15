@@ -19,23 +19,25 @@ const Hotels: FC = () => {
 		<section>
 			<Container>
 				<Flex vertical={true} gap={20}>
-					<Breadcrumb
-						items={[
-							{
-								title: (
-									<Link to={"/"} style={{ color: token.colorLink }}>
-										<Space>
-											<HomeOutlined />
-											Главная
-										</Space>
-									</Link>
-								)
-							},
-							{
-								title: city?.city
-							}
-						]}
-					/>
+					<Card>
+						<Breadcrumb
+							items={[
+								{
+									title: (
+										<Link to={"/"} style={{ color: token.colorLink }}>
+											<Space>
+												<HomeOutlined />
+												Главная
+											</Space>
+										</Link>
+									)
+								},
+								{
+									title: city?.city
+								}
+							]}
+						/>
+					</Card>
 					<Row gutter={20}>
 						<Col span={8}>
 							<HotelsForm />
@@ -43,7 +45,7 @@ const Hotels: FC = () => {
 						<Col span={16}>
 							<Flex vertical={true} gap={20}>
 								<Card>
-									<Title level={4}>Ташкент: доступно 368 вариантов</Title>
+									<Title level={4}>{city?.city}: доступно 368 вариантов</Title>
 								</Card>
 								<HotelsList />
 							</Flex>

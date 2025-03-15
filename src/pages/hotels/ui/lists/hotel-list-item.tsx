@@ -67,7 +67,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 							<Title level={4}>{hotel.name}</Title>
 							<Link to={"/"}>
 								<Space split={<Text>•</Text>}>
-									{hotel.city}
+									{hotel?.city?.city}
 									{"Показать на карте"}
 									<Text>4.1км от центра</Text>
 								</Space>
