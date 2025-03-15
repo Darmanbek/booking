@@ -24,7 +24,13 @@ const HotelRatingCard: FC = () => {
 				}
 			>
 				<Flex vertical={true} gap={8}>
-					<Carousel ref={carouselRef} slidesToShow={2} arrows={false}>
+					<Carousel
+						autoplay={true}
+						dots={false}
+						ref={carouselRef}
+						slidesToShow={2}
+						arrows={false}
+					>
 						{Array.from({ length: 10 }).map((_, index) => (
 							<div key={index}>
 								<Flex

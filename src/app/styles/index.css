@@ -12,6 +12,10 @@ p {
 	margin-bottom: 0;
 }
 
+html {
+	scroll-behavior: smooth;
+}
+
 body {
 	font-family: "Open Sans", sans-serif;
 	min-height: 100%;

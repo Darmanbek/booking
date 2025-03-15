@@ -47,6 +47,7 @@ const HotelReviewsCard: FC = () => {
 	return (
 		<RatingContainer placement={"start"} text={"7,1"}>
 			<Card
+				id={"reviews"}
 				title={
 					<Flex vertical={true} align={"start"} style={{ paddingLeft: 24 }}>
 						<Title level={3} style={{ fontSize: "inherit" }}>
