@@ -13,6 +13,8 @@
 import { Route as rootRoute } from "./routes/__root"
 import { Route as LayoutImport } from "./routes/_layout"
 import { Route as LayoutIndexImport } from "./routes/_layout/index"
+import { Route as LayoutRegisterImport } from "./routes/_layout/register"
+import { Route as LayoutLoginImport } from "./routes/_layout/login"
 import { Route as LayoutHotelsCitySlugIndexImport } from "./routes/_layout/hotels/$citySlug/index"
 import { Route as LayoutHotelsCitySlugHotelSlugImport } from "./routes/_layout/hotels/$citySlug/$hotelSlug"
 
@@ -26,6 +28,18 @@ const LayoutRoute = LayoutImport.update({
 const LayoutIndexRoute = LayoutIndexImport.update({
   id: "/",
   path: "/",
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutRegisterRoute = LayoutRegisterImport.update({
+  id: "/register",
+  path: "/register",
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutLoginRoute = LayoutLoginImport.update({
+  id: "/login",
+  path: "/login",
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -52,6 +66,20 @@ declare module "@tanstack/react-router" {
       fullPath: ""
       preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
+    }
+    "/_layout/login": {
+      id: "/_layout/login"
+      path: "/login"
+      fullPath: "/login"
+      preLoaderRoute: typeof LayoutLoginImport
+      parentRoute: typeof LayoutImport
+    }
+    "/_layout/register": {
+      id: "/_layout/register"
+      path: "/register"
+      fullPath: "/register"
+      preLoaderRoute: typeof LayoutRegisterImport
+      parentRoute: typeof LayoutImport
     }
     "/_layout/": {
       id: "/_layout/"
@@ -80,12 +108,16 @@ declare module "@tanstack/react-router" {
 // Create and export the route tree
 
 interface LayoutRouteChildren {
+  LayoutLoginRoute: typeof LayoutLoginRoute
+  LayoutRegisterRoute: typeof LayoutRegisterRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutHotelsCitySlugHotelSlugRoute: typeof LayoutHotelsCitySlugHotelSlugRoute
   LayoutHotelsCitySlugIndexRoute: typeof LayoutHotelsCitySlugIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutLoginRoute: LayoutLoginRoute,
+  LayoutRegisterRoute: LayoutRegisterRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutHotelsCitySlugHotelSlugRoute: LayoutHotelsCitySlugHotelSlugRoute,
   LayoutHotelsCitySlugIndexRoute: LayoutHotelsCitySlugIndexRoute,
@@ -96,12 +128,16 @@ const LayoutRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   "": typeof LayoutRouteWithChildren
+  "/login": typeof LayoutLoginRoute
+  "/register": typeof LayoutRegisterRoute
   "/": typeof LayoutIndexRoute
   "/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
   "/hotels/$citySlug": typeof LayoutHotelsCitySlugIndexRoute
 }
 
 export interface FileRoutesByTo {
+  "/login": typeof LayoutLoginRoute
+  "/register": typeof LayoutRegisterRoute
   "/": typeof LayoutIndexRoute
   "/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
   "/hotels/$citySlug": typeof LayoutHotelsCitySlugIndexRoute
@@ -110,6 +146,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   "/_layout": typeof LayoutRouteWithChildren
+  "/_layout/login": typeof LayoutLoginRoute
+  "/_layout/register": typeof LayoutRegisterRoute
   "/_layout/": typeof LayoutIndexRoute
   "/_layout/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
   "/_layout/hotels/$citySlug/": typeof LayoutHotelsCitySlugIndexRoute
@@ -117,12 +155,25 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "" | "/" | "/hotels/$citySlug/$hotelSlug" | "/hotels/$citySlug"
+  fullPaths:
+    | ""
+    | "/login"
+    | "/register"
+    | "/"
+    | "/hotels/$citySlug/$hotelSlug"
+    | "/hotels/$citySlug"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/hotels/$citySlug/$hotelSlug" | "/hotels/$citySlug"
+  to:
+    | "/login"
+    | "/register"
+    | "/"
+    | "/hotels/$citySlug/$hotelSlug"
+    | "/hotels/$citySlug"
   id:
     | "__root__"
     | "/_layout"
+    | "/_layout/login"
+    | "/_layout/register"
     | "/_layout/"
     | "/_layout/hotels/$citySlug/$hotelSlug"
     | "/_layout/hotels/$citySlug/"
@@ -153,10 +204,20 @@ export const routeTree = rootRoute
     "/_layout": {
       "filePath": "_layout.tsx",
       "children": [
+        "/_layout/login",
+        "/_layout/register",
         "/_layout/",
         "/_layout/hotels/$citySlug/$hotelSlug",
         "/_layout/hotels/$citySlug/"
       ]
+    },
+    "/_layout/login": {
+      "filePath": "_layout/login.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/register": {
+      "filePath": "_layout/register.tsx",
+      "parent": "/_layout"
     },
     "/_layout/": {
       "filePath": "_layout/index.tsx",

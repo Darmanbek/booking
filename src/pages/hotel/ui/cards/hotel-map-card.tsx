@@ -1,10 +1,24 @@
 import { Card, Flex } from "antd"
-import { type FC } from "react"
-import { useToken } from "src/shared/hooks"
+import type L from "leaflet"
+import { type FC, useEffect, useRef } from "react"
+import { Marker, Popup } from "react-leaflet"
+import { type Hotel } from "src/shared/data/hotel.data"
 import { Text, Title } from "src/shared/ui"
+import { Map } from "src/widgets/map"
+import { MapHotelCard } from "src/widgets/map/map-hotel-card"
 
-const HotelMapCard: FC = () => {
-	const { token } = useToken()
+interface HotelMapCardProps {
+	data?: Hotel
+}
+
+const HotelMapCard: FC<HotelMapCardProps> = ({ data: hotel }) => {
+	const markerRef = useRef<L.Marker>(null)
+
+	useEffect(() => {
+		if (markerRef.current) {
+			markerRef.current.openPopup()
+		}
+	}, [])
 	return (
 		<Card
 			title={
@@ -13,22 +27,20 @@ const HotelMapCard: FC = () => {
 						Расположение
 					</Title>
 					<Text style={{ fontSize: 14, fontWeight: 500 }}>
-						Центр города, набережная Тухачевского, дом 10, Омск
+						{hotel?.address}
 					</Text>
 				</Flex>
 			}
 		>
-			<Flex
-				align={"center"}
-				justify={"center"}
-				style={{
-					border: "1px dashed",
-					borderRadius: token.borderRadius,
-					minHeight: 300
-				}}
-			>
-				Карта
-			</Flex>
+			<Map scrollWheelZoom={false} center={hotel?.location}>
+				{hotel?.location && (
+					<Marker position={hotel?.location} ref={markerRef}>
+						<Popup>
+							<MapHotelCard data={hotel} />
+						</Popup>
+					</Marker>
+				)}
+			</Map>
 		</Card>
 	)
 }

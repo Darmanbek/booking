@@ -11,6 +11,8 @@ const Navbar: FC = () => {
 
 	const isHome = pathname === "/"
 
+	if (["/login", "/register"].includes(pathname)) return
+
 	return (
 		<nav
 			style={{

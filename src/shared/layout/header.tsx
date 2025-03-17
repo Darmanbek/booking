@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router"
+import { Link, useNavigate } from "@tanstack/react-router"
 import { Button, Flex, Layout, Select, Space } from "antd"
 import { type FC } from "react"
 import { useToken } from "src/shared/hooks"
@@ -6,6 +6,7 @@ import { Container, Logo } from "src/shared/ui"
 
 const Header: FC = () => {
 	const { token } = useToken()
+	const navigate = useNavigate()
 
 	return (
 		<Layout.Header
@@ -61,8 +62,26 @@ const Header: FC = () => {
 								</Space>
 							)}
 						/>
-						<Button type={"primary"}>Зарегистрироваться</Button>
-						<Button type={"link"}>Войти</Button>
+						<Button
+							type={"primary"}
+							onClick={() =>
+								navigate({
+									to: "/register"
+								})
+							}
+						>
+							Зарегистрироваться
+						</Button>
+						<Button
+							type={"link"}
+							onClick={() =>
+								navigate({
+									to: "/login"
+								})
+							}
+						>
+							Войти
+						</Button>
 					</Space>
 				</Flex>
 			</Container>

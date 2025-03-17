@@ -66,23 +66,25 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 			>
 				<Flex vertical={true} gap={8}>
 					<Flex align={"start"} justify={"space-between"} gap={12}>
-						<Flex vertical={true} gap={2}>
-							<Title level={4}>{hotel.name}</Title>
+						<Flex vertical={true} gap={2} style={{ width: "100%" }}>
+							<Flex gap={2} justify={"space-between"} align={"center"}>
+								<Title level={4}>{hotel.name}</Title>
+								<Tag
+									color={"blue-inverse"}
+									style={{ fontSize: 16, paddingBlock: 6 }}
+								>
+									{hotel.rating}
+								</Tag>
+							</Flex>
 							<Space split={"•"}>
 								<Text type={"secondary"} style={{ fontSize: 12 }}>
-									{hotel.city?.title}
+									{hotel.city?.city}
 								</Text>
 								<Text style={{ fontSize: 12 }}>
 									{hotel.distance} км от центра
 								</Text>
 							</Space>
 						</Flex>
-						<Tag
-							color={"blue-inverse"}
-							style={{ fontSize: 16, paddingBlock: 6 }}
-						>
-							{hotel.rating}
-						</Tag>
 					</Flex>
 					<Space>
 						<StarFilled style={{ color: "orange" }} />

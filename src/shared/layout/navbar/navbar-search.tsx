@@ -16,23 +16,22 @@ import {
 	Space,
 	Tabs
 } from "antd"
-import dayjs, { type Dayjs } from "dayjs"
-import { type FC } from "react"
+import dayjs from "dayjs"
+import { type FC, useEffect } from "react"
 import { cityData } from "src/shared/data/city.data"
+import {
+	type SearchChange,
+	useSearchStore
+} from "src/shared/store/use-search-store"
 import { Text } from "src/shared/ui"
 import { GuestCountList } from "./guest-count/guest-count-list"
 import { useNavbarStyles } from "./navbar.style"
-
-type SearchChange = {
-	search: string
-	date: [string | Dayjs, string | Dayjs]
-	guests: number[]
-}
 
 const NavbarSearch: FC = () => {
 	const { pathname } = useLocation()
 	const isHome = pathname === "/"
 	const navigate = useNavigate()
+	const { search, setSearch } = useSearchStore()
 
 	const [form] = Form.useForm<SearchChange>()
 	const guests = Form.useWatch("guests", form) || []
@@ -40,10 +39,11 @@ const NavbarSearch: FC = () => {
 	const today = dayjs().startOf("week")
 
 	const onFinish: FormProps<SearchChange>["onFinish"] = (values) => {
-		if (values.date) {
-			values.date = [
-				dayjs(values.date[0]).format("YYYY-MM-DD"),
-				dayjs(values.date[1]).format("YYYY-MM-DD")
+		setSearch(values)
+		if (values.dates) {
+			values.dates = [
+				dayjs(values.dates[0]).format("YYYY-MM-DD"),
+				dayjs(values.dates[1]).format("YYYY-MM-DD")
 			]
 		}
 		navigate({
@@ -52,13 +52,21 @@ const NavbarSearch: FC = () => {
 				citySlug: values.search
 			},
 			search: {
-				from_date: values.date[0] as string,
-				to_date: values.date[1] as string,
+				from_date: values.dates[0] as string,
+				to_date: values.dates[1] as string,
 				guests: values.guests.join("-")
 			}
 		})
 	}
 
+	useEffect(() => {
+		if (search) {
+			form.setFieldsValue({
+				...search,
+				dates: [dayjs(search.dates[0]), dayjs(search.dates[1])]
+			})
+		}
+	}, [form, search])
 	return (
 		<>
 			{isHome && (
@@ -136,16 +144,18 @@ const NavbarSearch: FC = () => {
 							/>
 						</Form.Item>
 						<Form.Item<SearchChange>
-							name={"date"}
+							name={"dates"}
 							noStyle={true}
 							initialValue={[today.day(6), today.day(7)]}
 						>
 							<DatePicker.RangePicker
-								format={"dd, DD MMM"}
+								inputReadOnly={true}
+								format={(value) => dayjs(value).format("dd, DD MMM")}
 								style={{
 									minWidth: 300,
 									minHeight: 50
 								}}
+								allowClear={false}
 								size={"large"}
 							/>
 						</Form.Item>

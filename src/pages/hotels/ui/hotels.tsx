@@ -3,8 +3,9 @@ import { Link, useParams } from "@tanstack/react-router"
 import { Breadcrumb, Card, Col, Flex, Row, Space } from "antd"
 import { type FC } from "react"
 import { cityData } from "src/shared/data/city.data"
-import { useToken } from "src/shared/hooks"
+import { hotelData } from "src/shared/data/hotel.data"
 import { Container, Title } from "src/shared/ui"
+import { HotelsMapCard } from "./cards/hotels-map-card"
 import { HotelsForm } from "./forms/hotels-form"
 import { HotelsList } from "./lists/hotels-list"
 
@@ -14,7 +15,6 @@ const Hotels: FC = () => {
 	})
 	const city = cityData.find((el) => el.slug === citySlug)
 
-	const { token } = useToken()
 	return (
 		<section>
 			<Container>
@@ -24,7 +24,7 @@ const Hotels: FC = () => {
 							items={[
 								{
 									title: (
-										<Link to={"/"} style={{ color: token.colorLink }}>
+										<Link to={"/"}>
 											<Space>
 												<HomeOutlined />
 												Главная
@@ -40,7 +40,10 @@ const Hotels: FC = () => {
 					</Card>
 					<Row gutter={20}>
 						<Col span={8}>
-							<HotelsForm />
+							<Flex vertical={true} gap={20} style={{ height: "100%" }}>
+								<HotelsMapCard data={hotelData} />
+								<HotelsForm />
+							</Flex>
 						</Col>
 						<Col span={16}>
 							<Flex vertical={true} gap={20}>

@@ -20,7 +20,7 @@ import {
 const Hotel: FC = () => {
 	const search = useSearch({ strict: false })
 	const { hotelSlug, citySlug } = useParams({
-		from: "/_layout/hotels/$citySlug/$hotelSlug"
+		strict: false
 	})
 	const city = cityData.find((el) => el.slug === citySlug)
 	const hotel = hotelData.find((el) => el.slug === hotelSlug)
@@ -72,7 +72,7 @@ const Hotel: FC = () => {
 					<HotelPreviewCard data={hotel} />
 					<HotelRatingCard />
 					<HotelComfortCard />
-					<HotelMapCard />
+					<HotelMapCard data={hotel} />
 					<HotelDescriptionCard />
 					<HotelServicesCard />
 					<HotelReviewsCard />

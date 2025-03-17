@@ -13,6 +13,7 @@ const HotelsForm: FC = () => {
 			requiredMark={false}
 			name={"hotels-form"}
 			form={form}
+			style={{ position: "sticky", top: 20, left: 0, right: 0 }}
 		>
 			<Card title={"Все фильтры"}>
 				<Form.Item label={"Цена за ночь"}>

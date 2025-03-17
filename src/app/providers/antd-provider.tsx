@@ -13,6 +13,7 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 		<>
 			<ConfigProvider
 				locale={localeRU}
+				prefixCls={"booking"}
 				theme={{
 					token: {
 						fontFamily: `Open Sans,${token.fontFamily}`
@@ -28,6 +29,9 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 					style: {
 						marginBottom: 0
 					}
+				}}
+				form={{
+					requiredMark: false
 				}}
 			>
 				{children}

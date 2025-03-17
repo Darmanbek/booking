@@ -4,6 +4,8 @@ import { Providers } from "src/app/providers"
 import { App } from "./app"
 import "./styles/index.css"
 
+import "leaflet/dist/leaflet.css"
+
 createRoot(document.getElementById("hotel")!).render(
 	<StrictMode>
 		<Providers>

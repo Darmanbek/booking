@@ -11,6 +11,10 @@ export type Hotel = {
 	reviews_count: number
 	rating: number | string
 	distance: number | string
+	location: {
+		lat: number
+		lng: number
+	}
 }
 
 const hotel: Hotel = {
@@ -27,14 +31,27 @@ const hotel: Hotel = {
 	address: "Чорсу 21 дом, 100071",
 	reviews_count: 8_123,
 	rating: 8.5,
-	distance: 1.2
+	distance: 1.2,
+	location: {
+		lat: 41.2995,
+		lng: 69.2401
+	}
 }
 
-export const hotelData: Hotel[] = cityData.map((item, index) => ({
-	...hotel,
-	id: index + 1,
-	price: 100_000 + Math.random() * 1_000_000,
-	rating: (0.1 + Math.random() * 10).toFixed(1),
-	distance: (0.1 + Math.random() * 10).toFixed(1),
-	city: item
-}))
+export const hotelData: Hotel[] = cityData.map((item, index) => {
+	const randomLat = 41.2995 + (Math.random() - 0.5) * 0.1 // ±0.05 градуса
+	const randomLng = 69.2401 + (Math.random() - 0.5) * 0.1 // ±0.05 градуса
+
+	return {
+		...hotel,
+		id: index + 1,
+		price: 100_000 + Math.random() * 1_000_000,
+		rating: (0.1 + Math.random() * 10).toFixed(1),
+		distance: (0.1 + Math.random() * 10).toFixed(1),
+		city: item,
+		location: {
+			lat: parseFloat(randomLat.toFixed(4)),
+			lng: parseFloat(randomLng.toFixed(4))
+		}
+	}
+})
