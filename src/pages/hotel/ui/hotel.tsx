@@ -14,7 +14,8 @@ import {
 	HotelRatingCard,
 	HotelReviewsCard,
 	HotelServicesCard,
-	HotelTopCard
+	HotelTopCard,
+	HotelVariantsCard
 } from "./cards"
 
 const Hotel: FC = () => {
@@ -67,12 +68,12 @@ const Hotel: FC = () => {
 							]}
 						/>
 					</Card>
-
 					<HotelTopCard data={hotel} city={city} />
 					<HotelPreviewCard data={hotel} />
 					<HotelRatingCard />
 					<HotelComfortCard />
 					<HotelMapCard data={hotel} />
+					<HotelVariantsCard />
 					<HotelDescriptionCard />
 					<HotelServicesCard />
 					<HotelReviewsCard />

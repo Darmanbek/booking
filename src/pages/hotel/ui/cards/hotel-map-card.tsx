@@ -12,13 +12,13 @@ interface HotelMapCardProps {
 }
 
 const HotelMapCard: FC<HotelMapCardProps> = ({ data: hotel }) => {
-	const markerRef = useRef<L.Marker>(null)
+	const popupRef = useRef<L.Popup>(null)
 
 	useEffect(() => {
-		if (markerRef.current) {
-			markerRef.current.openPopup()
+		if (popupRef.current && hotel?.location) {
+			popupRef.current.openPopup(hotel?.location)
 		}
-	}, [])
+	}, [hotel?.location])
 	return (
 		<Card
 			title={
@@ -32,15 +32,15 @@ const HotelMapCard: FC<HotelMapCardProps> = ({ data: hotel }) => {
 				</Flex>
 			}
 		>
-			<Map scrollWheelZoom={false} center={hotel?.location}>
-				{hotel?.location && (
-					<Marker position={hotel?.location} ref={markerRef}>
-						<Popup>
+			{hotel?.location && (
+				<Map scrollWheelZoom={false} center={hotel?.location}>
+					<Marker position={hotel?.location} autoPan={true}>
+						<Popup autoPan={true}>
 							<MapHotelCard data={hotel} />
 						</Popup>
 					</Marker>
-				)}
-			</Map>
+				</Map>
+			)}
 		</Card>
 	)
 }
