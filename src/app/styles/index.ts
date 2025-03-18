@@ -11,9 +11,9 @@ export const GlobalStyles = createGlobalStyle`
 
 	.leaflet-control-zoom-in,
 	.leaflet-control-zoom-out {
-		background-color: ${(token) => token.theme.colorBgContainer} !important; /* Зеленый фон */
-		color: ${(token) => token.theme.colorText} !important; /* Белый цвет текста */
-		border-radius: ${(token) => token.theme.borderRadius}px !important; /* Скругление */
+		background-color: ${(token) => token.theme.colorBgContainer} !important;
+		color: ${(token) => token.theme.colorText} !important;
+		border-radius: ${(token) => token.theme.borderRadius}px !important;
 		width: ${(token) => token.theme.controlHeight}px;
 		height: ${(token) => token.theme.controlHeight}px;
 		font-size: ${(token) => token.theme.fontSize}px;
@@ -31,7 +31,7 @@ export const GlobalStyles = createGlobalStyle`
 
 	.leaflet-control-zoom-in:hover,
 	.leaflet-control-zoom-out:hover {
-		background-color: ${(token) => token.theme.colorBgContainer} !important; /* Темно-зеленый при наведении */
+		background-color: ${(token) => token.theme.colorBgContainer} !important;
 		filter: brightness(0.95);
 	}
 `

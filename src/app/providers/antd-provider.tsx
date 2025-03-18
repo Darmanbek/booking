@@ -13,7 +13,6 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 		<>
 			<ConfigProvider
 				locale={localeRU}
-				prefixCls={"booking"}
 				theme={{
 					token: {
 						fontFamily: `Open Sans,${token.fontFamily}`
