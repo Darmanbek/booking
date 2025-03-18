@@ -10,7 +10,7 @@ const HotelVariantsCard: FC = () => {
 	return (
 		<Card title={"Доступные варианты"}>
 			<List
-				dataSource={Array.from({ length: 10 }).fill({})}
+				dataSource={Array.from({ length: 5 }).fill({})}
 				renderItem={() => (
 					<List.Item>
 						<Collapse
