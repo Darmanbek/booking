@@ -28,7 +28,7 @@ const HotelRatingCard: FC = () => {
 						autoplay={true}
 						dots={false}
 						ref={carouselRef}
-						slidesToShow={2}
+						slidesToShow={1}
 						arrows={false}
 					>
 						{Array.from({ length: 10 }).map((_, index) => (

@@ -9,11 +9,11 @@ import { type FC } from "react"
 
 const HotelComfortCard: FC = () => {
 	return (
-		<Card>
+		<Card style={{ height: "100%" }}>
 			<Flex>
 				<Descriptions
 					title={"Популярные удобства"}
-					column={2}
+					column={1}
 					items={Array.from({ length: 2 }).flatMap((_, index) => [
 						{
 							key: "wifi" + index,
@@ -47,8 +47,8 @@ const HotelComfortCard: FC = () => {
 				<Divider type={"vertical"} style={{ height: "inherit" }} />
 				<Descriptions
 					title={"Расположение"}
-					column={2}
-					items={Array.from({ length: 6 }).map((_, index) => ({
+					column={1}
+					items={Array.from({ length: 3 }).map((_, index) => ({
 						key: index,
 						children: (
 							<Space>

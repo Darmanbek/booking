@@ -1,6 +1,6 @@
 import { HomeOutlined } from "@ant-design/icons"
 import { Link, useParams, useSearch } from "@tanstack/react-router"
-import { Breadcrumb, Card, Flex, Space } from "antd"
+import { Breadcrumb, Card, Col, Flex, Row, Space } from "antd"
 import dayjs from "dayjs"
 import { type FC } from "react"
 import { cityData } from "src/shared/data/city.data"
@@ -70,8 +70,14 @@ const Hotel: FC = () => {
 					</Card>
 					<HotelTopCard data={hotel} city={city} />
 					<HotelPreviewCard data={hotel} />
-					<HotelRatingCard />
-					<HotelComfortCard />
+					<Row gutter={20} style={{ rowGap: 20 }}>
+						<Col span={12}>
+							<HotelRatingCard />
+						</Col>
+						<Col span={12}>
+							<HotelComfortCard />
+						</Col>
+					</Row>
 					<HotelMapCard data={hotel} />
 					<HotelVariantsCard />
 					<HotelDescriptionCard />

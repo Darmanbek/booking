@@ -26,6 +26,7 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 			/>
 			<Link
 				to={"/hotels/$citySlug/$hotelSlug"}
+				target={"_blank"}
 				params={{
 					citySlug: hotel?.city?.slug,
 					hotelSlug: hotel?.slug
