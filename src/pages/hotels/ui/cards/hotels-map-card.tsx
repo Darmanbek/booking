@@ -13,7 +13,7 @@ interface HotelsMapCardProps {
 const HotelsMapCard: FC<HotelsMapCardProps> = ({ data: hotels }) => {
 	return (
 		<Card>
-			<Map>
+			<Map scrollWheelZoom={false}>
 				<MarkerClusterGroup>
 					{hotels.map((hotel, index) => (
 						<Marker

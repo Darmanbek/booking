@@ -8,7 +8,7 @@ import { Text, Title } from "src/shared/ui"
 import { formatPriceWithCurrency } from "src/shared/utils/format.utils"
 
 interface HotelListItemProps {
-	data: Hotel
+	data?: Hotel
 }
 
 const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
@@ -23,7 +23,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 			to: "/hotels/$citySlug/$hotelSlug",
 			params: {
 				citySlug,
-				hotelSlug: hotel.slug
+				hotelSlug: hotel?.slug || ""
 			},
 			search
 		})
@@ -31,7 +31,10 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 
 	const { token } = useToken()
 	return (
-		<Badge.Ribbon text={hotel.rating} style={{ fontSize: 16, paddingBlock: 8 }}>
+		<Badge.Ribbon
+			text={hotel?.rating}
+			style={{ fontSize: 16, paddingBlock: 8 }}
+		>
 			<Card
 				style={{
 					marginBottom: 20,
@@ -48,8 +51,8 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 						<Image
 							width={256}
 							style={{ aspectRatio: 1, borderRadius: token.borderRadiusLG }}
-							alt={hotel.name}
-							src={hotel.image}
+							alt={hotel?.name}
+							src={hotel?.image}
 						/>
 						<Button
 							shape={"circle"}
@@ -64,7 +67,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 						style={{ padding: 20, paddingLeft: 8, flexGrow: 1 }}
 					>
 						<Flex vertical={true} align={"start"}>
-							<Title level={4}>{hotel.name}</Title>
+							<Title level={4}>{hotel?.name}</Title>
 							<Link to={"/"}>
 								<Space split={<Text>•</Text>}>
 									{hotel?.city?.city}
@@ -76,7 +79,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 						<Flex justify={"space-between"} align={"end"}>
 							<Flex vertical={true}>
 								<Title level={3} style={{ margin: 0 }}>
-									{formatPriceWithCurrency(hotel.price)}
+									{formatPriceWithCurrency(hotel?.price)}
 								</Title>
 								<Text type={"secondary"}>за ночь для 1 гостя</Text>
 							</Flex>

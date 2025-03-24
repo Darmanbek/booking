@@ -10,6 +10,7 @@ import {
 	HotelComfortCard,
 	HotelDescriptionCard,
 	HotelMapCard,
+	HotelOrdersCard,
 	HotelPreviewCard,
 	HotelRatingCard,
 	HotelReviewsCard,
@@ -78,10 +79,19 @@ const Hotel: FC = () => {
 							<HotelComfortCard />
 						</Col>
 					</Row>
-					<HotelMapCard data={hotel} />
-					<HotelVariantsCard />
-					<HotelDescriptionCard />
-					<HotelServicesCard />
+					<Row gutter={20} style={{ rowGap: 20 }}>
+						<Col span={16}>
+							<Flex vertical={true} gap={20}>
+								<HotelMapCard data={hotel} />
+								<HotelVariantsCard />
+								<HotelDescriptionCard />
+								<HotelServicesCard />
+							</Flex>
+						</Col>
+						<Col span={8}>
+							<HotelOrdersCard />
+						</Col>
+					</Row>
 					<HotelReviewsCard />
 				</Flex>
 			</Container>

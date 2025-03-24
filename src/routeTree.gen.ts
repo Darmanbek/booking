@@ -16,6 +16,7 @@ import { Route as LayoutIndexImport } from "./routes/_layout/index"
 import { Route as LayoutRegisterImport } from "./routes/_layout/register"
 import { Route as LayoutLoginImport } from "./routes/_layout/login"
 import { Route as LayoutHotelsCitySlugIndexImport } from "./routes/_layout/hotels/$citySlug/index"
+import { Route as LayoutOrdersReverseHotelSlugImport } from "./routes/_layout/orders/reverse/$hotelSlug"
 import { Route as LayoutHotelsCitySlugHotelSlugImport } from "./routes/_layout/hotels/$citySlug/$hotelSlug"
 
 // Create/Update Routes
@@ -48,6 +49,13 @@ const LayoutHotelsCitySlugIndexRoute = LayoutHotelsCitySlugIndexImport.update({
   path: "/hotels/$citySlug/",
   getParentRoute: () => LayoutRoute,
 } as any)
+
+const LayoutOrdersReverseHotelSlugRoute =
+  LayoutOrdersReverseHotelSlugImport.update({
+    id: "/orders/reverse/$hotelSlug",
+    path: "/orders/reverse/$hotelSlug",
+    getParentRoute: () => LayoutRoute,
+  } as any)
 
 const LayoutHotelsCitySlugHotelSlugRoute =
   LayoutHotelsCitySlugHotelSlugImport.update({
@@ -95,6 +103,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LayoutHotelsCitySlugHotelSlugImport
       parentRoute: typeof LayoutImport
     }
+    "/_layout/orders/reverse/$hotelSlug": {
+      id: "/_layout/orders/reverse/$hotelSlug"
+      path: "/orders/reverse/$hotelSlug"
+      fullPath: "/orders/reverse/$hotelSlug"
+      preLoaderRoute: typeof LayoutOrdersReverseHotelSlugImport
+      parentRoute: typeof LayoutImport
+    }
     "/_layout/hotels/$citySlug/": {
       id: "/_layout/hotels/$citySlug/"
       path: "/hotels/$citySlug"
@@ -112,6 +127,7 @@ interface LayoutRouteChildren {
   LayoutRegisterRoute: typeof LayoutRegisterRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutHotelsCitySlugHotelSlugRoute: typeof LayoutHotelsCitySlugHotelSlugRoute
+  LayoutOrdersReverseHotelSlugRoute: typeof LayoutOrdersReverseHotelSlugRoute
   LayoutHotelsCitySlugIndexRoute: typeof LayoutHotelsCitySlugIndexRoute
 }
 
@@ -120,6 +136,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutRegisterRoute: LayoutRegisterRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutHotelsCitySlugHotelSlugRoute: LayoutHotelsCitySlugHotelSlugRoute,
+  LayoutOrdersReverseHotelSlugRoute: LayoutOrdersReverseHotelSlugRoute,
   LayoutHotelsCitySlugIndexRoute: LayoutHotelsCitySlugIndexRoute,
 }
 
@@ -132,6 +149,7 @@ export interface FileRoutesByFullPath {
   "/register": typeof LayoutRegisterRoute
   "/": typeof LayoutIndexRoute
   "/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
+  "/orders/reverse/$hotelSlug": typeof LayoutOrdersReverseHotelSlugRoute
   "/hotels/$citySlug": typeof LayoutHotelsCitySlugIndexRoute
 }
 
@@ -140,6 +158,7 @@ export interface FileRoutesByTo {
   "/register": typeof LayoutRegisterRoute
   "/": typeof LayoutIndexRoute
   "/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
+  "/orders/reverse/$hotelSlug": typeof LayoutOrdersReverseHotelSlugRoute
   "/hotels/$citySlug": typeof LayoutHotelsCitySlugIndexRoute
 }
 
@@ -150,6 +169,7 @@ export interface FileRoutesById {
   "/_layout/register": typeof LayoutRegisterRoute
   "/_layout/": typeof LayoutIndexRoute
   "/_layout/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
+  "/_layout/orders/reverse/$hotelSlug": typeof LayoutOrdersReverseHotelSlugRoute
   "/_layout/hotels/$citySlug/": typeof LayoutHotelsCitySlugIndexRoute
 }
 
@@ -161,6 +181,7 @@ export interface FileRouteTypes {
     | "/register"
     | "/"
     | "/hotels/$citySlug/$hotelSlug"
+    | "/orders/reverse/$hotelSlug"
     | "/hotels/$citySlug"
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -168,6 +189,7 @@ export interface FileRouteTypes {
     | "/register"
     | "/"
     | "/hotels/$citySlug/$hotelSlug"
+    | "/orders/reverse/$hotelSlug"
     | "/hotels/$citySlug"
   id:
     | "__root__"
@@ -176,6 +198,7 @@ export interface FileRouteTypes {
     | "/_layout/register"
     | "/_layout/"
     | "/_layout/hotels/$citySlug/$hotelSlug"
+    | "/_layout/orders/reverse/$hotelSlug"
     | "/_layout/hotels/$citySlug/"
   fileRoutesById: FileRoutesById
 }
@@ -208,6 +231,7 @@ export const routeTree = rootRoute
         "/_layout/register",
         "/_layout/",
         "/_layout/hotels/$citySlug/$hotelSlug",
+        "/_layout/orders/reverse/$hotelSlug",
         "/_layout/hotels/$citySlug/"
       ]
     },
@@ -225,6 +249,10 @@ export const routeTree = rootRoute
     },
     "/_layout/hotels/$citySlug/$hotelSlug": {
       "filePath": "_layout/hotels/$citySlug/$hotelSlug.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/orders/reverse/$hotelSlug": {
+      "filePath": "_layout/orders/reverse/$hotelSlug.tsx",
       "parent": "/_layout"
     },
     "/_layout/hotels/$citySlug/": {

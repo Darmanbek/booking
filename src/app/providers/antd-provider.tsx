@@ -26,7 +26,8 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 				}}
 				typography={{
 					style: {
-						marginBottom: 0
+						marginBottom: 0,
+						marginTop: 0
 					}
 				}}
 				form={{
