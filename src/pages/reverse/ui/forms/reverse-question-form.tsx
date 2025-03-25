@@ -1,7 +1,23 @@
-import { Alert, Card, DatePicker, Form, Input } from "antd"
+import {
+	Alert,
+	Card,
+	DatePicker,
+	Form,
+	type FormInstance,
+	type FormProps,
+	Input
+} from "antd"
 import { type FC } from "react"
 
-const ReverseQuestionForm: FC = () => {
+interface ReverseQuestionFormProps {
+	form: FormInstance
+	onFinish: FormProps["onFinish"]
+}
+
+const ReverseQuestionForm: FC<ReverseQuestionFormProps> = ({
+	form,
+	onFinish
+}) => {
 	return (
 		<Card title={"Ваши пожелания"}>
 			<Form
@@ -12,8 +28,14 @@ const ReverseQuestionForm: FC = () => {
 						fontWeight: "bold"
 					}
 				}}
+				form={form}
+				onFinish={onFinish}
 			>
-				<Form.Item label={"Особые пожелания"}>
+				<Form.Item
+					label={"Особые пожелания"}
+					name={"question"}
+					initialValue={""}
+				>
 					<Input.TextArea
 						rows={8}
 						placeholder={
@@ -26,6 +48,7 @@ const ReverseQuestionForm: FC = () => {
 					tooltip={{
 						icon: <span style={{ marginLeft: 4 }}>:Вторник, 25 Марта 2025</span>
 					}}
+					name={"time"}
 					help={"К этому времени отельер подготовит номер к вашему прибытию"}
 				>
 					<DatePicker

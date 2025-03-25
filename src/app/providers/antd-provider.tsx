@@ -1,4 +1,4 @@
-import { ConfigProvider } from "antd"
+import { App, ConfigProvider } from "antd"
 import localeRU from "antd/locale/ru_RU"
 import "dayjs/locale/ru"
 import dayjs from "dayjs"
@@ -34,7 +34,7 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 					requiredMark: false
 				}}
 			>
-				{children}
+				<App>{children}</App>
 			</ConfigProvider>
 		</>
 	)
