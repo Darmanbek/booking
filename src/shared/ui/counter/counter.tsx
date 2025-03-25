@@ -10,7 +10,7 @@ import { forwardRef, useEffect, useState } from "react"
 import { useCounterStyles } from "./counter.style"
 
 const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
-	({ value, onChange, className, min = 1, ...rest }, ref) => {
+	({ value, onChange, className, min = 1, max, ...rest }, ref) => {
 		const minLength = Number(min)
 
 		const [currentValue, setCurrentValue] = useState(Number(value) || minLength)
@@ -44,7 +44,11 @@ const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
 					/>
 					<Button
 						icon={<PlusOutlined />}
-						onClick={() => setCurrentValue((prev) => prev + 1)}
+						onClick={() =>
+							setCurrentValue((prev) =>
+								max && prev >= Number(max) ? prev : prev + 1
+							)
+						}
 					/>
 				</Space.Compact>
 			</ConfigProvider>

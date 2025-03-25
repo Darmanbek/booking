@@ -14,7 +14,7 @@ p {
 
 html {
 	scroll-behavior: smooth;
-	scrollbar-width: thin;
+	/*scrollbar-width: thin;*/
 }
 
 body {
