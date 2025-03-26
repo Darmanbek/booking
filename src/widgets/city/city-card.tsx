@@ -12,6 +12,7 @@ const CityCard: FC<CityCardProps> = ({ data: city }) => {
 	return (
 		<Link
 			to={"/hotels/$citySlug"}
+			target={"_blank"}
 			params={{
 				citySlug: city.slug
 			}}

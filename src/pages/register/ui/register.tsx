@@ -1,10 +1,25 @@
 import { PhoneOutlined, UserOutlined } from "@ant-design/icons"
 import { Link } from "@tanstack/react-router"
-import { Button, Card, Checkbox, Divider, Flex, Form, Input } from "antd"
+import {
+	Button,
+	Card,
+	Checkbox,
+	Divider,
+	Flex,
+	Form,
+	type FormProps,
+	Input
+} from "antd"
 import { type FC } from "react"
 import { Container, Title } from "src/shared/ui"
 
 const Register: FC = () => {
+	const [form] = Form.useForm()
+
+	const onFinish: FormProps["onFinish"] = (values) => {
+		console.log(values)
+	}
+
 	return (
 		<section style={{ minHeight: "50vh" }}>
 			<Container>
@@ -18,6 +33,8 @@ const Register: FC = () => {
 							layout={"vertical"}
 							requiredMark={false}
 							size={"large"}
+							form={form}
+							onFinish={onFinish}
 							labelCol={{
 								style: {
 									display: "none"
@@ -37,6 +54,7 @@ const Register: FC = () => {
 								rules={[{ required: true }]}
 							>
 								<Input
+									addonBefore={"+998"}
 									placeholder={"Телефон номер"}
 									suffix={<PhoneOutlined />}
 								/>

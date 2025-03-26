@@ -1,12 +1,14 @@
 import { Link, useNavigate } from "@tanstack/react-router"
 import { Button, Flex, Layout, Select, Space } from "antd"
 import { type FC } from "react"
-import { useToken } from "src/shared/hooks"
+import { useAuth, useToken } from "src/shared/hooks"
+import { ProfileAvatar } from "src/shared/layout/header/profile-avatar"
 import { Container, Logo } from "src/shared/ui"
 
 const Header: FC = () => {
 	const { token } = useToken()
 	const navigate = useNavigate()
+	const { isAuth } = useAuth()
 
 	return (
 		<Layout.Header
@@ -62,26 +64,34 @@ const Header: FC = () => {
 								</Space>
 							)}
 						/>
-						<Button
-							type={"primary"}
-							onClick={() =>
-								navigate({
-									to: "/register"
-								})
-							}
-						>
-							Зарегистрироваться
-						</Button>
-						<Button
-							type={"link"}
-							onClick={() =>
-								navigate({
-									to: "/login"
-								})
-							}
-						>
-							Войти
-						</Button>
+						{isAuth ? (
+							<>
+								<ProfileAvatar />
+							</>
+						) : (
+							<>
+								<Button
+									type={"primary"}
+									onClick={() =>
+										navigate({
+											to: "/register"
+										})
+									}
+								>
+									Зарегистрироваться
+								</Button>
+								<Button
+									type={"link"}
+									onClick={() =>
+										navigate({
+											to: "/login"
+										})
+									}
+								>
+									Войти
+								</Button>
+							</>
+						)}
 					</Space>
 				</Flex>
 			</Container>

@@ -15,9 +15,13 @@ import { Route as LayoutImport } from "./routes/_layout"
 import { Route as LayoutIndexImport } from "./routes/_layout/index"
 import { Route as LayoutRegisterImport } from "./routes/_layout/register"
 import { Route as LayoutLoginImport } from "./routes/_layout/login"
+import { Route as LayoutProfileLayoutImport } from "./routes/_layout/_profile-layout"
+import { Route as LayoutProfileLayoutOrdersImport } from "./routes/_layout/_profile-layout/orders_"
+import { Route as LayoutProfileLayoutFavoritesImport } from "./routes/_layout/_profile-layout/favorites"
 import { Route as LayoutHotelsCitySlugIndexImport } from "./routes/_layout/hotels/$citySlug/index"
 import { Route as LayoutOrdersReverseHotelSlugImport } from "./routes/_layout/orders/reverse/$hotelSlug"
 import { Route as LayoutHotelsCitySlugHotelSlugImport } from "./routes/_layout/hotels/$citySlug/$hotelSlug"
+import { Route as LayoutProfileLayoutProfileSettingsImport } from "./routes/_layout/_profile-layout/profile/settings"
 
 // Create/Update Routes
 
@@ -44,6 +48,24 @@ const LayoutLoginRoute = LayoutLoginImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutProfileLayoutRoute = LayoutProfileLayoutImport.update({
+  id: "/_profile-layout",
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutProfileLayoutOrdersRoute = LayoutProfileLayoutOrdersImport.update({
+  id: "/orders_",
+  path: "/orders",
+  getParentRoute: () => LayoutProfileLayoutRoute,
+} as any)
+
+const LayoutProfileLayoutFavoritesRoute =
+  LayoutProfileLayoutFavoritesImport.update({
+    id: "/favorites",
+    path: "/favorites",
+    getParentRoute: () => LayoutProfileLayoutRoute,
+  } as any)
+
 const LayoutHotelsCitySlugIndexRoute = LayoutHotelsCitySlugIndexImport.update({
   id: "/hotels/$citySlug/",
   path: "/hotels/$citySlug/",
@@ -64,6 +86,13 @@ const LayoutHotelsCitySlugHotelSlugRoute =
     getParentRoute: () => LayoutRoute,
   } as any)
 
+const LayoutProfileLayoutProfileSettingsRoute =
+  LayoutProfileLayoutProfileSettingsImport.update({
+    id: "/profile/settings",
+    path: "/profile/settings",
+    getParentRoute: () => LayoutProfileLayoutRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module "@tanstack/react-router" {
@@ -74,6 +103,13 @@ declare module "@tanstack/react-router" {
       fullPath: ""
       preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
+    }
+    "/_layout/_profile-layout": {
+      id: "/_layout/_profile-layout"
+      path: ""
+      fullPath: ""
+      preLoaderRoute: typeof LayoutProfileLayoutImport
+      parentRoute: typeof LayoutImport
     }
     "/_layout/login": {
       id: "/_layout/login"
@@ -95,6 +131,27 @@ declare module "@tanstack/react-router" {
       fullPath: "/"
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
+    }
+    "/_layout/_profile-layout/favorites": {
+      id: "/_layout/_profile-layout/favorites"
+      path: "/favorites"
+      fullPath: "/favorites"
+      preLoaderRoute: typeof LayoutProfileLayoutFavoritesImport
+      parentRoute: typeof LayoutProfileLayoutImport
+    }
+    "/_layout/_profile-layout/orders_": {
+      id: "/_layout/_profile-layout/orders_"
+      path: "/orders"
+      fullPath: "/orders"
+      preLoaderRoute: typeof LayoutProfileLayoutOrdersImport
+      parentRoute: typeof LayoutProfileLayoutImport
+    }
+    "/_layout/_profile-layout/profile/settings": {
+      id: "/_layout/_profile-layout/profile/settings"
+      path: "/profile/settings"
+      fullPath: "/profile/settings"
+      preLoaderRoute: typeof LayoutProfileLayoutProfileSettingsImport
+      parentRoute: typeof LayoutProfileLayoutImport
     }
     "/_layout/hotels/$citySlug/$hotelSlug": {
       id: "/_layout/hotels/$citySlug/$hotelSlug"
@@ -122,7 +179,24 @@ declare module "@tanstack/react-router" {
 
 // Create and export the route tree
 
+interface LayoutProfileLayoutRouteChildren {
+  LayoutProfileLayoutFavoritesRoute: typeof LayoutProfileLayoutFavoritesRoute
+  LayoutProfileLayoutOrdersRoute: typeof LayoutProfileLayoutOrdersRoute
+  LayoutProfileLayoutProfileSettingsRoute: typeof LayoutProfileLayoutProfileSettingsRoute
+}
+
+const LayoutProfileLayoutRouteChildren: LayoutProfileLayoutRouteChildren = {
+  LayoutProfileLayoutFavoritesRoute: LayoutProfileLayoutFavoritesRoute,
+  LayoutProfileLayoutOrdersRoute: LayoutProfileLayoutOrdersRoute,
+  LayoutProfileLayoutProfileSettingsRoute:
+    LayoutProfileLayoutProfileSettingsRoute,
+}
+
+const LayoutProfileLayoutRouteWithChildren =
+  LayoutProfileLayoutRoute._addFileChildren(LayoutProfileLayoutRouteChildren)
+
 interface LayoutRouteChildren {
+  LayoutProfileLayoutRoute: typeof LayoutProfileLayoutRouteWithChildren
   LayoutLoginRoute: typeof LayoutLoginRoute
   LayoutRegisterRoute: typeof LayoutRegisterRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
@@ -132,6 +206,7 @@ interface LayoutRouteChildren {
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutProfileLayoutRoute: LayoutProfileLayoutRouteWithChildren,
   LayoutLoginRoute: LayoutLoginRoute,
   LayoutRegisterRoute: LayoutRegisterRoute,
   LayoutIndexRoute: LayoutIndexRoute,
@@ -144,19 +219,26 @@ const LayoutRouteWithChildren =
   LayoutRoute._addFileChildren(LayoutRouteChildren)
 
 export interface FileRoutesByFullPath {
-  "": typeof LayoutRouteWithChildren
+  "": typeof LayoutProfileLayoutRouteWithChildren
   "/login": typeof LayoutLoginRoute
   "/register": typeof LayoutRegisterRoute
   "/": typeof LayoutIndexRoute
+  "/favorites": typeof LayoutProfileLayoutFavoritesRoute
+  "/orders": typeof LayoutProfileLayoutOrdersRoute
+  "/profile/settings": typeof LayoutProfileLayoutProfileSettingsRoute
   "/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
   "/orders/reverse/$hotelSlug": typeof LayoutOrdersReverseHotelSlugRoute
   "/hotels/$citySlug": typeof LayoutHotelsCitySlugIndexRoute
 }
 
 export interface FileRoutesByTo {
+  "": typeof LayoutProfileLayoutRouteWithChildren
   "/login": typeof LayoutLoginRoute
   "/register": typeof LayoutRegisterRoute
   "/": typeof LayoutIndexRoute
+  "/favorites": typeof LayoutProfileLayoutFavoritesRoute
+  "/orders": typeof LayoutProfileLayoutOrdersRoute
+  "/profile/settings": typeof LayoutProfileLayoutProfileSettingsRoute
   "/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
   "/orders/reverse/$hotelSlug": typeof LayoutOrdersReverseHotelSlugRoute
   "/hotels/$citySlug": typeof LayoutHotelsCitySlugIndexRoute
@@ -165,9 +247,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   "/_layout": typeof LayoutRouteWithChildren
+  "/_layout/_profile-layout": typeof LayoutProfileLayoutRouteWithChildren
   "/_layout/login": typeof LayoutLoginRoute
   "/_layout/register": typeof LayoutRegisterRoute
   "/_layout/": typeof LayoutIndexRoute
+  "/_layout/_profile-layout/favorites": typeof LayoutProfileLayoutFavoritesRoute
+  "/_layout/_profile-layout/orders_": typeof LayoutProfileLayoutOrdersRoute
+  "/_layout/_profile-layout/profile/settings": typeof LayoutProfileLayoutProfileSettingsRoute
   "/_layout/hotels/$citySlug/$hotelSlug": typeof LayoutHotelsCitySlugHotelSlugRoute
   "/_layout/orders/reverse/$hotelSlug": typeof LayoutOrdersReverseHotelSlugRoute
   "/_layout/hotels/$citySlug/": typeof LayoutHotelsCitySlugIndexRoute
@@ -180,23 +266,34 @@ export interface FileRouteTypes {
     | "/login"
     | "/register"
     | "/"
+    | "/favorites"
+    | "/orders"
+    | "/profile/settings"
     | "/hotels/$citySlug/$hotelSlug"
     | "/orders/reverse/$hotelSlug"
     | "/hotels/$citySlug"
   fileRoutesByTo: FileRoutesByTo
   to:
+    | ""
     | "/login"
     | "/register"
     | "/"
+    | "/favorites"
+    | "/orders"
+    | "/profile/settings"
     | "/hotels/$citySlug/$hotelSlug"
     | "/orders/reverse/$hotelSlug"
     | "/hotels/$citySlug"
   id:
     | "__root__"
     | "/_layout"
+    | "/_layout/_profile-layout"
     | "/_layout/login"
     | "/_layout/register"
     | "/_layout/"
+    | "/_layout/_profile-layout/favorites"
+    | "/_layout/_profile-layout/orders_"
+    | "/_layout/_profile-layout/profile/settings"
     | "/_layout/hotels/$citySlug/$hotelSlug"
     | "/_layout/orders/reverse/$hotelSlug"
     | "/_layout/hotels/$citySlug/"
@@ -227,12 +324,22 @@ export const routeTree = rootRoute
     "/_layout": {
       "filePath": "_layout.tsx",
       "children": [
+        "/_layout/_profile-layout",
         "/_layout/login",
         "/_layout/register",
         "/_layout/",
         "/_layout/hotels/$citySlug/$hotelSlug",
         "/_layout/orders/reverse/$hotelSlug",
         "/_layout/hotels/$citySlug/"
+      ]
+    },
+    "/_layout/_profile-layout": {
+      "filePath": "_layout/_profile-layout.tsx",
+      "parent": "/_layout",
+      "children": [
+        "/_layout/_profile-layout/favorites",
+        "/_layout/_profile-layout/orders_",
+        "/_layout/_profile-layout/profile/settings"
       ]
     },
     "/_layout/login": {
@@ -246,6 +353,18 @@ export const routeTree = rootRoute
     "/_layout/": {
       "filePath": "_layout/index.tsx",
       "parent": "/_layout"
+    },
+    "/_layout/_profile-layout/favorites": {
+      "filePath": "_layout/_profile-layout/favorites.tsx",
+      "parent": "/_layout/_profile-layout"
+    },
+    "/_layout/_profile-layout/orders_": {
+      "filePath": "_layout/_profile-layout/orders_.tsx",
+      "parent": "/_layout/_profile-layout"
+    },
+    "/_layout/_profile-layout/profile/settings": {
+      "filePath": "_layout/_profile-layout/profile/settings.tsx",
+      "parent": "/_layout/_profile-layout"
     },
     "/_layout/hotels/$citySlug/$hotelSlug": {
       "filePath": "_layout/hotels/$citySlug/$hotelSlug.tsx",

@@ -19,7 +19,7 @@ const CityCardList: FC = () => {
 				{cityData
 					.filter((_, index) => index + 1 <= limit)
 					.map((city, index) => (
-						<Col key={index} span={8}>
+						<Col key={index} xs={24} sm={12} lg={8}>
 							<CityCard data={city} />
 						</Col>
 					))}

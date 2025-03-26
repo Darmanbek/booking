@@ -1,3 +1,4 @@
+import { LoadingOutlined } from "@ant-design/icons"
 import { App, ConfigProvider } from "antd"
 import localeRU from "antd/locale/ru_RU"
 import "dayjs/locale/ru"
@@ -32,6 +33,9 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 				}}
 				form={{
 					requiredMark: false
+				}}
+				spin={{
+					indicator: <LoadingOutlined />
 				}}
 			>
 				<App>{children}</App>
