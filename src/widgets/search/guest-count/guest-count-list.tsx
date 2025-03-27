@@ -8,9 +8,15 @@ interface GuestCountListProps {
 	fields: FormListFieldData[]
 	add: () => void
 	remove: (index: number) => void
+	onClose: () => void
 }
 
-const GuestCountList: FC<GuestCountListProps> = ({ fields, remove, add }) => {
+const GuestCountList: FC<GuestCountListProps> = ({
+	fields,
+	remove,
+	add,
+	onClose
+}) => {
 	const { token } = useToken()
 	return (
 		<Flex
@@ -49,7 +55,9 @@ const GuestCountList: FC<GuestCountListProps> = ({ fields, remove, add }) => {
 				<Button type={"link"} onClick={() => add()} icon={<PlusOutlined />}>
 					Добавить номер
 				</Button>
-				<Button type={"primary"}>Готово</Button>
+				<Button type={"primary"} onClick={onClose}>
+					Готово
+				</Button>
 			</Space>
 		</Flex>
 	)

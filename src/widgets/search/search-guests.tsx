@@ -1,7 +1,7 @@
 import { UserOutlined } from "@ant-design/icons"
 import { type FormListFieldData, Select, type SelectProps, Space } from "antd"
 import type { BaseSelectRef } from "rc-select"
-import { forwardRef } from "react"
+import { forwardRef, useState } from "react"
 import { Text } from "src/shared/ui"
 import { GuestCountList } from "./guest-count/guest-count-list"
 
@@ -14,6 +14,8 @@ interface SearchGuestsProps extends SelectProps {
 
 const SearchGuests = forwardRef<BaseSelectRef, SearchGuestsProps>(
 	({ fields, guests, add, remove, style, ...props }, ref) => {
+		const [open, setOpen] = useState(false)
+
 		return (
 			<Select
 				ref={ref}
@@ -23,6 +25,8 @@ const SearchGuests = forwardRef<BaseSelectRef, SearchGuestsProps>(
 					...style
 				}}
 				value={"guests"}
+				open={open}
+				onDropdownVisibleChange={setOpen}
 				options={[
 					{
 						value: "guests",
@@ -45,7 +49,12 @@ const SearchGuests = forwardRef<BaseSelectRef, SearchGuestsProps>(
 				prefix={<UserOutlined />}
 				size={"large"}
 				dropdownRender={() => (
-					<GuestCountList fields={fields} add={add} remove={remove} />
+					<GuestCountList
+						fields={fields}
+						add={add}
+						remove={remove}
+						onClose={() => setOpen(false)}
+					/>
 				)}
 				{...props}
 			/>

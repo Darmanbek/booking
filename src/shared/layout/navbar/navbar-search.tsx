@@ -1,21 +1,10 @@
 import {
 	ArrowRightOutlined,
 	HomeOutlined,
-	SearchOutlined,
-	UserOutlined
+	SearchOutlined
 } from "@ant-design/icons"
-import { useLocation, useNavigate } from "@tanstack/react-router"
-import {
-	Button,
-	Card,
-	DatePicker,
-	Flex,
-	Form,
-	type FormProps,
-	Select,
-	Space,
-	Tabs
-} from "antd"
+import { useLocation, useNavigate, useSearch } from "@tanstack/react-router"
+import { Button, Card, Flex, Form, type FormProps, Select, Tabs } from "antd"
 import dayjs from "dayjs"
 import { type FC, useEffect } from "react"
 import { cityData } from "src/shared/data/city.data"
@@ -23,8 +12,8 @@ import {
 	type SearchChange,
 	useSearchStore
 } from "src/shared/store/use-search-store"
-import { Text } from "src/shared/ui"
-import { GuestCountList } from "./guest-count/guest-count-list"
+import { SearchDates } from "src/widgets/search/search-dates"
+import { SearchGuests } from "src/widgets/search/search-guests"
 import { useNavbarStyles } from "./navbar.style"
 
 const NavbarSearch: FC = () => {
@@ -32,6 +21,9 @@ const NavbarSearch: FC = () => {
 	const isHome = pathname === "/"
 	const navigate = useNavigate()
 	const { search, setSearch } = useSearchStore()
+	const searchParams = useSearch({
+		strict: false
+	})
 
 	const [form] = Form.useForm<SearchChange>()
 	const guests = Form.useWatch("guests", form) || []
@@ -60,13 +52,30 @@ const NavbarSearch: FC = () => {
 	}
 
 	useEffect(() => {
+		setSearch({
+			...search,
+			guests: searchParams?.guests
+				? searchParams.guests?.split("-").map((guest) => Number(guest) || 1)
+				: search.guests,
+			dates: [
+				searchParams?.from_date || search.dates[0],
+				searchParams?.to_date || search.dates[1]
+			]
+		})
 		if (search) {
 			form.setFieldsValue({
 				...search,
-				dates: [dayjs(search.dates[0]), dayjs(search.dates[1])]
+				dates: [
+					dayjs(searchParams?.from_date || search.dates[0]),
+					dayjs(searchParams?.to_date || search.dates[1])
+				],
+				guests: searchParams?.guests
+					? searchParams.guests?.split("-").map((guest) => Number(guest) || 1)
+					: search.guests
 			})
 		}
-	}, [form, search])
+	}, [])
+
 	return (
 		<>
 			{isHome && (
@@ -148,49 +157,15 @@ const NavbarSearch: FC = () => {
 							noStyle={true}
 							initialValue={[today.day(6), today.day(7)]}
 						>
-							<DatePicker.RangePicker
-								inputReadOnly={true}
-								format={(value) => dayjs(value).format("dd, DD MMM")}
-								style={{
-									minWidth: 300,
-									minHeight: 50
-								}}
-								allowClear={false}
-								size={"large"}
-							/>
+							<SearchDates />
 						</Form.Item>
 						<Form.List name={"guests"} initialValue={[1]}>
 							{(fields, { add, remove }) => (
-								<Select
-									style={{
-										minWidth: 300,
-										minHeight: 50
-									}}
-									value={"guests"}
-									options={[
-										{
-											value: "guests",
-											label: (
-												<Space split={"/"}>
-													<Text>
-														Гостей:{" "}
-														{guests?.reduce(
-															(total, guest) => total + (Number(guest) || 0),
-															0
-														)}
-													</Text>
-													<Text>Номеров: {guests?.length}</Text>
-												</Space>
-											)
-										}
-									]}
-									placement={"bottomLeft"}
-									popupMatchSelectWidth={false}
-									prefix={<UserOutlined />}
-									size={"large"}
-									dropdownRender={() => (
-										<GuestCountList fields={fields} add={add} remove={remove} />
-									)}
+								<SearchGuests
+									guests={guests}
+									fields={fields}
+									add={add}
+									remove={remove}
 								/>
 							)}
 						</Form.List>
