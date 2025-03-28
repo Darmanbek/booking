@@ -3,40 +3,61 @@ import {
 	HomeOutlined,
 	SearchOutlined
 } from "@ant-design/icons"
-import { useLocation, useNavigate, useSearch } from "@tanstack/react-router"
+import {
+	useLocation,
+	useNavigate,
+	useParams,
+	useSearch
+} from "@tanstack/react-router"
 import { Button, Card, Flex, Form, type FormProps, Select, Tabs } from "antd"
 import dayjs from "dayjs"
-import { type FC, useEffect } from "react"
+import { type FC, useEffect, useMemo } from "react"
 import { cityData } from "src/shared/data/city.data"
 import {
 	type SearchChange,
 	useSearchStore
 } from "src/shared/store/use-search-store"
+import { formatDate } from "src/shared/utils/format.utils"
 import { SearchDates } from "src/widgets/search/search-dates"
 import { SearchGuests } from "src/widgets/search/search-guests"
 import { useNavbarStyles } from "./navbar.style"
 
 const NavbarSearch: FC = () => {
+	const [form] = Form.useForm<SearchChange>()
+
 	const { pathname } = useLocation()
-	const isHome = pathname === "/"
 	const navigate = useNavigate()
+	const { citySlug } = useParams({ strict: false })
 	const { search, setSearch } = useSearchStore()
+	const { styles } = useNavbarStyles()
 	const searchParams = useSearch({
 		strict: false
 	})
 
-	const [form] = Form.useForm<SearchChange>()
 	const guests = Form.useWatch("guests", form) || []
-	const { styles } = useNavbarStyles()
+	const isHome = pathname === "/"
 	const today = dayjs().startOf("week")
 
+	const currentCity = useMemo(() => {
+		return citySlug || search.search
+	}, [citySlug, search.search])
+
+	const currentDates = useMemo(() => {
+		return {
+			from_date: searchParams.from_date || search.dates[0],
+			to_date: searchParams.to_date || search.dates[1]
+		}
+	}, [search.dates, searchParams.from_date, searchParams.to_date])
+
+	const currentGuests = useMemo(() => {
+		return searchParams?.guests
+			? searchParams.guests?.split("-").map((guest) => Number(guest) || 1)
+			: search.guests
+	}, [search.guests, searchParams.guests])
+
 	const onFinish: FormProps<SearchChange>["onFinish"] = (values) => {
-		setSearch(values)
 		if (values.dates) {
-			values.dates = [
-				dayjs(values.dates[0]).format("YYYY-MM-DD"),
-				dayjs(values.dates[1]).format("YYYY-MM-DD")
-			]
+			values.dates = [formatDate(values.dates[0]), formatDate(values.dates[1])]
 		}
 		navigate({
 			to: "/hotels/$citySlug",
@@ -52,29 +73,43 @@ const NavbarSearch: FC = () => {
 	}
 
 	useEffect(() => {
-		setSearch({
-			...search,
-			guests: searchParams?.guests
-				? searchParams.guests?.split("-").map((guest) => Number(guest) || 1)
-				: search.guests,
-			dates: [
-				searchParams?.from_date || search.dates[0],
-				searchParams?.to_date || search.dates[1]
-			]
-		})
-		if (search) {
-			form.setFieldsValue({
-				...search,
-				dates: [
-					dayjs(searchParams?.from_date || search.dates[0]),
-					dayjs(searchParams?.to_date || search.dates[1])
-				],
-				guests: searchParams?.guests
-					? searchParams.guests?.split("-").map((guest) => Number(guest) || 1)
-					: search.guests
+		if (
+			currentCity !== search.search ||
+			formatDate(currentDates.from_date) !== formatDate(search.dates[0]) ||
+			formatDate(currentDates.to_date) !== formatDate(search.dates[1]) ||
+			JSON.stringify(currentGuests) !== JSON.stringify(search.guests)
+		) {
+			setSearch({
+				search: currentCity,
+				dates: [dayjs(currentDates.from_date), dayjs(currentDates.to_date)],
+				guests: currentGuests
 			})
 		}
-	}, [])
+	}, [
+		currentCity,
+		currentDates.from_date,
+		currentDates.to_date,
+		currentGuests,
+		search.dates,
+		search.guests,
+		search.search,
+		setSearch
+	])
+
+	useEffect(() => {
+		form.setFieldsValue({
+			search: currentCity,
+			dates: [dayjs(currentDates.from_date), dayjs(currentDates.to_date)],
+			guests: currentGuests
+		})
+	}, [
+		currentCity,
+		currentDates.from_date,
+		currentDates.to_date,
+		currentGuests,
+		form,
+		search.dates
+	])
 
 	return (
 		<>
