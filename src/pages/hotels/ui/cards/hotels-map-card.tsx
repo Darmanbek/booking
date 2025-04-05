@@ -1,9 +1,9 @@
 import { Card } from "antd"
-import { type FC } from "react"
+import { type FC, useRef } from "react"
 import { Marker, Popup } from "react-leaflet"
 import MarkerClusterGroup from "react-leaflet-cluster"
 import { type Hotel } from "src/shared/data/hotel.data"
-import { Map } from "src/widgets/map"
+import { Map, MapRef } from "src/widgets/map"
 import { MapHotelCard } from "src/widgets/map/map-hotel-card"
 
 interface HotelsMapCardProps {
@@ -11,9 +11,11 @@ interface HotelsMapCardProps {
 }
 
 const HotelsMapCard: FC<HotelsMapCardProps> = ({ data: hotels }) => {
+	const mapRef = useRef<MapRef>(null)
+
 	return (
 		<Card>
-			<Map scrollWheelZoom={false}>
+			<Map fullscreenControl={true} ref={mapRef}>
 				<MarkerClusterGroup>
 					{hotels.map((hotel, index) => (
 						<Marker

@@ -107,8 +107,7 @@ const NavbarSearch: FC = () => {
 		currentDates.from_date,
 		currentDates.to_date,
 		currentGuests,
-		form,
-		search.dates
+		form
 	])
 
 	return (

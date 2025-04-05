@@ -10,23 +10,15 @@ export const GlobalStyles = createGlobalStyle`
 	}
 
 	.leaflet-control-zoom-in,
-	.leaflet-control-zoom-out {
+	.leaflet-control-zoom-out,
+	.leaflet-control-zoom-fullscreen {
 		background-color: ${(token) => token.theme.colorBgContainer} !important;
 		color: ${(token) => token.theme.colorText} !important;
 		border-radius: ${(token) => token.theme.borderRadius}px !important;
 		width: ${(token) => token.theme.controlHeight}px;
 		height: ${(token) => token.theme.controlHeight}px;
 		font-size: ${(token) => token.theme.fontSize}px;
-	}
-
-	.leaflet-control-zoom-out {
-		border-top-left-radius: 0 !important;
-		border-top-right-radius: 0 !important;
-	}
-
-	.leaflet-control-zoom-in {
-		border-bottom-left-radius: 0 !important;
-		border-bottom-right-radius: 0 !important;
+		margin-bottom: 4px;
 	}
 
 	.leaflet-control-zoom-in:hover,

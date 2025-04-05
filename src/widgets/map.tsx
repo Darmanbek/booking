@@ -22,4 +22,4 @@ const Map = forwardRef<LeafletMap, MapContainerProps>(
 	}
 )
 
-export { Map }
+export { Map, type LeafletMap as MapRef }
