@@ -1,6 +1,6 @@
 export type GetParams = {
 	page?: number
-	per_page?: number
+	page_size?: number
 	search?: string
 }
 

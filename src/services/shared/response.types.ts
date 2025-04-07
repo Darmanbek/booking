@@ -1,9 +1,14 @@
 import type { AxiosError } from "axios"
 
+export type Tokens = {
+	access_token: string
+	refresh_token: string | null
+	token_type: string
+}
+
 export type Response<T> = {
 	data: T[]
-	links: Links
-	meta: Meta
+	pagination: Pagination
 }
 
 export type ResponseData<T> = {
@@ -18,26 +23,9 @@ export type ResponseError = AxiosError<{
 	message: string
 }>
 
-export type Links = {
-	first: string
-	last: string
-	prev: string | null
-	next: string | null
-}
-
-export type Meta = {
-	current_page: number
-	from: number
-	last_page: number
-	links: Link[]
-	path: string
-	per_page: number
-	to: number
-	total: number
-}
-
-export type Link = {
-	url?: string
-	label: string
-	active: boolean
+export type Pagination = {
+	page: number
+	page_size: number
+	total_elements: number
+	total_pages: number
 }

@@ -1,9 +1,7 @@
 import { Flex } from "antd"
 import { type FC } from "react"
 import { Container } from "src/shared/ui"
-import { CityCardList } from "src/widgets/city/city-card-list"
-import { HotelCarouselList } from "src/widgets/hotel/hotel-carousel-list"
-import { TitleContainer } from "src/widgets/title-container"
+import { HomeCityList, HomeHotelList } from "./lists"
 
 const Home: FC = () => {
 	return (
@@ -11,12 +9,8 @@ const Home: FC = () => {
 			<section>
 				<Container>
 					<Flex vertical={true} gap={20}>
-						<TitleContainer title={"Рекомендуемые отели"}>
-							<HotelCarouselList />
-						</TitleContainer>
-						<TitleContainer title={"Популярные направления"}>
-							<CityCardList />
-						</TitleContainer>
+						<HomeHotelList />
+						<HomeCityList />
 					</Flex>
 				</Container>
 			</section>

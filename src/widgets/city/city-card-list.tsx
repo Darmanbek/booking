@@ -1,34 +1,47 @@
 import { SyncOutlined } from "@ant-design/icons"
 import { Button, Col, Flex, Row } from "antd"
-import { type FC, useState } from "react"
-import { cityData } from "src/shared/data/city.data"
+import { type FC } from "react"
+import type { LocationCity } from "src/services/locations"
 import { CityCard } from "./city-card"
+import { CityLoadingCard } from "./city-loading-card"
 
-const CityCardList: FC = () => {
-	const size = 6
+interface CityCardListProps {
+	data: LocationCity[]
+	loading: boolean
+	limit: number
+	onMore: () => void
+}
 
-	const [limit, setLimit] = useState(size)
-
-	const onChangeLimit = () => {
-		setLimit((prev) => prev + size)
-	}
-
+const CityCardList: FC<CityCardListProps> = ({
+	data,
+	loading,
+	onMore,
+	limit
+}) => {
 	return (
 		<Flex vertical={true} gap={20}>
 			<Row gutter={20} style={{ rowGap: 20 }}>
-				{cityData
-					.filter((_, index) => index + 1 <= limit)
-					.map((city, index) => (
+				{data?.map((city, index) => (
+					<Col key={index} xs={24} sm={12} lg={8}>
+						<CityCard data={city} />
+					</Col>
+				))}
+			</Row>
+			{loading && (
+				<Row gutter={20} style={{ rowGap: 20 }}>
+					{Array.from({ length: 6 })?.map((_, index) => (
 						<Col key={index} xs={24} sm={12} lg={8}>
-							<CityCard data={city} />
+							<CityLoadingCard />
 						</Col>
 					))}
-			</Row>
-			{limit < cityData.length && (
+				</Row>
+			)}
+			{limit <= data.length && (
 				<Flex justify={"center"} align={"center"}>
 					<Button
+						loading={loading}
 						type={"primary"}
-						onClick={onChangeLimit}
+						onClick={onMore}
 						icon={<SyncOutlined />}
 					>
 						Показать ещё

@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router"
 import { Card, Flex, Image } from "antd"
 import { type FC } from "react"
-import type { City } from "src/shared/data/city.data"
+import type { LocationCity } from "src/services/locations"
 import { Text, Title } from "src/shared/ui"
 
 interface CityCardProps {
-	data: City
+	data: LocationCity
 }
 
 const CityCard: FC<CityCardProps> = ({ data: city }) => {
@@ -29,22 +29,23 @@ const CityCard: FC<CityCardProps> = ({ data: city }) => {
 					<Image
 						preview={false}
 						loading={"lazy"}
+						placeholder={true}
 						height={220}
 						style={{
 							objectFit: "cover"
 						}}
 						role={"presentation"}
-						src={"/hotel/city.jpg"}
+						src={city.image}
 						alt={""}
 					/>
 				}
 			>
 				<Flex vertical={true} gap={2}>
 					<Title level={5} style={{ fontSize: 14 }}>
-						{city.title}
+						{city.name}
 					</Title>
 					<Text type={"secondary"} style={{ fontSize: 12 }}>
-						{city.city}
+						{city.slug}
 					</Text>
 				</Flex>
 			</Card>

@@ -6,10 +6,13 @@ import {
 import { tokenStorage } from "src/shared/utils/storage.utils"
 
 const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
-	const [isAuth, setIsAuth] = useState(() => !!tokenStorage.get())
+	const [isAuth, setIsAuth] = useState(() => !!tokenStorage.getAccess())
 
-	const login: AuthContextValues["login"] = (token, remember) => {
-		tokenStorage.set(token, remember)
+	const login: AuthContextValues["login"] = (tokens, remember) => {
+		tokenStorage.setAccess(tokens.access_token, remember)
+		if (tokens.refresh_token) {
+			tokenStorage.setRefresh(tokens.refresh_token, remember)
+		}
 		setIsAuth(true)
 	}
 
