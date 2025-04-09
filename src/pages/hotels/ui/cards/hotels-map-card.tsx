@@ -1,5 +1,6 @@
+import { useSearch } from "@tanstack/react-router"
 import { Card } from "antd"
-import { type FC, useRef } from "react"
+import { type FC, useEffect, useRef, useState } from "react"
 import { Marker, Popup } from "react-leaflet"
 import MarkerClusterGroup from "react-leaflet-cluster"
 import { type Hotel } from "src/shared/data/hotel.data"
@@ -12,10 +13,22 @@ interface HotelsMapCardProps {
 
 const HotelsMapCard: FC<HotelsMapCardProps> = ({ data: hotels }) => {
 	const mapRef = useRef<MapRef>(null)
+	const searchParams = useSearch({
+		strict: false
+	})
+	const [center, setCenter] = useState<[number, number]>([41.2995, 69.2401])
 
+	useEffect(() => {
+		if (searchParams.coordinates) {
+			const [latitude, longitude] = searchParams.coordinates.split("-")
+			if (Number(latitude) && Number(longitude)) {
+				setCenter([Number(latitude), Number(longitude)])
+			}
+		}
+	}, [searchParams.coordinates])
 	return (
 		<Card>
-			<Map fullscreenControl={true} ref={mapRef}>
+			<Map center={center} fullscreenControl={true} ref={mapRef}>
 				<MarkerClusterGroup>
 					{hotels.map((hotel, index) => (
 						<Marker

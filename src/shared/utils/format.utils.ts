@@ -38,3 +38,8 @@ export const formatCustomDate = (
 	value?: string,
 	format: string = "YYYY-MM-DD"
 ) => dayjs(value).format(format)
+
+export const formatGuests = (guests?: string): number[] | null => {
+	if (!guests) return null
+	return guests.split("-").map(Number)
+}

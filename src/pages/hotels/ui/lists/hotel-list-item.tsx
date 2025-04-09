@@ -1,9 +1,9 @@
 import { ArrowRightOutlined, HeartOutlined } from "@ant-design/icons"
-import { Link, useNavigate, useParams, useSearch } from "@tanstack/react-router"
+import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import { Badge, Button, Card, Flex, Image, List, Space } from "antd"
 import { type FC } from "react"
-import type { Hotel } from "src/shared/data/hotel.data"
-import { useToken } from "src/shared/hooks"
+import { type Hotel } from "src/services/hotels"
+import { useToken, useTranslation } from "src/shared/hooks"
 import { Text, Title } from "src/shared/ui"
 import { formatPriceWithCurrency } from "src/shared/utils/format.utils"
 
@@ -12,10 +12,9 @@ interface HotelListItemProps {
 }
 
 const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
+	const { t } = useTranslation()
 	const { citySlug = "" } = useParams({ strict: false })
-	const search = useSearch({
-		strict: false
-	})
+
 	const navigate = useNavigate()
 
 	const onNavigateToHotel = () => {
@@ -25,14 +24,14 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 				citySlug,
 				hotelSlug: hotel?.slug || ""
 			},
-			search
+			search: (prev) => prev
 		})
 	}
 
 	const { token } = useToken()
 	return (
 		<Badge.Ribbon
-			text={hotel?.rating}
+			text={Number(Number(hotel?.rating) || 0).toFixed(1)}
 			style={{ fontSize: 16, paddingBlock: 8 }}
 		>
 			<Card
@@ -50,8 +49,14 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 					<Flex style={{ position: "relative", padding: 12 }}>
 						<Image
 							width={256}
-							style={{ aspectRatio: 1, borderRadius: token.borderRadiusLG }}
-							alt={hotel?.name}
+							style={{
+								aspectRatio: 1,
+								borderRadius: token.borderRadiusLG,
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center"
+							}}
+							alt={t(hotel?.name)}
 							src={hotel?.image}
 						/>
 						<Button
@@ -67,12 +72,23 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 						style={{ padding: 20, paddingLeft: 8, flexGrow: 1 }}
 					>
 						<Flex vertical={true} align={"start"}>
-							<Title level={4}>{hotel?.name}</Title>
-							<Link to={"/"}>
+							<Title level={4}>{t(hotel?.name)}</Title>
+							<Link
+								to={"."}
+								search={(prev) => ({
+									...prev,
+									coordinates: `${hotel?.location?.coordinates?.latitude}-${hotel?.location?.coordinates?.longitude}`
+								})}
+							>
 								<Space split={<Text>•</Text>}>
-									{hotel?.city?.city}
+									{hotel?.location?.city}
 									{"Показать на карте"}
-									<Text>4.1км от центра</Text>
+									<Text>
+										{Math.round(
+											(hotel?.location?.distance_to_center || 0) / 1000
+										).toFixed(1)}
+										км от центра
+									</Text>
 								</Space>
 							</Link>
 						</Flex>
