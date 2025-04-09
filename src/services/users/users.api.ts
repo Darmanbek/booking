@@ -1,8 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query"
+import type { GetParams } from "src/services/shared"
 import { usersService } from "src/services/users/users.service"
 import { useCrudMutation, useCrudQuery } from "src/shared/api"
 
-const useGetMeQuery = (params: Record<string, unknown>) => {
+const useGetMeQuery = (params: GetParams = {}) => {
 	return useCrudQuery({
 		queryFn: () => usersService.getMe(params),
 		queryKey: ["users", ...Object.values(params)]

@@ -10,15 +10,11 @@ import {
 	type FormProps,
 	Input
 } from "antd"
-import { type FC } from "react"
+import { type FC, useEffect } from "react"
+import { type LoginChange, useLoginMutation } from "src/services/users"
 import { useAuth } from "src/shared/hooks"
 import { Container, Title } from "src/shared/ui"
-
-type LoginChange = {
-	phone: string
-	password: string
-	remember?: boolean
-}
+import { formatFormPhone } from "src/shared/utils"
 
 const Login: FC = () => {
 	const [form] = Form.useForm<LoginChange>()
@@ -26,15 +22,29 @@ const Login: FC = () => {
 	const auth = useAuth()
 	const remember = Form.useWatch("remember", form)
 
+	const {
+		data: loginData,
+		mutate: login,
+		isPending: loginLoading,
+		isSuccess
+	} = useLoginMutation()
+
 	const onFinish: FormProps<LoginChange>["onFinish"] = (values) => {
-		console.log(values)
-		auth.login("token", remember)
-		navigate({
-			to: "/",
-			replace: true
-		})
+		if (values.phone_number) {
+			values.phone_number = formatFormPhone(values.phone_number)
+		}
+		login(values)
 	}
 
+	useEffect(() => {
+		if (isSuccess && loginData) {
+			auth.login(loginData?.data, remember)
+			navigate({
+				to: "/",
+				replace: true
+			})
+		}
+	}, [auth, isSuccess, loginData, navigate, remember])
 	return (
 		<section style={{ minHeight: "50vh" }}>
 			<Container>
@@ -57,9 +67,9 @@ const Login: FC = () => {
 								}
 							}}
 						>
-							<Form.Item
+							<Form.Item<LoginChange>
 								label={"Телефон номер"}
-								name={"phone"}
+								name={"phone_number"}
 								rules={[{ required: true }]}
 							>
 								<Input
@@ -68,7 +78,7 @@ const Login: FC = () => {
 									suffix={<PhoneOutlined />}
 								/>
 							</Form.Item>
-							<Form.Item
+							<Form.Item<LoginChange>
 								label={"Пароль"}
 								name={"password"}
 								rules={[{ required: true }]}
@@ -84,7 +94,12 @@ const Login: FC = () => {
 								<Checkbox style={{ marginBottom: 20 }}>Запомните меня</Checkbox>
 							</Form.Item>
 							<Form.Item noStyle={true}>
-								<Button type={"primary"} htmlType={"submit"} block={true}>
+								<Button
+									loading={loginLoading}
+									type={"primary"}
+									htmlType={"submit"}
+									block={true}
+								>
 									Войти
 								</Button>
 							</Form.Item>

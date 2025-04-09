@@ -23,6 +23,11 @@ export const formatPriceWithCurrency = (price?: number | string): string => {
 	)
 }
 
+export const formatFormPhone = (phone?: string) => {
+	if (!phone) return ""
+	return `998` + phone
+}
+
 export const formatInputPrice = <T>(value?: T) =>
 	`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 

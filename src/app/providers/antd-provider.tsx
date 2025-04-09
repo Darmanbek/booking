@@ -37,6 +37,16 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 				spin={{
 					indicator: <LoadingOutlined />
 				}}
+				menu={{
+					style: {
+						borderRight: 0
+					}
+				}}
+				datePicker={{
+					style: {
+						width: "100%"
+					}
+				}}
 			>
 				<App>{children}</App>
 			</ConfigProvider>

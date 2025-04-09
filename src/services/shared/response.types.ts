@@ -21,6 +21,9 @@ export type ResponseSingleData<T> = {
 
 export type ResponseError = AxiosError<{
 	message: string
+	detail: string
+	status: string
+	error_code: string
 }>
 
 export type Pagination = {

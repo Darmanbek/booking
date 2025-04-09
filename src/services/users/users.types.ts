@@ -1,3 +1,5 @@
+import type { Dayjs } from "dayjs"
+
 export type User = {
 	id: number
 	first_name: string
@@ -16,9 +18,9 @@ export type User = {
 export type UserChange = {
 	first_name: string
 	last_name: string
-	birthday: string
-	gender: string
-	country_id: number
+	birthday: string | null | Dayjs
+	gender: string | null
+	country_id: number | null
 }
 
 export type UserPhoneChange = {
@@ -30,11 +32,16 @@ export type LoginChange = {
 	password: string
 }
 
+export type RegisterData = {
+	phone_number: string
+}
+
 export type RegisterChange = {
 	phone_number: string
 	first_name: string
 	last_name: string
 	password: string
+	remember?: boolean
 }
 
 export type VerifyChange = {
@@ -43,5 +50,5 @@ export type VerifyChange = {
 }
 
 export type LogoutChange = {
-	refresh_token?: string
+	refresh_token?: string | null
 }

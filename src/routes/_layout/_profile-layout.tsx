@@ -7,13 +7,23 @@ import {
 	createFileRoute,
 	Link,
 	Outlet,
+	redirect,
 	useLocation
 } from "@tanstack/react-router"
 import { Breadcrumb, Card, Col, Flex, Menu, Row } from "antd"
+import { useGetMeQuery } from "src/services/users"
 import { Container } from "src/shared/ui"
 
 export const Route = createFileRoute("/_layout/_profile-layout")({
-	component: RouteComponent
+	component: RouteComponent,
+	beforeLoad: ({ context }) => {
+		if (!context.auth?.isAuth) {
+			throw redirect({
+				to: "/",
+				replace: true
+			})
+		}
+	}
 })
 
 const items = [
@@ -37,6 +47,7 @@ const items = [
 function RouteComponent() {
 	const navigate = Route.useNavigate()
 	const { pathname } = useLocation()
+	const { data: profile, isLoading } = useGetMeQuery()
 
 	const currentBreadcrumb = items.find((item) => item.key === pathname)?.label
 
@@ -60,7 +71,15 @@ function RouteComponent() {
 					</Card>
 					<Row gutter={20} style={{ rowGap: 20 }}>
 						<Col span={8}>
-							<Card title={"Alex Mercer"}>
+							<Card
+								title={
+									isLoading
+										? "Загрузка..."
+										: profile
+											? `${profile?.data?.first_name} ${profile?.data?.last_name}`
+											: "Меню"
+								}
+							>
 								<Menu
 									selectedKeys={[pathname]}
 									onSelect={(item) => navigate({ to: item.key })}

@@ -1,5 +1,6 @@
 import {
 	HeartOutlined,
+	LoadingOutlined,
 	LogoutOutlined,
 	OrderedListOutlined,
 	SettingOutlined,
@@ -8,18 +9,24 @@ import {
 import { useLocation, useNavigate } from "@tanstack/react-router"
 import { Avatar, Dropdown, Space } from "antd"
 import { type FC } from "react"
+import { useGetMeQuery, useLogoutMutation } from "src/services/users"
 import { useAuth } from "src/shared/hooks"
 import { Title } from "src/shared/ui"
+import { tokenStorage } from "src/shared/utils"
 
 const ProfileAvatar: FC = () => {
 	const navigate = useNavigate()
 	const { pathname } = useLocation()
-	const { logout } = useAuth()
+	const { data: profile, isLoading } = useGetMeQuery()
+	const auth = useAuth()
+	const { mutate: logout, isPending: logoutLoading } = useLogoutMutation()
 
 	const onSelectMenu = (key: string) => {
 		if (key === "/logout") {
-			console.log("Logout")
-			logout()
+			logout({
+				refresh_token: tokenStorage.getRefresh()
+			})
+			auth.logout()
 			return
 		}
 		navigate({
@@ -56,7 +63,11 @@ const ProfileAvatar: FC = () => {
 					},
 					{
 						key: "/logout",
-						icon: <LogoutOutlined />,
+						icon: logoutLoading ? (
+							<LoadingOutlined spin={true} />
+						) : (
+							<LogoutOutlined />
+						),
 						danger: true,
 						label: "Выйти"
 					}
@@ -64,9 +75,13 @@ const ProfileAvatar: FC = () => {
 			}}
 		>
 			<Space style={{ cursor: "pointer" }}>
-				<Avatar icon={<UserOutlined />} />
+				<Avatar
+					icon={isLoading ? <LoadingOutlined spin={true} /> : <UserOutlined />}
+				/>
 				<Title level={5} style={{ fontSize: 16 }}>
-					Alex Mercer
+					{isLoading
+						? "Загрузка"
+						: `${profile?.data?.first_name} ${profile?.data?.last_name}`}
 				</Title>
 			</Space>
 		</Dropdown>

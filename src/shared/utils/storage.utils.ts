@@ -3,7 +3,7 @@ import Cookies from "js-cookie"
 export const TokenKeys = {
 	ACCESS_TOKEN: "access-token",
 	REFRESH_TOKEN: "refresh-token"
-}
+} as const
 
 export const tokenStorage = {
 	getAccess: (): string | null => Cookies.get(TokenKeys.ACCESS_TOKEN) || null,

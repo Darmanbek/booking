@@ -10,20 +10,41 @@ import {
 	type FormProps,
 	Input
 } from "antd"
-import { type FC } from "react"
+import { type FC, useState } from "react"
+import { type RegisterChange, useRegisterMutation } from "src/services/users"
 import { Container, Title } from "src/shared/ui"
+import { formatFormPhone } from "src/shared/utils"
+import { Verify } from "./verify"
 
 const Register: FC = () => {
-	const [form] = Form.useForm()
+	const [form] = Form.useForm<RegisterChange>()
+	const remember = Form.useWatch("remember", form)
+	const phoneNumber = Form.useWatch("phone_number", form)
+	const [isVerify, setIsVerify] = useState(false)
 
-	const onFinish: FormProps["onFinish"] = (values) => {
-		console.log(values)
+	const { mutate: register, isPending: registerLoading } = useRegisterMutation()
+
+	const onFinish: FormProps<RegisterChange>["onFinish"] = (values) => {
+		if (values.phone_number) {
+			values.phone_number = formatFormPhone(values.phone_number)
+		}
+		register(values, {
+			onSuccess: () => {
+				setIsVerify(true)
+			}
+		})
 	}
 
 	return (
 		<section style={{ minHeight: "50vh" }}>
 			<Container>
 				<Flex vertical={true} align={"center"}>
+					<Verify
+						isVerify={isVerify}
+						setIsVerify={setIsVerify}
+						phoneNumber={phoneNumber}
+						remember={remember}
+					/>
 					<Card style={{ padding: 10, maxWidth: 380, width: "100%" }}>
 						<Title level={4} style={{ marginBottom: 20 }}>
 							Регистрация
@@ -41,16 +62,23 @@ const Register: FC = () => {
 								}
 							}}
 						>
-							<Form.Item
+							<Form.Item<RegisterChange>
 								label={"Имя"}
-								name={"name"}
+								name={"first_name"}
 								rules={[{ required: true }]}
 							>
 								<Input placeholder={"Имя"} suffix={<UserOutlined />} />
 							</Form.Item>
-							<Form.Item
+							<Form.Item<RegisterChange>
+								label={"Фамилия"}
+								name={"last_name"}
+								rules={[{ required: true }]}
+							>
+								<Input placeholder={"Фамилия"} suffix={<UserOutlined />} />
+							</Form.Item>
+							<Form.Item<RegisterChange>
 								label={"Телефон номер"}
-								name={"phone"}
+								name={"phone_number"}
 								rules={[{ required: true }]}
 							>
 								<Input
@@ -59,7 +87,7 @@ const Register: FC = () => {
 									suffix={<PhoneOutlined />}
 								/>
 							</Form.Item>
-							<Form.Item
+							<Form.Item<RegisterChange>
 								label={"Пароль"}
 								name={"password"}
 								rules={[{ required: true }]}
@@ -92,7 +120,12 @@ const Register: FC = () => {
 								<Checkbox style={{ marginBottom: 16 }}>Запомните меня</Checkbox>
 							</Form.Item>
 							<Form.Item noStyle={true}>
-								<Button type={"primary"} htmlType={"submit"} block={true}>
+								<Button
+									loading={registerLoading}
+									type={"primary"}
+									htmlType={"submit"}
+									block={true}
+								>
 									Регистрация
 								</Button>
 							</Form.Item>

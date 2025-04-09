@@ -4,6 +4,7 @@ import type {
 	LoginChange,
 	LogoutChange,
 	RegisterChange,
+	RegisterData,
 	User,
 	UserChange,
 	UserPhoneChange,
@@ -23,7 +24,7 @@ class UsersService {
 
 	register = async (
 		form: RegisterChange
-	): Promise<ResponseSingleData<Tokens>> => {
+	): Promise<ResponseSingleData<RegisterData>> => {
 		const response = await classic.post(`/users/auth/register`, form)
 		return response.data
 	}
