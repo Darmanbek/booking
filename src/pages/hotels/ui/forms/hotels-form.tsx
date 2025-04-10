@@ -31,7 +31,6 @@ const HotelsForm: FC = () => {
 							tooltip={{
 								formatter: formatPrice
 							}}
-							defaultValue={[27_500, 520_000]}
 							max={10_000_000}
 						/>
 					</Form.Item>

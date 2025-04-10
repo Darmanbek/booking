@@ -24,7 +24,7 @@ api.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config
-		if (error.response.status === 401 && !originalRequest._Retry) {
+		if (error.status === 401 && !originalRequest._Retry) {
 			originalRequest._Retry = true // Mark the request as retried to avoid infinite loops.
 			try {
 				const refreshToken = tokenStorage.getRefresh() // Retrieve the stored refresh token.

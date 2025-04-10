@@ -29,6 +29,6 @@ export type ResponseError = AxiosError<{
 export type Pagination = {
 	page: number
 	page_size: number
-	total_elements: number
+	total: number
 	total_pages: number
 }

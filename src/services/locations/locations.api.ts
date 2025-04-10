@@ -1,4 +1,4 @@
-import type { GetParams } from "src/services/shared"
+import type { GetParams, ParamId } from "src/services/shared"
 import { useCrudQuery } from "src/shared/api"
 import { locationsService } from "./locations.service"
 
@@ -9,4 +9,12 @@ const useGetLocationsQuery = (params: GetParams = {}) => {
 	})
 }
 
-export { useGetLocationsQuery }
+const useGetLocationBySlugQuery = (slug: ParamId) => {
+	return useCrudQuery({
+		queryFn: () => locationsService.getCitiesBySlug(slug),
+		queryKey: ["locations", slug],
+		enabled: !!slug
+	})
+}
+
+export { useGetLocationsQuery, useGetLocationBySlugQuery }

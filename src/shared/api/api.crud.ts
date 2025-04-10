@@ -55,7 +55,10 @@ export const useCrudQuery = <
 		throwOnError: (e) => {
 			const customError = renderError?.(e) ||
 				error || {
-					description: e.response?.data?.message
+					description:
+						e?.response?.data?.message ||
+						e?.response?.data?.detail ||
+						e?.message
 				}
 			if (customError) {
 				message.error({

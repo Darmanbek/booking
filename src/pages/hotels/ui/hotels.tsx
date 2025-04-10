@@ -1,12 +1,13 @@
 import { HomeOutlined } from "@ant-design/icons"
-import { Link, useNavigate, useParams } from "@tanstack/react-router"
+import { Link, useNavigate, useParams, useSearch } from "@tanstack/react-router"
 import { Breadcrumb, Card, Col, Flex, Row, Space } from "antd"
 import dayjs from "dayjs"
 import { type FC, useEffect } from "react"
-import { cityData } from "src/shared/data/city.data"
-import { hotelData } from "src/shared/data/hotel.data"
+import { useGetHotelsSearchQuery } from "src/services/hotels"
+import { useGetLocationBySlugQuery } from "src/services/locations"
 import { useSearchStore } from "src/shared/store/use-search-store"
 import { Container, Title } from "src/shared/ui"
+import { formatDate, formatGuests } from "src/shared/utils"
 import { HotelsMapCard } from "./cards/hotels-map-card"
 import { HotelsForm } from "./forms/hotels-form"
 import { HotelsList } from "./lists/hotels-list"
@@ -17,7 +18,22 @@ const Hotels: FC = () => {
 	})
 	const { search, setSearch } = useSearchStore()
 	const navigate = useNavigate()
-	const city = cityData.find((el) => el.slug === citySlug)
+	const { data: city } = useGetLocationBySlugQuery(citySlug)
+
+	const { dates, guests } = useSearchStore((state) => state.search)
+	const searchParams = useSearch({
+		strict: false
+	})
+	const {
+		data: hotels,
+		isLoading,
+		isFetching
+	} = useGetHotelsSearchQuery({
+		city: citySlug,
+		check_in: searchParams?.from_date || formatDate(dates[0]),
+		check_out: searchParams?.to_date || formatDate(dates[1]),
+		guests: formatGuests(searchParams?.guests) || guests
+	})
 
 	useEffect(() => {
 		if (search) {
@@ -36,13 +52,13 @@ const Hotels: FC = () => {
 	}, [])
 
 	useEffect(() => {
-		if (city) {
+		if (citySlug) {
 			setSearch({
 				...search,
-				search: city?.slug
+				search: citySlug
 			})
 		}
-	}, [city])
+	}, [citySlug])
 	return (
 		<section>
 			<Container>
@@ -61,7 +77,7 @@ const Hotels: FC = () => {
 									)
 								},
 								{
-									title: city?.city
+									title: city ? city?.data?.name : "Загрузка"
 								}
 							]}
 						/>
@@ -69,16 +85,22 @@ const Hotels: FC = () => {
 					<Row gutter={20}>
 						<Col span={8}>
 							<Flex vertical={true} gap={20} style={{ height: "100%" }}>
-								<HotelsMapCard data={hotelData} />
+								<HotelsMapCard data={hotels?.data || []} />
 								<HotelsForm />
 							</Flex>
 						</Col>
 						<Col span={16}>
 							<Flex vertical={true} gap={20}>
 								<Card>
-									<Title level={4}>{city?.city}: доступно 368 вариантов</Title>
+									<Title level={4}>
+										{city ? city?.data?.name : "Загрузка"}: доступно{" "}
+										{hotels?.pagination?.total || 0} вариантов
+									</Title>
 								</Card>
-								<HotelsList />
+								<HotelsList
+									data={hotels?.data || []}
+									loading={isLoading || isFetching}
+								/>
 							</Flex>
 						</Col>
 					</Row>

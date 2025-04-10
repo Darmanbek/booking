@@ -5,9 +5,11 @@ export type Hotel = {
 	name: TranslateName
 	description: TranslateName
 	slug: string
+	images: string[]
 	category: TranslateName
 	location: HotelLocation
 	reviews_count: number
+	rating: number | null
 	available_rooms: HotelAvailableRoom[]
 }
 
@@ -16,6 +18,9 @@ export type HotelLocation = {
 	city: string
 	coordinates: HotelCoordinates
 	distance_to_center: number
+	to_airport: number
+	to_railway: number
+	to_city_center: number
 }
 
 export type HotelCoordinates = {

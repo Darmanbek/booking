@@ -31,7 +31,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 	const { token } = useToken()
 	return (
 		<Badge.Ribbon
-			text={Number(Number(hotel?.rating) || 0).toFixed(1)}
+			text={hotel?.rating ? Number(hotel?.rating).toFixed(1) : ""}
 			style={{ fontSize: 16, paddingBlock: 8 }}
 		>
 			<Card
@@ -57,7 +57,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 								alignItems: "center"
 							}}
 							alt={t(hotel?.name)}
-							src={hotel?.image}
+							src={hotel?.images[3]}
 						/>
 						<Button
 							shape={"circle"}

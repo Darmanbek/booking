@@ -3,7 +3,7 @@ import { Link, useParams, useSearch } from "@tanstack/react-router"
 import { Breadcrumb, Card, Col, Flex, Row, Space } from "antd"
 import dayjs from "dayjs"
 import { type FC } from "react"
-import { cityData } from "src/shared/data/city.data"
+import { useGetLocationBySlugQuery } from "src/services/locations"
 import { hotelData } from "src/shared/data/hotel.data"
 import { Container } from "src/shared/ui"
 import {
@@ -21,10 +21,10 @@ import {
 
 const Hotel: FC = () => {
 	const search = useSearch({ strict: false })
-	const { hotelSlug, citySlug } = useParams({
+	const { hotelSlug, citySlug = "" } = useParams({
 		strict: false
 	})
-	const city = cityData.find((el) => el.slug === citySlug)
+	const { data: city } = useGetLocationBySlugQuery(citySlug)
 	const hotel = hotelData.find((el) => el.slug === hotelSlug)
 
 	return (
@@ -48,10 +48,10 @@ const Hotel: FC = () => {
 									title: (
 										<Link
 											to={"/hotels/$citySlug"}
-											params={{ citySlug: city?.slug || "" }}
+											params={{ citySlug }}
 											search={search}
 										>
-											{city?.title}
+											{city ? city?.data?.name : "Загрузка"}
 										</Link>
 									)
 								},
@@ -69,7 +69,7 @@ const Hotel: FC = () => {
 							]}
 						/>
 					</Card>
-					<HotelTopCard data={hotel} city={city} />
+					<HotelTopCard />
 					<HotelPreviewCard data={hotel} />
 					<Row gutter={20} style={{ rowGap: 20 }}>
 						<Col span={12}>
