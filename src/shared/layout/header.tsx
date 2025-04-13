@@ -27,7 +27,7 @@ const Header: FC = () => {
 						height: "100%"
 					}}
 				>
-					<Link to={"/"}>
+					<Link to={"/"} style={{ color: token.colorPrimary }}>
 						<Logo titleProps={{ style: { color: "inherit" } }} />
 					</Link>
 					<Space>

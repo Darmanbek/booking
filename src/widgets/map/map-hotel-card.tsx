@@ -29,11 +29,11 @@ const MapHotelCard: FC<MapHotelCardProps> = ({ data: hotel }) => {
 					width={75}
 					height={75}
 					style={{ borderRadius: 8 }}
-					src={hotel?.image}
+					src={hotel?.images?.[0]}
 				/>
 				<Flex vertical={true} gap={8} justify={"space-between"}>
 					<Flex gap={16} align={"start"} justify={"space-between"}>
-						<Flex vertical={true}>
+						<Flex vertical={true} style={{ minWidth: 70 }}>
 							<Title level={5} style={{ fontSize: 14 }}>
 								{t(hotel?.name)}
 							</Title>
@@ -46,7 +46,7 @@ const MapHotelCard: FC<MapHotelCardProps> = ({ data: hotel }) => {
 						</RatingTag>
 					</Flex>
 					<Title level={5} style={{ fontSize: 14 }}>
-						{formatPriceWithCurrency(hotel?.price)}
+						{formatPriceWithCurrency(hotel?.min_price)}
 					</Title>
 				</Flex>
 			</Flex>

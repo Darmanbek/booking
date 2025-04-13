@@ -1,16 +1,38 @@
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons"
 import {
 	Button,
+	type ButtonProps,
 	ConfigProvider,
 	InputNumber,
-	type InputNumberProps,
+	type InputNumberProps as AntdInputNumberProps,
 	Space
 } from "antd"
+import type { SpaceCompactProps } from "antd/es/space/Compact"
 import { forwardRef, useEffect, useState } from "react"
 import { useCounterStyles } from "./counter.style"
 
+interface InputNumberProps extends AntdInputNumberProps {
+	buttonProps?: {
+		decrement?: ButtonProps
+		increment?: ButtonProps
+	}
+	spaceProps?: SpaceCompactProps
+}
+
 const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
-	({ value, onChange, className, min = 1, max, ...rest }, ref) => {
+	(
+		{
+			value,
+			onChange,
+			className,
+			min = 1,
+			max,
+			buttonProps,
+			spaceProps,
+			...rest
+		},
+		ref
+	) => {
 		const minLength = Number(min)
 
 		const [currentValue, setCurrentValue] = useState(Number(value) || minLength)
@@ -25,13 +47,14 @@ const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
 					disabled: true
 				}}
 			>
-				<Space.Compact>
+				<Space.Compact {...spaceProps}>
 					<Button
 						icon={<MinusOutlined />}
 						onClick={() => {
 							if (currentValue < minLength + 1) return
 							setCurrentValue((prev) => prev - 1)
 						}}
+						{...buttonProps?.decrement}
 					/>
 					<InputNumber
 						controls={false}
@@ -49,6 +72,7 @@ const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
 								max && prev >= Number(max) ? prev : prev + 1
 							)
 						}
+						{...buttonProps?.increment}
 					/>
 				</Space.Compact>
 			</ConfigProvider>

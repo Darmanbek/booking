@@ -93,8 +93,8 @@ const Hotels: FC = () => {
 							<Flex vertical={true} gap={20}>
 								<Card>
 									<Title level={4}>
-										{city ? city?.data?.name : "Загрузка"}: доступно{" "}
-										{hotels?.pagination?.total || 0} вариантов
+										{city ? city?.data?.name : "Загрузка"}, доступно вариантов:{" "}
+										{hotels?.pagination?.total || 0}
 									</Title>
 								</Card>
 								<HotelsList

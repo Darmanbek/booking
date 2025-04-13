@@ -1,13 +1,14 @@
 import { CloseOutlined } from "@ant-design/icons"
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router"
 import { Button, Card, Flex, Spin } from "antd"
-import { type FC, useEffect, useRef, useState } from "react"
+import { type FC, useEffect, useMemo, useRef, useState } from "react"
 import { Marker, Popup } from "react-leaflet"
 import MarkerClusterGroup from "react-leaflet-cluster"
 import type { Hotel } from "src/services/hotels"
 import { useGetLocationBySlugQuery } from "src/services/locations"
 import { Map, type MapRef } from "src/widgets/map"
 import { MapHotelCard } from "src/widgets/map/map-hotel-card"
+import { RedMarker } from "src/widgets/map/red-marker"
 
 interface HotelsMapCardProps {
 	data: Hotel[]
@@ -24,6 +25,12 @@ const HotelsMapCard: FC<HotelsMapCardProps> = ({ data: hotels }) => {
 	})
 	const { data: city } = useGetLocationBySlugQuery(citySlug)
 	const [center, setCenter] = useState<[number, number] | null>(null)
+
+	const cityCenter: [number, number] | undefined = useMemo(() => {
+		if (city && city?.data?.geocode_lat && city?.data?.geocode_lng) {
+			return [city.data.geocode_lat, city.data.geocode_lng]
+		}
+	}, [city])
 
 	useEffect(() => {
 		if (searchParams.coordinates) return
@@ -72,6 +79,13 @@ const HotelsMapCard: FC<HotelsMapCardProps> = ({ data: hotels }) => {
 									</Popup>
 								</Marker>
 							))}
+							{cityCenter && (
+								<RedMarker position={cityCenter}>
+									<Popup>
+										<b>{city?.data?.name}</b>
+									</Popup>
+								</RedMarker>
+							)}
 						</MarkerClusterGroup>
 					</Map>
 					<Button

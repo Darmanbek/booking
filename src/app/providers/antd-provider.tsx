@@ -16,7 +16,8 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 				locale={localeRU}
 				theme={{
 					token: {
-						fontFamily: `Open Sans,${token.fontFamily}`
+						fontFamily: `Open Sans,${token.fontFamily}`,
+						colorPrimary: token.blue8
 					},
 					components: {
 						Breadcrumb: {

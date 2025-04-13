@@ -1,6 +1,6 @@
-import axios from "axios"
-import { BASE_URL } from "src/shared/config/url.config"
-import { tokenStorage } from "src/shared/utils/storage.utils"
+import axios, { type AxiosError } from "axios"
+import { BASE_URL } from "src/shared/config"
+import { tokenStorage } from "src/shared/utils"
 import { refreshAccessToken } from "./api.service"
 
 const api = axios.create({
@@ -22,7 +22,13 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
 	(response) => response,
-	async (error) => {
+	async (
+		error: AxiosError & {
+			config: AxiosError["config"] & {
+				_Retry: boolean
+			}
+		}
+	) => {
 		const originalRequest = error.config
 		if (error.status === 401 && !originalRequest._Retry) {
 			originalRequest._Retry = true // Mark the request as retried to avoid infinite loops.
@@ -30,7 +36,7 @@ api.interceptors.response.use(
 				const refreshToken = tokenStorage.getRefresh() // Retrieve the stored refresh token.
 				// Make a request to your auth server to refresh the token.
 				const response = await refreshAccessToken(refreshToken)
-				const { access_token } = response
+				const { access_token } = response.data
 				// Store the new access and refresh tokens.
 				tokenStorage.setAccess(access_token)
 				// Update the authorization header with the new access token.

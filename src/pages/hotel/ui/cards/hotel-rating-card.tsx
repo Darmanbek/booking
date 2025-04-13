@@ -1,37 +1,60 @@
 import { LeftOutlined, RightOutlined, UserOutlined } from "@ant-design/icons"
-import { Link } from "@tanstack/react-router"
+import { Link, useParams } from "@tanstack/react-router"
 import { Avatar, Button, Card, Flex, Space } from "antd"
 import { type CarouselRef } from "antd/es/carousel"
 import { type FC, useRef } from "react"
+import {
+	useGetHotelsBySlugRatingQuery,
+	useGetHotelsBySlugReviewsQuery
+} from "src/services/hotels"
 import { Carousel, Paragraph, Title } from "src/shared/ui"
 import { RatingContainer } from "src/widgets/rating-container"
 
 const HotelRatingCard: FC = () => {
 	const carouselRef = useRef<CarouselRef>(null)
+	const { hotelSlug } = useParams({
+		from: "/_layout/hotels/$citySlug/$hotelSlug"
+	})
+
+	const { data: hotelRating } = useGetHotelsBySlugRatingQuery(hotelSlug)
+	const { data: reviews } = useGetHotelsBySlugReviewsQuery(hotelSlug)
 
 	return (
-		<RatingContainer text={"7.5"}>
+		<RatingContainer
+			text={Number(Number(hotelRating?.data?.average_rating) || 0).toFixed(1)}
+		>
 			<Card
 				title={
 					<Flex vertical={true} align={"start"}>
 						<Title level={3} style={{ fontSize: "inherit" }}>
 							Очень хорошо
 						</Title>
-						<Link to={"."} hash={"reviews"} style={{ fontSize: 12 }}>
-							27 отзывов
+						<Link
+							to={"."}
+							hash={"reviews"}
+							search={(prev) => prev}
+							style={{ fontSize: 12 }}
+						>
+							{`${hotelRating?.data?.reviews_count || 0} отзывов`}
 						</Link>
 					</Flex>
 				}
 			>
-				<Flex vertical={true} gap={8}>
+				<Flex
+					vertical={true}
+					gap={8}
+					style={{ minHeight: 250 }}
+					justify={"space-between"}
+				>
 					<Carousel
 						autoplay={true}
 						dots={false}
+						style={{ height: "100%" }}
 						ref={carouselRef}
 						slidesToShow={1}
 						arrows={false}
 					>
-						{Array.from({ length: 10 }).map((_, index) => (
+						{reviews?.data?.map((review, index) => (
 							<div key={index}>
 								<Flex
 									vertical={true}
@@ -40,19 +63,16 @@ const HotelRatingCard: FC = () => {
 								>
 									<Space>
 										<Avatar icon={<UserOutlined />} />
-										Alex {index + 1}
+										{review?.hotel_id}
 									</Space>
-									<Paragraph>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-										Quisque vel est a massa gravida convallis. Sed vel enim vel
-										neque consectetur convallis. Donec vel mi non neque semper
-										commodo. Nullam et neque non erat tincidunt dignissim. Donec
-										auctor metus non nulla consectetur, non malesuada neque
-										ullamcorper. Nulla facilisi. Sed vel massa et nunc
-										consectetur molestie. Sed consectetur, mi id elementum
-										fermentum, nunc eros congue ex, vel volutpat lectus nunc at
-										nunc. Aliquam erat volutpat. Nulla facilisi. Sed vel massa
-										et nunc
+									<Paragraph
+										style={{ height: "100%" }}
+										ellipsis={{
+											rows: 7,
+											expandable: "collapsible"
+										}}
+									>
+										{review?.comment}
 									</Paragraph>
 								</Flex>
 							</div>
@@ -73,7 +93,11 @@ const HotelRatingCard: FC = () => {
 								icon={<RightOutlined />}
 							/>
 						</Space>
-						<Button type={"primary"} icon={"(+27)"} iconPosition={"end"}>
+						<Button
+							type={"primary"}
+							icon={`(+${hotelRating?.data?.reviews_count || 0})`}
+							iconPosition={"end"}
+						>
 							Посмотреть все отзывы
 						</Button>
 					</Flex>

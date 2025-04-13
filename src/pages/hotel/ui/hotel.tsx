@@ -3,8 +3,9 @@ import { Link, useParams, useSearch } from "@tanstack/react-router"
 import { Breadcrumb, Card, Col, Flex, Row, Space } from "antd"
 import dayjs from "dayjs"
 import { type FC } from "react"
+import { useGetHotelsBySlugQuery } from "src/services/hotels"
 import { useGetLocationBySlugQuery } from "src/services/locations"
-import { hotelData } from "src/shared/data/hotel.data"
+import { useTranslation } from "src/shared/hooks"
 import { Container } from "src/shared/ui"
 import {
 	HotelComfortCard,
@@ -24,8 +25,11 @@ const Hotel: FC = () => {
 	const { hotelSlug, citySlug = "" } = useParams({
 		strict: false
 	})
-	const { data: city } = useGetLocationBySlugQuery(citySlug)
-	const hotel = hotelData.find((el) => el.slug === hotelSlug)
+	const { t } = useTranslation()
+	const { data: city, isLoading: cityLoading } =
+		useGetLocationBySlugQuery(citySlug)
+	const { data: hotel, isLoading: hotelLoading } =
+		useGetHotelsBySlugQuery(hotelSlug)
 
 	return (
 		<section>
@@ -51,7 +55,7 @@ const Hotel: FC = () => {
 											params={{ citySlug }}
 											search={search}
 										>
-											{city ? city?.data?.name : "Загрузка"}
+											{cityLoading ? "Загрузка" : city ? city?.data?.name : ""}
 										</Link>
 									)
 								},
@@ -64,31 +68,31 @@ const Hotel: FC = () => {
 										}
 									: {},
 								{
-									title: hotel?.name
+									title: hotelLoading ? "Загрузка" : t(hotel?.data?.name)
 								}
 							]}
 						/>
 					</Card>
 					<HotelTopCard />
-					<HotelPreviewCard data={hotel} />
+					<HotelPreviewCard />
 					<Row gutter={20} style={{ rowGap: 20 }}>
-						<Col span={12}>
+						<Col xs={24} md={12}>
 							<HotelRatingCard />
 						</Col>
-						<Col span={12}>
+						<Col xs={24} md={12}>
 							<HotelComfortCard />
 						</Col>
 					</Row>
 					<Row gutter={20} style={{ rowGap: 20 }}>
-						<Col span={16}>
+						<Col xs={24} md={16}>
 							<Flex vertical={true} gap={20}>
-								<HotelMapCard data={hotel} />
+								<HotelMapCard />
 								<HotelVariantsCard />
 								<HotelDescriptionCard />
 								<HotelServicesCard />
 							</Flex>
 						</Col>
-						<Col span={8}>
+						<Col xs={24} md={8}>
 							<HotelOrdersCard />
 						</Col>
 					</Row>

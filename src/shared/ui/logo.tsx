@@ -10,7 +10,7 @@ const Logo: FC<LogoProps> = ({ titleProps }) => {
 	return (
 		<Flex>
 			<Title level={3} {...titleProps}>
-				Booking.uz
+				NBooking.uz
 			</Title>
 		</Flex>
 	)

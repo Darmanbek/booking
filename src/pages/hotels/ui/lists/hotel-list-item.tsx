@@ -1,5 +1,5 @@
 import { ArrowRightOutlined, HeartOutlined } from "@ant-design/icons"
-import { Link, useNavigate, useParams } from "@tanstack/react-router"
+import { Link, useParams } from "@tanstack/react-router"
 import { Badge, Button, Card, Flex, Image, List, Space } from "antd"
 import { type FC } from "react"
 import { type Hotel } from "src/services/hotels"
@@ -14,19 +14,6 @@ interface HotelListItemProps {
 const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 	const { t } = useTranslation()
 	const { citySlug = "" } = useParams({ strict: false })
-
-	const navigate = useNavigate()
-
-	const onNavigateToHotel = () => {
-		navigate({
-			to: "/hotels/$citySlug/$hotelSlug",
-			params: {
-				citySlug,
-				hotelSlug: hotel?.slug || ""
-			},
-			search: (prev) => prev
-		})
-	}
 
 	const { token } = useToken()
 	return (
@@ -47,18 +34,24 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 			>
 				<List.Item style={{ padding: 0, alignItems: "stretch" }}>
 					<Flex style={{ position: "relative", padding: 12 }}>
-						<Image
-							width={256}
-							style={{
-								aspectRatio: 1,
-								borderRadius: token.borderRadiusLG,
-								display: "flex",
-								justifyContent: "center",
-								alignItems: "center"
-							}}
-							alt={t(hotel?.name)}
-							src={hotel?.images[3]}
-						/>
+						<Image.PreviewGroup>
+							{hotel?.images?.map((image, index) => (
+								<Image
+									key={index}
+									hidden={index !== 0}
+									width={256}
+									style={{
+										aspectRatio: 1,
+										borderRadius: token.borderRadiusLG,
+										display: "flex",
+										justifyContent: "center",
+										alignItems: "center"
+									}}
+									alt={t(hotel?.name)}
+									src={image}
+								/>
+							))}
+						</Image.PreviewGroup>
 						<Button
 							shape={"circle"}
 							icon={<HeartOutlined />}
@@ -95,19 +88,31 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 						<Flex justify={"space-between"} align={"end"}>
 							<Flex vertical={true}>
 								<Title level={3} style={{ margin: 0 }}>
-									{formatPriceWithCurrency(hotel?.price)}
+									{formatPriceWithCurrency(hotel?.min_price)}
 								</Title>
-								<Text type={"secondary"}>за ночь для 1 гостя</Text>
+								<Text type={"secondary"}>
+									за ночь для {hotel?.guests || 0} гостя
+								</Text>
 							</Flex>
-							<Button
-								iconPosition={"end"}
-								type={"primary"}
-								icon={<ArrowRightOutlined />}
-								key={"link"}
-								onClick={onNavigateToHotel}
+							<Link
+								to={"/hotels/$citySlug/$hotelSlug"}
+								params={{
+									citySlug,
+									hotelSlug: hotel?.slug || ""
+								}}
+								target={"_blank"}
+								search={(prev) => prev}
 							>
-								Показать номера
-							</Button>
+								<Button
+									iconPosition={"end"}
+									type={"primary"}
+									icon={<ArrowRightOutlined />}
+									key={"link"}
+									// onClick={onNavigateToHotel}
+								>
+									Показать номера
+								</Button>
+							</Link>
 						</Flex>
 					</Flex>
 				</List.Item>

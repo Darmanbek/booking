@@ -1,49 +1,32 @@
+import { UserOutlined } from "@ant-design/icons"
+import { useParams } from "@tanstack/react-router"
+import { Avatar, Card, Col, Flex, List, Progress, Row } from "antd"
+import { type FC, useState } from "react"
 import {
-	Avatar,
-	Card,
-	Col,
-	Divider,
-	Flex,
-	List,
-	Progress,
-	Row,
-	Space
-} from "antd"
-import { type FC } from "react"
+	HotelReview,
+	useGetHotelsBySlugReviewsQuery
+} from "src/services/hotels"
+import { useTranslation } from "src/shared/hooks"
 import { Text, Title } from "src/shared/ui"
+import { formatCustomDate } from "src/shared/utils"
 import { RatingContainer } from "src/widgets/rating-container"
 import { RatingTag } from "src/widgets/rating-tag"
 
-const data = Array.from({ length: 23 }).map((_, i) => ({
-	title: `User ${i + 1}`,
-	avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
-	description: (
-		<Space
-			direction={"vertical"}
-			split={<Divider style={{ marginBlock: 0 }} />}
-		>
-			<Space split={<Divider type={"vertical"} />}>
-				<>отдых, в одиночку</>
-				<>февраль 2024 г.</>
-			</Space>
-			<>
-				Двухместный номер Standard с видом на город (двуспальная кровать)
-				(кровать king size), 4 ночи
-			</>
-		</Space>
-	),
-	content:
-		"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aperiam aspernatur autem blanditiis corporis debitis delectus, deserunt dicta dolor dolore dolorem dolores ducimus enim error eveniet ex laboriosam nihil odit possimus repellat? Accusantium consequuntur dolorem eius minus odit perspiciatis quam."
-}))
-
-// const IconText = ({ icon, text }: { icon: FC; text: string }) => (
-// 	<Space>
-// 		{createElement(icon)}
-// 		{text}
-// 	</Space>
-// )
-
 const HotelReviewsCard: FC = () => {
+	const { hotelSlug } = useParams({
+		from: "/_layout/hotels/$citySlug/$hotelSlug"
+	})
+	const { t } = useTranslation()
+	const [params, setParams] = useState({
+		page: 1,
+		pageSize: 5
+	})
+	const { data: hotelReviews, isLoading: reviewsLoading } =
+		useGetHotelsBySlugReviewsQuery(hotelSlug, {
+			page: params.page,
+			page_size: params.pageSize
+		})
+
 	return (
 		<RatingContainer placement={"start"} text={"7,1"}>
 			<Card
@@ -88,30 +71,29 @@ const HotelReviewsCard: FC = () => {
 					</Row>
 				}
 			>
-				<List
+				<List<HotelReview>
 					itemLayout={"vertical"}
+					loading={reviewsLoading}
 					size={"large"}
 					pagination={{
-						onChange: (page) => {
-							console.log(page)
+						current: params.page,
+						onChange: (page, pageSize) => {
+							setParams({ page, pageSize })
 						},
-						pageSize: 3
+						pageSize: params.pageSize
 					}}
-					dataSource={data}
+					dataSource={hotelReviews?.data}
 					renderItem={(item) => (
 						<List.Item
-							key={item.title}
+							key={item.id}
 							extra={
-								<Flex vertical={true}>
-									<Space size={2}>
-										<RatingTag>7.5</RatingTag>
-										<Text style={{ fontWeight: 600 }}>Очень хорошо</Text>
-									</Space>
-									{[85, 64, 84, 38].map((value, index) => (
+								<Flex vertical={true} align={"end"}>
+									<RatingTag>{Number(item?.rating).toFixed(1)}</RatingTag>
+									{item?.review_category_ratings.map((value, index) => (
 										<Flex key={index} vertical={true}>
 											<Progress
 												size={"small"}
-												percent={value}
+												percent={(Number(value?.rating) || 0) * 10}
 												showInfo={false}
 											/>
 											<Flex
@@ -119,37 +101,22 @@ const HotelReviewsCard: FC = () => {
 												style={{ width: "100%", fontSize: 12 }}
 												justify={"space-between"}
 											>
-												<span>Название</span>
-												<span>{(value || 0) / 10}</span>
+												<span>{t(value?.review_category?.name)}:</span>
+												<span>
+													{Number(Number(value?.rating) || 0).toFixed(1)}
+												</span>
 											</Flex>
 										</Flex>
 									))}
 								</Flex>
 							}
-							// actions={[
-							// 	<IconText
-							// 		icon={StarOutlined}
-							// 		text={"156"}
-							// 		key={"list-vertical-star-o"}
-							// 	/>,
-							// 	<IconText
-							// 		icon={LikeOutlined}
-							// 		text={"156"}
-							// 		key={"list-vertical-like-o"}
-							// 	/>,
-							// 	<IconText
-							// 		icon={MessageOutlined}
-							// 		text={"2"}
-							// 		key={"list-vertical-message"}
-							// 	/>
-							// ]}
 						>
 							<List.Item.Meta
-								avatar={<Avatar src={item.avatar} />}
-								title={item.title}
-								description={item.description}
+								avatar={<Avatar icon={<UserOutlined />} />}
+								title={`${item?.user?.first_name || ""} ${item?.user?.last_name}`}
+								description={formatCustomDate(item?.created_at, "D MMMM YYYY")}
 							/>
-							{item.content}
+							{item?.comment}
 						</List.Item>
 					)}
 				/>

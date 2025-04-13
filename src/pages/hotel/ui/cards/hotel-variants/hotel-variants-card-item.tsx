@@ -1,11 +1,19 @@
 import { RightOutlined } from "@ant-design/icons"
-import { Button, Collapse, Flex, Image, List } from "antd"
+import { Button, Collapse, Flex, Image, List, Space } from "antd"
 import { type FC } from "react"
-import { useToken } from "src/shared/hooks"
+import { type HotelRoom } from "src/services/hotels"
+import { useToken, useTranslation } from "src/shared/hooks"
 import { Title } from "src/shared/ui"
 import { HotelVariantList } from "./hotel-variant-list"
 
-const HotelVariantsCardItem: FC = () => {
+interface HotelVariantsCardItemProps {
+	data: HotelRoom
+}
+
+const HotelVariantsCardItem: FC<HotelVariantsCardItemProps> = ({
+	data: room
+}) => {
+	const { t } = useTranslation()
 	const { token } = useToken()
 	return (
 		<List.Item>
@@ -32,26 +40,36 @@ const HotelVariantsCardItem: FC = () => {
 						label: (
 							<Flex align={"stretch"} gap={12}>
 								<Flex>
-									<Image
-										height={100}
-										width={175}
-										src={"/hotel/hotel-room.jpg"}
-										fallback={"/public/hotel/hotel-room.jpg"}
-										onClick={(e) => e.stopPropagation()}
-										style={{
-											borderRadius: token.borderRadius,
-											objectFit: "cover"
-										}}
-									/>
+									<Image.PreviewGroup>
+										{room?.images?.map((image, index) => (
+											<Image
+												hidden={index !== 0}
+												key={index}
+												height={100}
+												width={175}
+												src={image?.image}
+												onClick={(e) => e.stopPropagation()}
+												style={{
+													borderRadius: token.borderRadius,
+													objectFit: "cover"
+												}}
+											/>
+										))}
+									</Image.PreviewGroup>
 								</Flex>
 								<Flex vertical={true} flex={1} style={{ height: "100%" }}>
 									<Title level={4} style={{ fontSize: 16 }}>
-										Апартаменты с душем
+										{room?.room_type}
 									</Title>
+									<Space>
+										{room?.amenities?.[0]?.hotel_amenities?.map((el) =>
+											t(el.name)
+										)}
+									</Space>
 								</Flex>
 							</Flex>
 						),
-						children: <HotelVariantList />
+						children: <HotelVariantList data={room} />
 					}
 				]}
 			/>

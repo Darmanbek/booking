@@ -4,12 +4,13 @@ import {
 	StarFilled
 } from "@ant-design/icons"
 import { Link } from "@tanstack/react-router"
-import { Button, Card, Flex, Image, Space, Tag } from "antd"
+import { Button, Card, Flex, Image, Space } from "antd"
 import { type FC } from "react"
 import { type Hotel } from "src/shared/data/hotel.data"
 import { useToken } from "src/shared/hooks"
 import { Text, Title } from "src/shared/ui"
 import { formatPriceWithCurrency } from "src/shared/utils/format.utils"
+import { RatingTag } from "src/widgets/rating-tag"
 
 interface HotelCardProps {
 	data: Hotel
@@ -71,12 +72,7 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 							<Flex vertical={true} gap={2} style={{ width: "100%" }}>
 								<Flex gap={2} justify={"space-between"} align={"center"}>
 									<Title level={4}>{hotel.name}</Title>
-									<Tag
-										color={"blue-inverse"}
-										style={{ fontSize: 16, paddingBlock: 6 }}
-									>
-										{hotel.rating}
-									</Tag>
+									<RatingTag>{hotel.rating}</RatingTag>
 								</Flex>
 								<Space split={"•"}>
 									<Text type={"secondary"} style={{ fontSize: 12 }}>

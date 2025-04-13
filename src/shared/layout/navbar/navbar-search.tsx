@@ -1,10 +1,12 @@
 import {
 	ArrowRightOutlined,
 	HomeOutlined,
+	LoadingOutlined,
 	SearchOutlined
 } from "@ant-design/icons"
 import {
 	useLocation,
+	useMatchRoute,
 	useNavigate,
 	useParams,
 	useSearch
@@ -12,15 +14,14 @@ import {
 import { Button, Card, Flex, Form, type FormProps, Select, Tabs } from "antd"
 import dayjs from "dayjs"
 import { type FC, useEffect, useMemo } from "react"
-import { cityData } from "src/shared/data/city.data"
-import {
-	type SearchChange,
-	useSearchStore
-} from "src/shared/store/use-search-store"
-import { formatDate } from "src/shared/utils/format.utils"
-import { SearchDates } from "src/widgets/search/search-dates"
-import { SearchGuests } from "src/widgets/search/search-guests"
+import { cityData } from "src/shared/data"
+import { type SearchChange, useSearchStore } from "src/shared/store"
+import { formatDate } from "src/shared/utils"
+import { SearchDates, SearchGuests } from "src/widgets/search"
 import { useNavbarStyles } from "./navbar.style"
+import "dayjs/locale/ru"
+
+dayjs.locale("ru")
 
 const NavbarSearch: FC = () => {
 	const [form] = Form.useForm<SearchChange>()
@@ -33,10 +34,16 @@ const NavbarSearch: FC = () => {
 	const searchParams = useSearch({
 		strict: false
 	})
+	const match = useMatchRoute()
+
+	const params = match({
+		to: "/hotels/$citySlug",
+		pending: true
+	})
 
 	const guests = Form.useWatch("guests", form) || []
-	const isHome = pathname === "/"
-	const today = dayjs().startOf("week")
+	const isHome = useMemo(() => pathname === "/", [pathname])
+	const today = useMemo(() => dayjs().startOf("week"), [])
 
 	const currentCity = useMemo(() => {
 		return citySlug || search.search
@@ -204,7 +211,7 @@ const NavbarSearch: FC = () => {
 							)}
 						</Form.List>
 						<Button
-							icon={<SearchOutlined />}
+							icon={params ? <LoadingOutlined /> : <SearchOutlined />}
 							iconPosition={"end"}
 							style={{ minHeight: 50 }}
 							type={"primary"}

@@ -1,9 +1,14 @@
 import { Flex } from "antd"
 import { type FC } from "react"
+import { type HotelRoom } from "src/services/hotels"
 import { useToken } from "src/shared/hooks"
 import { HotelVariantCard } from "./hotel-variant-card"
 
-const HotelVariantList: FC = () => {
+interface HotelVariantListProps {
+	data: HotelRoom
+}
+
+const HotelVariantList: FC<HotelVariantListProps> = ({ data: room }) => {
 	const { token } = useToken()
 	return (
 		<div
@@ -45,9 +50,7 @@ const HotelVariantList: FC = () => {
 					scrollbarWidth: "thin"
 				}}
 			>
-				{Array.from({ length: 5 }).map((_, index) => (
-					<HotelVariantCard data={index} key={index} />
-				))}
+				<HotelVariantCard data={room} />
 			</Flex>
 		</div>
 	)

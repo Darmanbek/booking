@@ -1,46 +1,76 @@
-import { Card, Flex } from "antd"
+import { useParams } from "@tanstack/react-router"
+import { Card, Empty, Flex, Spin } from "antd"
 import type L from "leaflet"
 import { type FC, useEffect, useRef } from "react"
 import { Marker, Popup } from "react-leaflet"
-import { type Hotel } from "src/shared/data/hotel.data"
+import {
+	useGetHotelsBySlugLocationQuery,
+	useGetHotelsBySlugQuery
+} from "src/services/hotels"
 import { Text, Title } from "src/shared/ui"
 import { Map } from "src/widgets/map"
 import { MapHotelCard } from "src/widgets/map/map-hotel-card"
 
-interface HotelMapCardProps {
-	data?: Hotel
-}
-
-const HotelMapCard: FC<HotelMapCardProps> = ({ data: hotel }) => {
+const HotelMapCard: FC = () => {
 	const popupRef = useRef<L.Popup>(null)
+	const { hotelSlug } = useParams({
+		from: "/_layout/hotels/$citySlug/$hotelSlug"
+	})
+
+	const { data: hotel, isLoading: hotelLoading } =
+		useGetHotelsBySlugQuery(hotelSlug)
+	const { data: hotelLocation, isLoading: hotelLocationLoading } =
+		useGetHotelsBySlugLocationQuery(hotelSlug)
 
 	useEffect(() => {
-		if (popupRef.current && hotel?.location) {
-			popupRef.current.openPopup(hotel?.location)
+		if (popupRef.current && hotelLocation?.data?.coordinates) {
+			popupRef.current.openPopup({
+				lng: hotelLocation?.data?.coordinates?.longitude,
+				lat: hotelLocation?.data?.coordinates?.longitude
+			})
 		}
-	}, [hotel?.location])
+	}, [hotelLocation?.data?.coordinates])
 	return (
 		<Card
+			id={"location"}
 			title={
 				<Flex vertical={true} gap={4} style={{ paddingBlock: 12 }}>
 					<Title level={3} style={{ fontSize: "inherit" }}>
 						Расположение
 					</Title>
 					<Text style={{ fontSize: 14, fontWeight: 500 }}>
-						{hotel?.address}
+						{hotelLocationLoading
+							? "Загрузка"
+							: hotelLocation?.data?.address || "Нейзвестный адресс"}
 					</Text>
 				</Flex>
 			}
 		>
-			{hotel?.location && (
-				<Map scrollWheelZoom={false} center={hotel?.location}>
-					<Marker position={hotel?.location} autoPan={true}>
-						<Popup autoPan={true}>
-							<MapHotelCard data={hotel} />
-						</Popup>
-					</Marker>
-				</Map>
-			)}
+			<Spin spinning={hotelLoading || hotelLocationLoading}>
+				{hotelLocation?.data?.coordinates ? (
+					<Map
+						scrollWheelZoom={false}
+						center={{
+							lat: hotelLocation?.data?.coordinates?.latitude,
+							lng: hotelLocation?.data?.coordinates?.longitude
+						}}
+					>
+						<Marker
+							position={{
+								lat: hotelLocation?.data?.coordinates?.latitude,
+								lng: hotelLocation?.data?.coordinates?.longitude
+							}}
+							autoPan={true}
+						>
+							<Popup ref={popupRef}>
+								<MapHotelCard data={hotel?.data} />
+							</Popup>
+						</Marker>
+					</Map>
+				) : (
+					<Empty />
+				)}
+			</Spin>
 		</Card>
 	)
 }
