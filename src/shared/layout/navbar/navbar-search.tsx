@@ -12,6 +12,7 @@ import {
 	useSearch
 } from "@tanstack/react-router"
 import { Button, Card, Flex, Form, type FormProps, Select, Tabs } from "antd"
+import { useResponsive } from "antd-style"
 import dayjs from "dayjs"
 import { type FC, useEffect, useMemo } from "react"
 import { cityData } from "src/shared/data"
@@ -25,65 +26,68 @@ dayjs.locale("ru")
 
 const NavbarSearch: FC = () => {
 	const [form] = Form.useForm<SearchChange>()
-
+	const { md } = useResponsive()
 	const { pathname } = useLocation()
 	const navigate = useNavigate()
 	const { citySlug } = useParams({ strict: false })
 	const { search, setSearch } = useSearchStore()
 	const { styles } = useNavbarStyles()
-	const searchParams = useSearch({
-		strict: false
-	})
+	const searchParams = useSearch({ strict: false })
 	const match = useMatchRoute()
+
+	const isHome = pathname === "/"
+	const today = useMemo(() => dayjs().startOf("week"), [])
+
+	const guests = Form.useWatch("guests", form) || []
 
 	const params = match({
 		to: "/hotels/$citySlug",
 		pending: true
 	})
 
-	const guests = Form.useWatch("guests", form) || []
-	const isHome = useMemo(() => pathname === "/", [pathname])
-	const today = useMemo(() => dayjs().startOf("week"), [])
+	// Объединённая memo-логика
+	const { currentCity, currentDates, currentGuests } = useMemo(() => {
+		const from = searchParams.from_date || search.dates[0]
+		const to = searchParams.to_date || search.dates[1]
 
-	const currentCity = useMemo(() => {
-		return citySlug || search.search
-	}, [citySlug, search.search])
-
-	const currentDates = useMemo(() => {
 		return {
-			from_date: searchParams.from_date || search.dates[0],
-			to_date: searchParams.to_date || search.dates[1]
+			currentCity: citySlug || search.search,
+			currentDates: {
+				from_date: from,
+				to_date: to
+			},
+			currentGuests: searchParams?.guests
+				? searchParams.guests.split("-").map(Number)
+				: search.guests
 		}
-	}, [search.dates, searchParams.from_date, searchParams.to_date])
+	}, [citySlug, search, searchParams])
 
-	const currentGuests = useMemo(() => {
-		return searchParams?.guests
-			? searchParams.guests?.split("-").map((guest) => Number(guest) || 1)
-			: search.guests
-	}, [search.guests, searchParams.guests])
+	const formattedFrom = formatDate(currentDates.from_date)
+	const formattedTo = formatDate(currentDates.to_date)
 
 	const onFinish: FormProps<SearchChange>["onFinish"] = (values) => {
-		if (values.dates) {
-			values.dates = [formatDate(values.dates[0]), formatDate(values.dates[1])]
-		}
+		const [from, to] = values.dates.map(formatDate)
+
 		navigate({
 			to: "/hotels/$citySlug",
-			params: {
-				citySlug: values.search
-			},
+			params: { citySlug: values.search },
 			search: {
-				from_date: values.dates[0] as string,
-				to_date: values.dates[1] as string,
+				from_date: from,
+				to_date: to,
 				guests: values.guests.join("-")
 			}
 		})
 	}
 
+	// Обновление store при расхождении с текущими значениями
 	useEffect(() => {
+		const storeFrom = formatDate(search.dates[0])
+		const storeTo = formatDate(search.dates[1])
+
 		if (
 			currentCity !== search.search ||
-			formatDate(currentDates.from_date) !== formatDate(search.dates[0]) ||
-			formatDate(currentDates.to_date) !== formatDate(search.dates[1]) ||
+			formattedFrom !== storeFrom ||
+			formattedTo !== storeTo ||
 			JSON.stringify(currentGuests) !== JSON.stringify(search.guests)
 		) {
 			setSearch({
@@ -94,28 +98,21 @@ const NavbarSearch: FC = () => {
 		}
 	}, [
 		currentCity,
-		currentDates.from_date,
-		currentDates.to_date,
+		formattedFrom,
+		formattedTo,
 		currentGuests,
-		search.dates,
-		search.guests,
-		search.search,
+		search,
 		setSearch
 	])
 
+	// Установка значений формы
 	useEffect(() => {
 		form.setFieldsValue({
 			search: currentCity,
 			dates: [dayjs(currentDates.from_date), dayjs(currentDates.to_date)],
 			guests: currentGuests
 		})
-	}, [
-		currentCity,
-		currentDates.from_date,
-		currentDates.to_date,
-		currentGuests,
-		form
-	])
+	}, [currentCity, currentDates, currentGuests, form])
 
 	return (
 		<>
@@ -125,62 +122,34 @@ const NavbarSearch: FC = () => {
 					type={"card"}
 					activeKey={"hotels"}
 					style={{ width: "auto", margin: 0 }}
-					tabBarStyle={{
-						margin: 0,
-						border: 0
-					}}
+					tabBarStyle={{ margin: 0, border: 0 }}
 					tabBarExtraContent={
 						<Button
-							size={"large"}
-							style={{
-								marginLeft: 8,
-								marginBottom: 8
-							}}
+							size={md ? "large" : "middle"}
+							style={{ marginLeft: 8, marginBottom: 8 }}
 							icon={<ArrowRightOutlined rotate={-45} />}
 							iconPosition={"end"}
 						>
 							Для командировок
 						</Button>
 					}
-					items={[
-						{
-							key: "hotels",
-							label: "Отели и квартиры"
-						}
-					]}
+					items={[{ key: "hotels", label: "Отели и квартиры" }]}
 				/>
 			)}
-			<Card
-				style={
-					isHome
-						? {
-								borderTopLeftRadius: 0
-							}
-						: {}
-				}
-			>
+			<Card style={isHome ? { borderTopLeftRadius: 0 } : {}}>
 				<Form
-					onFinish={onFinish}
+					form={form}
 					name={"search-form"}
 					autoComplete={"off"}
 					requiredMark={false}
-					form={form}
+					onFinish={onFinish}
 				>
-					<Flex
-						gap={8}
-						style={{
-							width: "100%"
-						}}
-					>
-						<Form.Item<SearchChange>
-							name={"search"}
-							noStyle={true}
-							initialValue={cityData[0].slug}
-						>
+					<Flex gap={8} style={{ width: "100%" }} wrap={true}>
+						<Form.Item name={"search"} noStyle={true}>
 							<Select
-								options={cityData.map((item) => ({
-									value: item.slug,
-									label: item.city
+								options={cityData.map(({ slug, city }) => ({
+									value: slug,
+									label: city
 								}))}
 								showSearch={true}
 								optionFilterProp={"label"}
@@ -189,20 +158,24 @@ const NavbarSearch: FC = () => {
 								size={"large"}
 								style={{
 									minHeight: 50,
-									width: "100%"
+									flexBasis: "auto",
+									flexGrow: 1
 								}}
 							/>
 						</Form.Item>
-						<Form.Item<SearchChange>
+
+						<Form.Item
 							name={"dates"}
 							noStyle={true}
 							initialValue={[today.day(6), today.day(7)]}
 						>
-							<SearchDates />
+							<SearchDates style={md ? {} : { width: "100%", minWidth: 0 }} />
 						</Form.Item>
+
 						<Form.List name={"guests"} initialValue={[1]}>
 							{(fields, { add, remove }) => (
 								<SearchGuests
+									style={md ? {} : { width: "100%", minWidth: 0 }}
 									guests={guests}
 									fields={fields}
 									add={add}
@@ -210,10 +183,14 @@ const NavbarSearch: FC = () => {
 								/>
 							)}
 						</Form.List>
+
 						<Button
 							icon={params ? <LoadingOutlined /> : <SearchOutlined />}
 							iconPosition={"end"}
-							style={{ minHeight: 50 }}
+							style={{
+								minHeight: 50,
+								width: md ? undefined : "100%"
+							}}
 							type={"primary"}
 							size={"large"}
 							htmlType={"submit"}

@@ -3,7 +3,7 @@ import { type FC } from "react"
 
 const FooterPayments: FC = () => {
 	return (
-		<Flex justify={"space-around"}>
+		<Flex justify={"space-around"} wrap={true} gap={20}>
 			<Image
 				preview={false}
 				src={"/home/mastercard.png"}

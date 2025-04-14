@@ -14,7 +14,11 @@ const Footer: FC = () => {
 
 	return (
 		<>
-			<Layout.Footer>
+			<Layout.Footer
+				style={{
+					paddingInline: 24
+				}}
+			>
 				<Container>
 					<Flex vertical={true}>
 						{isAuthPage ? null : (

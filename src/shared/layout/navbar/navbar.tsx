@@ -3,7 +3,7 @@ import { Flex, Space } from "antd"
 import { type FC } from "react"
 import { useToken } from "src/shared/hooks"
 import { Container, Paragraph, Title } from "src/shared/ui"
-import { NavbarSearch } from "./navbar/navbar-search"
+import { NavbarSearch } from "./navbar-search"
 
 const Navbar: FC = () => {
 	const { token } = useToken()
@@ -25,7 +25,7 @@ const Navbar: FC = () => {
 		<nav
 			style={{
 				position: "relative",
-				height: isHome ? 434 : "auto",
+				minHeight: isHome ? 434 : "auto",
 				backgroundColor: token.blue10,
 				padding: `${token.paddingLG}px 0`,
 				color: token.colorWhite,

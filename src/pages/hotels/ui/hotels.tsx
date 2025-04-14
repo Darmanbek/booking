@@ -1,6 +1,7 @@
-import { HomeOutlined } from "@ant-design/icons"
+import { AimOutlined, FilterFilled, HomeOutlined } from "@ant-design/icons"
 import { Link, useNavigate, useParams, useSearch } from "@tanstack/react-router"
-import { Breadcrumb, Card, Col, Flex, Row, Space } from "antd"
+import { Breadcrumb, Button, Card, Col, Flex, Row, Space } from "antd"
+import { useResponsive } from "antd-style"
 import dayjs from "dayjs"
 import { type FC, useEffect } from "react"
 import { useGetHotelsSearchQuery } from "src/services/hotels"
@@ -16,6 +17,7 @@ const Hotels: FC = () => {
 	const { citySlug } = useParams({
 		strict: false
 	})
+	const { md } = useResponsive()
 	const { search, setSearch } = useSearchStore()
 	const navigate = useNavigate()
 	const { data: city } = useGetLocationBySlugQuery(citySlug)
@@ -82,14 +84,29 @@ const Hotels: FC = () => {
 							]}
 						/>
 					</Card>
-					<Row gutter={20}>
-						<Col span={8}>
-							<Flex vertical={true} gap={20} style={{ height: "100%" }}>
-								<HotelsMapCard data={hotels?.data || []} />
-								<HotelsForm />
-							</Flex>
+					<Row gutter={20} style={{ rowGap: 20 }}>
+						<Col xs={24} md={8}>
+							{md ? (
+								<Flex vertical={true} gap={20} style={{ height: "100%" }}>
+									<HotelsMapCard data={hotels?.data || []} />
+									<HotelsForm />
+								</Flex>
+							) : (
+								<Card>
+									<Flex justify={"center"}>
+										<Space>
+											<Button type={"primary"} icon={<FilterFilled />}>
+												Фильтры
+											</Button>
+											<Button type={"primary"} icon={<AimOutlined />}>
+												Карта
+											</Button>
+										</Space>
+									</Flex>
+								</Card>
+							)}
 						</Col>
-						<Col span={16}>
+						<Col xs={24} md={16}>
 							<Flex vertical={true} gap={20}>
 								<Card>
 									<Title level={4}>

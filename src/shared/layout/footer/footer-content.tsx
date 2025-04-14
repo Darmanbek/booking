@@ -4,7 +4,7 @@ import { Text, Title } from "src/shared/ui"
 
 const FooterContent: FC = () => {
 	return (
-		<Flex gap={20} justify={"space-between"}>
+		<Flex gap={20} justify={"space-between"} wrap={true}>
 			<Flex vertical={true} gap={8}>
 				<Title level={5}>Контакты:</Title>
 				<Flex vertical={true} gap={12}>
@@ -33,7 +33,7 @@ const FooterContent: FC = () => {
 			</Flex>
 			<Flex vertical={true} gap={8}>
 				<Title level={5}>Мобильное приложение:</Title>
-				<Flex gap={8}>
+				<Flex gap={8} wrap={true} justify={"center"}>
 					<Flex vertical={true} gap={12}>
 						<Text
 							type={"secondary"}

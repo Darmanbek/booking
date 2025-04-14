@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons"
 import { useLocation, useNavigate } from "@tanstack/react-router"
 import { Avatar, Dropdown, Space } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import { useGetMeQuery, useLogoutMutation } from "src/services/users"
 import { useAuth } from "src/shared/hooks"
@@ -16,6 +17,7 @@ import { tokenStorage } from "src/shared/utils"
 
 const ProfileAvatar: FC = () => {
 	const navigate = useNavigate()
+	const { md } = useResponsive()
 	const { pathname } = useLocation()
 	const { data: profile, isLoading } = useGetMeQuery()
 	const auth = useAuth()
@@ -78,11 +80,13 @@ const ProfileAvatar: FC = () => {
 				<Avatar
 					icon={isLoading ? <LoadingOutlined spin={true} /> : <UserOutlined />}
 				/>
-				<Title level={5} style={{ fontSize: 16 }}>
-					{isLoading
-						? "Загрузка"
-						: `${profile?.data?.first_name} ${profile?.data?.last_name}`}
-				</Title>
+				{md ? (
+					<Title level={5} style={{ fontSize: 16 }}>
+						{isLoading
+							? "Загрузка"
+							: `${profile?.data?.first_name} ${profile?.data?.last_name}`}
+					</Title>
+				) : null}
 			</Space>
 		</Dropdown>
 	)

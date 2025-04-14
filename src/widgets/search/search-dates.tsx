@@ -14,7 +14,7 @@ const SearchDates = forwardRef<PickerRef, RangePickerProps>(
 				ref={ref}
 				locale={localeRU}
 				inputReadOnly={true}
-				format={(value) => dayjs(value).format("dd, DD MMM")}
+				format={"dd, DD MMM"}
 				style={{
 					minWidth: 300,
 					minHeight: 50,
