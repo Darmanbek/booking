@@ -11,7 +11,6 @@ import {
 	useLocation
 } from "@tanstack/react-router"
 import { Breadcrumb, Card, Col, Flex, Menu, Row } from "antd"
-import { useResponsive } from "antd-style"
 import { useGetMeQuery } from "src/services/users"
 import { Container } from "src/shared/ui"
 
@@ -48,7 +47,6 @@ const items = [
 function RouteComponent() {
 	const navigate = Route.useNavigate()
 	const { pathname } = useLocation()
-	const { md } = useResponsive()
 	const { data: profile, isLoading } = useGetMeQuery()
 
 	const currentBreadcrumb = items.find((item) => item.key === pathname)?.label
