@@ -15,6 +15,7 @@ const HotelVariantsCardItem: FC<HotelVariantsCardItemProps> = ({
 }) => {
 	const { t } = useTranslation()
 	const { token } = useToken()
+
 	return (
 		<List.Item>
 			<Collapse

@@ -3,7 +3,6 @@ import {
 	ArrowRightOutlined,
 	CheckCircleOutlined
 } from "@ant-design/icons"
-import { useParams } from "@tanstack/react-router"
 import {
 	App,
 	Button,
@@ -24,7 +23,6 @@ import {
 	ReverseRoomsForm,
 	ReverseUserForm
 } from "src/pages/reverse/ui/forms"
-import { hotelData } from "src/shared/data/hotel.data"
 import { Container } from "src/shared/ui"
 import { ReverseHotelCard, ReverseInfoCard, ReversePricesCard } from "./cards"
 
@@ -40,11 +38,8 @@ export type ReverseChange = {
 }
 
 const Reverse: FC = () => {
-	const { hotelSlug } = useParams({ strict: false })
 	const [form] = Form.useForm<ReverseChange>()
 	const [step, setStep] = useState(1)
-
-	const hotel = hotelData.find((el) => el.slug === hotelSlug)
 
 	const { notification } = App.useApp()
 
@@ -132,7 +127,7 @@ const Reverse: FC = () => {
 										label: "Бронирование",
 										children: (
 											<Flex vertical={true} gap={20}>
-												<ReverseHotelCard data={hotel} />
+												<ReverseHotelCard />
 												<ReverseUserForm form={form} onFinish={onFinish} />
 												<ReverseRoomsForm form={form} onFinish={onFinish} />
 												<ReverseQuestionForm form={form} onFinish={onFinish} />

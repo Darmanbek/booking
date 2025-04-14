@@ -1,7 +1,9 @@
 import { UserOutlined } from "@ant-design/icons"
 import { Avatar, Card, Descriptions } from "antd"
-import { type FC } from "react"
+import { type FC, useState } from "react"
+import { useOrders } from "src/pages/hotel/hooks"
 import { type HotelRoom } from "src/services/hotels"
+import { useDebounceEffect as useEffect } from "src/shared/hooks"
 import { Counter, Title } from "src/shared/ui"
 import { formatPriceWithCurrency } from "src/shared/utils/format.utils"
 
@@ -10,6 +12,12 @@ interface HotelVariantCardProps {
 }
 
 const HotelVariantCard: FC<HotelVariantCardProps> = ({ data: room }) => {
+	const [quantity, setQuantity] = useState(0)
+	const { addRoom } = useOrders()
+
+	useEffect(() => {
+		addRoom(room, quantity)
+	}, [addRoom, quantity, room])
 	return (
 		<Card
 			style={{
@@ -24,6 +32,8 @@ const HotelVariantCard: FC<HotelVariantCardProps> = ({ data: room }) => {
 							paddingInline: 12
 						}
 					}}
+					value={quantity}
+					onChange={(value) => setQuantity(Number(value) || 0)}
 					style={{ width: "100%", maxWidth: "100%", textAlign: "center" }}
 					key={"Counter"}
 					min={0}

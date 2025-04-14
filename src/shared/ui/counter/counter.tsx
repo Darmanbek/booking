@@ -37,6 +37,17 @@ const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
 
 		const [currentValue, setCurrentValue] = useState(Number(value) || minLength)
 		const { styles, cx } = useCounterStyles()
+		
+		const decrement = () => {
+			if (currentValue < minLength + 1) return
+			setCurrentValue((prev) => prev - 1)
+		}
+		
+		const increment = () => {
+			setCurrentValue((prev) =>
+				max && prev >= Number(max) ? prev : prev + 1
+			)
+		}
 
 		useEffect(() => {
 			onChange?.(currentValue)
@@ -50,10 +61,7 @@ const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
 				<Space.Compact {...spaceProps}>
 					<Button
 						icon={<MinusOutlined />}
-						onClick={() => {
-							if (currentValue < minLength + 1) return
-							setCurrentValue((prev) => prev - 1)
-						}}
+						onClick={decrement}
 						{...buttonProps?.decrement}
 					/>
 					<InputNumber
@@ -67,11 +75,7 @@ const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
 					/>
 					<Button
 						icon={<PlusOutlined />}
-						onClick={() =>
-							setCurrentValue((prev) =>
-								max && prev >= Number(max) ? prev : prev + 1
-							)
-						}
+						onClick={increment}
 						{...buttonProps?.increment}
 					/>
 				</Space.Compact>
