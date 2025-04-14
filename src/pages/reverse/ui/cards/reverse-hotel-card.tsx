@@ -3,6 +3,7 @@ import { useParams } from "@tanstack/react-router"
 import { Card, Flex, Image, Space } from "antd"
 import { type FC } from "react"
 import {
+	useGetHotelsBySlugImagesQuery,
 	useGetHotelsBySlugLocationQuery,
 	useGetHotelsBySlugQuery
 } from "src/services/hotels"
@@ -16,6 +17,7 @@ const ReverseHotelCard: FC = () => {
 	const { hotelSlug } = useParams({ strict: false })
 	const { data: hotel } = useGetHotelsBySlugQuery(hotelSlug)
 	const { data: hotelLocation } = useGetHotelsBySlugLocationQuery(hotelSlug)
+	const { data: hotelImages } = useGetHotelsBySlugImagesQuery(hotelSlug)
 
 	return (
 		<Card
@@ -37,7 +39,7 @@ const ReverseHotelCard: FC = () => {
 							alignItems: "center"
 						}}
 						alt={t(hotel?.data?.name)}
-						src={hotel?.data?.images?.[0]}
+						src={hotelImages?.data?.[0]?.image}
 					/>
 				</Flex>
 				<Flex vertical={true} align={"start"}>
@@ -48,7 +50,10 @@ const ReverseHotelCard: FC = () => {
 							{hotelLocation?.data?.address}
 						</Space>
 						{hotelLocation?.data?.city}
-						<Text>4.1км от центра</Text>
+						<Text>
+							{Number(Number(hotelLocation?.data?.to_city_center) || 0)}км от
+							центра
+						</Text>
 					</Space>
 				</Flex>
 			</Flex>

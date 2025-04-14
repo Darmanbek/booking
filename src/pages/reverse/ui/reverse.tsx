@@ -3,27 +3,36 @@ import {
 	ArrowRightOutlined,
 	CheckCircleOutlined
 } from "@ant-design/icons"
+import { useNavigate, useParams } from "@tanstack/react-router"
 import {
-	App,
 	Button,
 	Col,
 	Flex,
 	Form,
 	type FormProps,
 	Row,
+	Spin,
 	Steps,
-	Tabs,
-	Typography
+	Tabs
 } from "antd"
-import dayjs, { type Dayjs } from "dayjs"
-import { type FC, useState } from "react"
+import { type Dayjs } from "dayjs"
+import { type FC, useEffect, useState } from "react"
+import { ReverseContext } from "src/pages/reverse/context"
 import {
 	ReversePaymentForm,
 	ReverseQuestionForm,
 	ReverseRoomsForm,
 	ReverseUserForm
 } from "src/pages/reverse/ui/forms"
+import {
+	type BookingFinalChange,
+	useCreateBookingFinalMutation,
+	useGetBookingByIdQuery
+} from "src/services/booking"
+import { NotFound } from "src/shared/layout"
 import { Container } from "src/shared/ui"
+import { formatCustomDate, formatFormPhone } from "src/shared/utils"
+import { Loader } from "src/widgets/loader"
 import { ReverseHotelCard, ReverseInfoCard, ReversePricesCard } from "./cards"
 
 export type ReverseChange = {
@@ -38,23 +47,39 @@ export type ReverseChange = {
 }
 
 const Reverse: FC = () => {
-	const [form] = Form.useForm<ReverseChange>()
+	const [form] = Form.useForm<BookingFinalChange>()
 	const [step, setStep] = useState(1)
+	const { orderId, hotelSlug } = useParams({
+		from: "/_layout/orders/$orderId/reverse/$hotelSlug"
+	})
+	const navigate = useNavigate()
 
-	const { notification } = App.useApp()
+	const { data: booking, isLoading } = useGetBookingByIdQuery(orderId)
 
-	const onFinish: FormProps<ReverseChange>["onFinish"] = (values) => {
+	const {
+		mutate: reverse,
+		isPending: reverseLoading,
+		isSuccess
+	} = useCreateBookingFinalMutation(hotelSlug)
+
+	const onFinish: FormProps<BookingFinalChange>["onFinish"] = (values) => {
+		if (!booking) return
 		if (values.time) {
-			values.time = dayjs(values.time).format("HH:mm")
+			values.time = formatCustomDate(values.time, "HH:mm")
 		}
-		console.log(values)
-		notification.info({
-			message: "Результат",
-			description: (
-				<Typography.Text>
-					<pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
-				</Typography.Text>
-			)
+		if (values.phone_number) {
+			values.phone_number = formatFormPhone(values.phone_number)
+		}
+		if (values.rooms_info) {
+			values.rooms_info = values?.rooms_info?.map((el) => ({
+				...el,
+				guest_name: el?.guest_name || undefined
+			}))
+		}
+		reverse({
+			...values,
+			check_in_date: booking?.data?.check_in_date,
+			check_out_date: booking?.data?.check_out_date
 		})
 	}
 
@@ -95,103 +120,133 @@ const Reverse: FC = () => {
 		})
 	}
 
+	useEffect(() => {
+		if (isSuccess) {
+			navigate({
+				to: "/orders",
+				replace: true
+			})
+		}
+	}, [isSuccess, navigate])
+
+	if (isLoading)
+		return (
+			<Flex justify={"center"} align={"center"} style={{ minHeight: "50vh" }}>
+				<Spin />
+			</Flex>
+		)
+
+	if (!booking?.data)
+		return (
+			<NotFound title={"Не найдено"} subTitle={"Такой брони несуществует"} />
+		)
+
 	return (
-		<section>
-			<Container>
-				<Flex vertical={true} gap={20}>
-					<Steps
-						current={step}
-						items={[
-							{
-								title: "Выбор отеля"
-							},
-							{
-								title: "Бронирование"
-							},
-							{
-								title: "Способ оплаты"
-							}
-						]}
-					/>
-					<Row gutter={20} style={{ rowGap: 20 }}>
-						<Col span={16}>
-							<Tabs
-								animated={true}
-								activeKey={`${step}`}
-								tabBarStyle={{
-									display: "none"
-								}}
-								items={[
-									{
-										key: "1",
-										label: "Бронирование",
-										children: (
-											<Flex vertical={true} gap={20}>
-												<ReverseHotelCard />
-												<ReverseUserForm form={form} onFinish={onFinish} />
-												<ReverseRoomsForm form={form} onFinish={onFinish} />
-												<ReverseQuestionForm form={form} onFinish={onFinish} />
-											</Flex>
-										)
-									},
-									{
-										key: "2",
-										label: "Способ оплаты",
-										children: (
-											<Flex vertical={true} gap={20}>
-												<ReversePaymentForm form={form} onFinish={onFinish} />
-											</Flex>
-										)
-									}
-								]}
-							/>
-							<Flex justify={"space-between"} style={{ marginTop: 20 }}>
-								<Button
-									danger={true}
-									size={"large"}
-									type={"primary"}
-									iconPosition={"start"}
-									style={
-										step === 1
-											? {
-													opacity: 0,
-													pointerEvents: "none",
-													visibility: "hidden"
-												}
-											: {}
-									}
-									onClick={onPrevStep}
-									icon={<ArrowLeftOutlined />}
-								>
-									Назад
-								</Button>
-								<Button
-									size={"large"}
-									type={"primary"}
-									iconPosition={"end"}
-									onClick={onNextStep}
-									icon={
-										step === 2 ? (
-											<CheckCircleOutlined />
-										) : (
-											<ArrowRightOutlined />
-										)
-									}
-								>
-									{step === 2 ? "Забронировать" : "Продолжить"}
-								</Button>
-							</Flex>
-						</Col>
-						<Col span={8}>
-							<Flex vertical={true} gap={20}>
-								<ReverseInfoCard />
-								<ReversePricesCard />
-							</Flex>
-						</Col>
-					</Row>
-				</Flex>
-			</Container>
-		</section>
+		<ReverseContext.Provider
+			value={{
+				form,
+				onFinish
+			}}
+		>
+			<Loader loading={reverseLoading} />
+			<section>
+				<Container>
+					<Flex vertical={true} gap={20}>
+						<Steps
+							current={step}
+							items={[
+								{
+									title: "Выбор отеля"
+								},
+								{
+									title: "Бронирование"
+								},
+								{
+									title: "Способ оплаты"
+								}
+							]}
+						/>
+						<Row gutter={20} style={{ rowGap: 20 }}>
+							<Col span={16}>
+								<Tabs
+									animated={true}
+									activeKey={`${step}`}
+									tabBarStyle={{
+										display: "none"
+									}}
+									items={[
+										{
+											key: "1",
+											label: "Бронирование",
+											children: (
+												<Flex vertical={true} gap={20}>
+													<ReverseHotelCard />
+													<ReverseUserForm />
+													<ReverseRoomsForm />
+													<ReverseQuestionForm />
+												</Flex>
+											)
+										},
+										{
+											key: "2",
+											label: "Способ оплаты",
+											children: (
+												<Flex vertical={true} gap={20}>
+													<ReversePaymentForm />
+												</Flex>
+											)
+										}
+									]}
+								/>
+								<Flex justify={"space-between"} style={{ marginTop: 20 }}>
+									<Button
+										danger={true}
+										size={"large"}
+										type={"primary"}
+										iconPosition={"start"}
+										style={
+											step === 1
+												? {
+														opacity: 0,
+														pointerEvents: "none",
+														visibility: "hidden"
+													}
+												: {}
+										}
+										onClick={onPrevStep}
+										icon={<ArrowLeftOutlined />}
+									>
+										Назад
+									</Button>
+									<Button
+										size={"large"}
+										type={"primary"}
+										iconPosition={"end"}
+										onClick={onNextStep}
+										loading={reverseLoading}
+										icon={
+											step === 2 ? (
+												<CheckCircleOutlined />
+											) : (
+												<ArrowRightOutlined />
+											)
+										}
+									>
+										{step === 2 ? "Забронировать" : "Продолжить"}
+									</Button>
+								</Flex>
+							</Col>
+							<Col span={8}>
+								<Flex vertical={true} gap={20}>
+									<ReverseInfoCard />
+									<ReversePricesCard />
+								</Flex>
+							</Col>
+						</Row>
+					</Flex>
+				</Container>
+			</section>
+		</ReverseContext.Provider>
 	)
 }
 

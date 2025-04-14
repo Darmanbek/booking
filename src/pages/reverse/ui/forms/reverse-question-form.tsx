@@ -1,23 +1,21 @@
-import {
-	Alert,
-	Card,
-	DatePicker,
-	Form,
-	type FormInstance,
-	type FormProps,
-	Input
-} from "antd"
+import { useParams } from "@tanstack/react-router"
+import { Alert, Card, DatePicker, Form, Input } from "antd"
 import { type FC } from "react"
+import { useReverse } from "src/pages/reverse/hooks"
+import {
+	BookingFinalChange,
+	useGetBookingByIdQuery
+} from "src/services/booking"
+import { useGetHotelsBySlugRulesQuery } from "src/services/hotels"
+import { formatCustomDate } from "src/shared/utils"
 
-interface ReverseQuestionFormProps {
-	form: FormInstance
-	onFinish: FormProps["onFinish"]
-}
-
-const ReverseQuestionForm: FC<ReverseQuestionFormProps> = ({
-	form,
-	onFinish
-}) => {
+const ReverseQuestionForm: FC = () => {
+	const { hotelSlug, orderId } = useParams({
+		from: "/_layout/orders/$orderId/reverse/$hotelSlug"
+	})
+	const { data: hotelRules } = useGetHotelsBySlugRulesQuery(hotelSlug)
+	const { data: order } = useGetBookingByIdQuery(orderId)
+	const { form, onFinish } = useReverse()
 	return (
 		<Card title={"Ваши пожелания"}>
 			<Form
@@ -31,9 +29,9 @@ const ReverseQuestionForm: FC<ReverseQuestionFormProps> = ({
 				form={form}
 				onFinish={onFinish}
 			>
-				<Form.Item
+				<Form.Item<BookingFinalChange>
 					label={"Особые пожелания"}
-					name={"question"}
+					name={"special_requests"}
 					initialValue={""}
 				>
 					<Input.TextArea
@@ -43,10 +41,15 @@ const ReverseQuestionForm: FC<ReverseQuestionFormProps> = ({
 						}
 					/>
 				</Form.Item>
-				<Form.Item
+				<Form.Item<BookingFinalChange>
 					label={"Время прибытия"}
 					tooltip={{
-						icon: <span style={{ marginLeft: 4 }}>:Вторник, 25 Марта 2025</span>
+						icon: (
+							<span style={{ marginLeft: 4 }}>
+								:
+								{`${formatCustomDate(order?.data?.check_in_date, "dddd, D MMMM YYYY")}`}
+							</span>
+						)
 					}}
 					name={"time"}
 					help={"К этому времени отельер подготовит номер к вашему прибытию"}
@@ -67,7 +70,8 @@ const ReverseQuestionForm: FC<ReverseQuestionFormProps> = ({
 					showIcon={true}
 					message={
 						<>
-							Ваш номер будет готов в <b>14:00</b>
+							Ваш номер будет готов в{" "}
+							<b>{hotelRules?.data?.check_in_from || ""}</b>
 						</>
 					}
 					description={

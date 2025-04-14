@@ -5,15 +5,21 @@ import type {
 	ResponseSingleData
 } from "src/services/shared"
 import { api } from "src/shared/api"
-import { BookingInitial, BookingInitialChange } from "./booking.types"
+import type {
+	Booking,
+	BookingFinal,
+	BookingFinalChange,
+	BookingInitial,
+	BookingInitialChange
+} from "./booking.types"
 
 class BookingService {
-	get = async (params: GetParams = {}): Promise<Response<void>> => {
+	get = async (params: GetParams = {}): Promise<Response<Booking>> => {
 		const response = await api.get(`/bookings`, { params })
 		return response.data
 	}
 
-	getById = async (id: ParamId): Promise<ResponseSingleData<void>> => {
+	getById = async (id: ParamId): Promise<ResponseSingleData<BookingFinal>> => {
 		const response = await api.get(`/booking/${id}`)
 		return response.data
 	}
@@ -31,7 +37,7 @@ class BookingService {
 
 	createFinal = async (
 		hotelSlug: ParamId,
-		form: BookingInitialChange
+		form: BookingFinalChange
 	): Promise<ResponseSingleData<void>> => {
 		const response = await api.post(`/hotels/${hotelSlug}/bookings/final`, form)
 		return response.data

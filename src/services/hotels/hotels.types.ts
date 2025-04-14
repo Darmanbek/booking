@@ -1,5 +1,5 @@
 import type { TranslateName } from "src/services/shared"
-import { User } from "src/services/users"
+import type { User } from "src/services/users"
 
 export type Hotel = {
 	id: number
@@ -20,6 +20,8 @@ export type HotelLocation = {
 	address: string
 	city: string
 	coordinates: HotelCoordinates
+	latitude: number
+	longitude: number
 	distance_to_center: number
 	to_airport: number
 	to_railway: number
@@ -82,6 +84,7 @@ export type HotelRoom = {
 	quantity: number
 	available_quantity: number
 	max_guests: number
+	room_area: number
 	room_type_id: number
 	room_type: string
 	base_price: number

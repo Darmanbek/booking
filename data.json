@@ -1,0 +1,78 @@
+{
+	"data": [
+		{
+			"status": "booked",
+			"check_in_date": "2025-04-14",
+			"total_price": 150000,
+			"total_days": 1,
+			"time": null,
+			"id": 38,
+			"check_out_date": "2025-04-15",
+			"special_requests": "string",
+			"payment_method_id": 1,
+			"booking_type": "personal",
+			"hotel_id": 11,
+			"user_id": 1,
+			"created_at": "2025-04-14T09:53:27.422348+00:00",
+			"updated_at": null,
+			"hotel_info": {
+				"is_active": true,
+				"hotel_category_id": 1,
+				"id": 11,
+				"slug": "grand-hotel-9",
+				"description": {
+					"ru": "Роскошный отель в центре города с великолепным видом на город",
+					"en": "Luxury hotel in the city center with magnificent city views",
+					"uz": "Shahar markazida joylashgan hashamatli mehmonxona",
+					"kk ": "Қала орталығындағы салтанатты қонақ үй"
+				},
+				"hotel_admin_id": 1,
+				"created_at": "2025-03-29T13:06:16.632654+00:00",
+				"image": null,
+				"updated_at": null,
+				"name": {
+					"ru": "Гранд Отель",
+					"en": "Grand Hotel",
+					"uz": "Grand Mehmonxonasi",
+					"kk": "Grand Қонақ үйі"
+				},
+				"hotel_images": [],
+				"location": {
+					"city_id": 1,
+					"longitude": 37.6173,
+					"to_railway": 3420776.8,
+					"hotel_id": 11,
+					"address": "ул. Центральная, 1",
+					"latitude": 55.7558,
+					"to_airport": 3417761.7,
+					"to_city_center": 3412103.6,
+					"id": 11
+				}
+			},
+			"booking_rooms": [
+				{
+					"guest_name": "string",
+					"id": 28,
+					"booking_id": 38,
+					"room_id": 2,
+					"guest_quantity": 1,
+					"room": {
+						"image": null,
+						"quantity": 20,
+						"room_area": 35,
+						"room_type_id": 1,
+						"hotel_id": 11,
+						"max_guests": 2,
+						"base_price": 150000,
+						"use_dinamic_price": true,
+						"id": 2,
+						"room_type": {
+							"name": "Одноместный номер Делюкс",
+							"id": 1
+						}
+					}
+				}
+			]
+		}
+	]
+}

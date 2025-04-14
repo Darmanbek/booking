@@ -7,7 +7,7 @@ export const useTranslation = () => {
 	const t = (name?: TranslateName | string) => {
 		if (name === undefined) return ""
 		if (typeof name === "object") {
-			return name[lang]
+			return name[lang] || name["ru"] || "-"
 		}
 
 		return name

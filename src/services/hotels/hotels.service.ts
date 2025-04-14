@@ -88,6 +88,14 @@ class HotelsService {
 		const response = await api.post(`/hotels/${slug}/rooms/search`, params)
 		return response.data
 	}
+
+	getBySlugRoomsById = async (
+		slug: ParamId,
+		id: ParamId
+	): Promise<ResponseSingleData<HotelRoom>> => {
+		const response = await api.get(`/hotels/${slug}/rooms/${id}`)
+		return response.data
+	}
 }
 
 export const hotelsService = new HotelsService()

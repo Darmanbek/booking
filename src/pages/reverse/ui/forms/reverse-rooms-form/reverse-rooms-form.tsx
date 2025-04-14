@@ -1,13 +1,32 @@
-import { Flex, Form, type FormInstance, type FormProps } from "antd"
-import { type FC } from "react"
+import { useParams } from "@tanstack/react-router"
+import { Flex, Form } from "antd"
+import { type FC, useEffect } from "react"
+import { useReverse } from "src/pages/reverse/hooks"
+import { useGetBookingByIdQuery } from "src/services/booking"
 import { ReverseRoomsFormItem } from "./reverse-rooms-form-item"
 
-interface ReverseRoomFormProps {
-	form: FormInstance
-	onFinish: FormProps["onFinish"]
-}
+const ReverseRoomsForm: FC = () => {
+	const { form, onFinish } = useReverse()
 
-const ReverseRoomsForm: FC<ReverseRoomFormProps> = ({ form, onFinish }) => {
+	const { orderId } = useParams({
+		from: "/_layout/orders/$orderId/reverse/$hotelSlug"
+	})
+
+	const { data: order } = useGetBookingByIdQuery(orderId)
+
+	useEffect(() => {
+		if (order?.data) {
+			form.setFieldValue(
+				"rooms_info",
+				order?.data?.rooms_info?.map((room) => ({
+					uuid: room?.uuid,
+					room_id: room?.room_id,
+					guest_quantity: room?.guest_quantity,
+					guest_name: room?.guest_name || ""
+				}))
+			)
+		}
+	}, [form, order?.data])
 	return (
 		<Form
 			layout={"vertical"}
@@ -17,15 +36,7 @@ const ReverseRoomsForm: FC<ReverseRoomFormProps> = ({ form, onFinish }) => {
 			onFinish={onFinish}
 		>
 			<Flex vertical={true} gap={20}>
-				<Form.List
-					name={"rooms"}
-					initialValue={[
-						{
-							guest_name: "",
-							guest_count: 1
-						}
-					]}
-				>
+				<Form.List name={"rooms_info"} initialValue={[]}>
 					{(fields, { remove }) => (
 						<>
 							{fields.map((field, index) => (
@@ -33,6 +44,7 @@ const ReverseRoomsForm: FC<ReverseRoomFormProps> = ({ form, onFinish }) => {
 									field={field}
 									remove={remove}
 									key={index}
+									length={fields.length}
 								/>
 							))}
 						</>

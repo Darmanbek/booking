@@ -1,10 +1,18 @@
-import { Card, Descriptions } from "antd"
-import dayjs from "dayjs"
+import { useParams } from "@tanstack/react-router"
+import { Card, Descriptions, Form } from "antd"
 import { type FC } from "react"
-import { useSearchStore } from "src/shared/store/use-search-store"
+import { useReverse } from "src/pages/reverse/hooks"
+import { useGetBookingByIdQuery } from "src/services/booking"
+import { formatCustomDate, formatNumber } from "src/shared/utils"
 
 const ReverseInfoCard: FC = () => {
-	const { search } = useSearchStore()
+	const { orderId } = useParams({
+		from: "/_layout/orders/$orderId/reverse/$hotelSlug"
+	})
+	const { form } = useReverse()
+	const roomsInfo = Form.useWatch("rooms_info", form) || []
+
+	const { data: order } = useGetBookingByIdQuery(orderId)
 	return (
 		<Card title={"Данные бронирования"}>
 			<Descriptions
@@ -13,17 +21,32 @@ const ReverseInfoCard: FC = () => {
 				items={[
 					{
 						label: "Дата заезда",
-						children: dayjs(search.dates[0]).format("dddd, D MMMM YYYY")
+						children: formatCustomDate(
+							order?.data?.check_in_date,
+							"dddd, D MMMM YYYY"
+						)
 					},
 					{
 						label: "Дата отъезда",
-						children: dayjs(search.dates[1]).format("dddd, D MMMM YYYY")
+						children: formatCustomDate(
+							order?.data?.check_out_date,
+							"dddd, D MMMM YYYY"
+						)
 					},
 					{
 						label: "Число гостей",
-						children: search.guests.reduce((total, guest) => total + guest, 0)
+						children:
+							Number(
+								roomsInfo.reduce(
+									(total, room) => total + (Number(room?.guest_quantity) || 0),
+									0
+								)
+							) || 0
 					},
-					{ label: "Кол-во номеров", children: search.guests.length }
+					{
+						label: "Кол-во номеров",
+						children: formatNumber(roomsInfo?.length)
+					}
 				]}
 			/>
 		</Card>

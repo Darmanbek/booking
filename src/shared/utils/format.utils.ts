@@ -1,5 +1,10 @@
 import dayjs, { type Dayjs } from "dayjs"
 
+export const formatNumber = <T>(value: T) => {
+	if (isNaN(Number(value))) return 0
+	return Number(value) || 0
+}
+
 export const formatPrice = (price?: number | string): string => {
 	if (price === undefined && isNaN(Number(price))) {
 		return "0"
@@ -23,6 +28,11 @@ export const formatPriceWithCurrency = (price?: number | string): string => {
 	)
 }
 
+export const formatPhone = (value?: string | null) => {
+	if (!value) return ""
+	return value.replace(/(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/, "+$1 $2 $3 $4 $5")
+}
+
 export const formatFormPhone = (phone?: string) => {
 	if (!phone) return ""
 	return `998` + phone
@@ -35,7 +45,7 @@ export const formatDate = (value?: string | Dayjs) =>
 	dayjs(value).format("YYYY-MM-DD")
 
 export const formatCustomDate = (
-	value?: string,
+	value?: string | Dayjs,
 	format: string = "YYYY-MM-DD"
 ) => dayjs(value).format(format)
 

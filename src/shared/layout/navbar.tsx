@@ -1,4 +1,4 @@
-import { useLocation } from "@tanstack/react-router"
+import { useLocation, useParams } from "@tanstack/react-router"
 import { Flex, Space } from "antd"
 import { type FC } from "react"
 import { useToken } from "src/shared/hooks"
@@ -8,10 +8,18 @@ import { NavbarSearch } from "./navbar/navbar-search"
 const Navbar: FC = () => {
 	const { token } = useToken()
 	const { pathname } = useLocation()
+	const { orderId, hotelSlug } = useParams({
+		strict: false
+	})
 
 	const isHome = pathname === "/"
 
-	if (["/login", "/register"].includes(pathname)) return
+	if (
+		["/login", "/register", `/orders/${orderId}/reverse/${hotelSlug}`].includes(
+			pathname
+		)
+	)
+		return
 
 	return (
 		<nav

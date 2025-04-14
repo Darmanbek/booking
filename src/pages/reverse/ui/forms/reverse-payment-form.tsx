@@ -1,30 +1,25 @@
 import {
 	Badge,
 	Card,
-	Checkbox,
 	Col,
 	Descriptions,
 	Flex,
 	Form,
-	type FormInstance,
-	type FormProps,
 	Input,
 	Radio,
 	Row
 } from "antd"
 import { type FC } from "react"
+import { useReverse } from "src/pages/reverse/hooks"
+import { BookingFinalChange } from "src/services/booking"
+import { useGetMeQuery } from "src/services/users"
 import { useToken } from "src/shared/hooks"
+import { formatPhone } from "src/shared/utils"
 
-interface ReversePaymentFormProps {
-	form: FormInstance
-	onFinish: FormProps["onFinish"]
-}
-
-const ReversePaymentForm: FC<ReversePaymentFormProps> = ({
-	form,
-	onFinish
-}) => {
+const ReversePaymentForm: FC = () => {
 	const { token } = useToken()
+	const { form, onFinish } = useReverse()
+	const { data: profile, isLoading } = useGetMeQuery()
 	return (
 		<Card title={"Ваши данные"}>
 			<Form
@@ -42,9 +37,9 @@ const ReversePaymentForm: FC<ReversePaymentFormProps> = ({
 				<Flex vertical={true} gap={20}>
 					<Row gutter={16} style={{ rowGap: 16 }}>
 						<Col span={16}>
-							<Form.Item
+							<Form.Item<BookingFinalChange>
 								label={"Номер телефона"}
-								name={"phone"}
+								name={"phone_number"}
 								tooltip={{
 									icon: (
 										<span className={"anticon"}>
@@ -58,20 +53,9 @@ const ReversePaymentForm: FC<ReversePaymentFormProps> = ({
 							>
 								<Input addonBefore={"+998"} />
 							</Form.Item>
-							<br />
-							<Form.Item
-								valuePropName={"checked"}
-								name={"is_message"}
-								initialValue={false}
-								help={"(рекомендуется)"}
-							>
-								<Checkbox>
-									Да, отправьте мне бесплатное электронное подтверждение
-								</Checkbox>
-							</Form.Item>
 						</Col>
 						<Col span={8}>
-							<Card type={"inner"}>
+							<Card type={"inner"} loading={isLoading}>
 								<Descriptions
 									column={1}
 									layout={"vertical"}
@@ -79,12 +63,12 @@ const ReversePaymentForm: FC<ReversePaymentFormProps> = ({
 										{
 											key: "name",
 											label: "Имя",
-											children: "Alex"
+											children: `${profile?.data?.first_name || ""} ${profile?.data?.last_name || ""}`
 										},
 										{
 											key: "phone",
 											label: "Телефон",
-											children: "+998 90 123 45 67"
+											children: formatPhone(profile?.data?.phone_number)
 										}
 									]}
 								/>
@@ -92,9 +76,9 @@ const ReversePaymentForm: FC<ReversePaymentFormProps> = ({
 						</Col>
 					</Row>
 					<Card type={"inner"}>
-						<Form.Item
+						<Form.Item<BookingFinalChange>
 							label={"Способ оплаты"}
-							name={"payment_method"}
+							name={"payment_method_id"}
 							initialValue={1}
 						>
 							<Radio.Group size={"large"}>
@@ -106,7 +90,7 @@ const ReversePaymentForm: FC<ReversePaymentFormProps> = ({
 											borderColor: token.colorPrimary,
 											cursor: "pointer"
 										}}
-										onClick={() => form.setFieldValue("payment_method", 1)}
+										onClick={() => form.setFieldValue("payment_method_id", 1)}
 									>
 										<Radio value={1}>На месте</Radio>
 									</Card>

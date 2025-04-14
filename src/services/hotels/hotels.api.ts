@@ -87,6 +87,14 @@ const useGetHotelsBySlugRoomsSearchQuery = (
 	})
 }
 
+const useGetHotelsBySlugRoomsByIdQuery = (slug: ParamId, id: ParamId) => {
+	return useCrudQuery({
+		queryFn: () => hotelsService.getBySlugRoomsById(slug, id),
+		queryKey: ["hotels", slug, "rooms", id],
+		enabled: !!slug
+	})
+}
+
 export {
 	useGetHotelsSearchQuery,
 	useGetHotelsBySlugQuery,
@@ -97,5 +105,6 @@ export {
 	useGetHotelsBySlugImagesQuery,
 	useGetHotelsBySlugReviewsQuery,
 	useGetHotelsBySlugRatingQuery,
-	useGetHotelsBySlugRoomsSearchQuery
+	useGetHotelsBySlugRoomsSearchQuery,
+	useGetHotelsBySlugRoomsByIdQuery
 }

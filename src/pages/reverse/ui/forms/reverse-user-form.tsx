@@ -1,20 +1,10 @@
-import {
-	Card,
-	Col,
-	Form,
-	type FormInstance,
-	type FormProps,
-	Input,
-	Row
-} from "antd"
+import { Card, Col, Form, Input, Row } from "antd"
 import { type FC } from "react"
+import { useReverse } from "src/pages/reverse/hooks"
 
-interface ReverseUserFormProps {
-	form: FormInstance
-	onFinish: FormProps["onFinish"]
-}
+const ReverseUserForm: FC = () => {
+	const { form, onFinish } = useReverse()
 
-const ReverseUserForm: FC<ReverseUserFormProps> = ({ form, onFinish }) => {
 	return (
 		<Card title={"Ваши данные"}>
 			<Form

@@ -2,7 +2,7 @@ import { CloseOutlined } from "@ant-design/icons"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { Button, Card, Flex, Form, List, Space } from "antd"
 import { type FC, useEffect } from "react"
-import { OrdersContextValues } from "src/pages/hotel/context"
+import type { OrdersContextValues } from "src/pages/hotel/context"
 import { useOrders } from "src/pages/hotel/hooks"
 import { useCreateBookingInitialMutation } from "src/services/booking"
 import {
@@ -32,12 +32,15 @@ const HotelOrdersCard: FC = () => {
 		useCreateBookingInitialMutation(hotelSlug)
 
 	const onBooking = () => {
+		const duplicatedRooms = rooms.flatMap(({ quantity, room }) =>
+			Array.from({ length: quantity }, () => room)
+		)
 		addBooking(
 			{
 				check_in_date: formatDate(search?.dates?.[0]),
-				check_out_date: formatDate(search?.dates?.[0]),
-				rooms_info: rooms.map((el) => ({
-					room_id: el?.room?.id,
+				check_out_date: formatDate(search?.dates?.[1]),
+				rooms_info: duplicatedRooms.map((el) => ({
+					room_id: el?.id,
 					guest_quantity: search?.guests.reduce(
 						(total, guest) => total + guest,
 						0

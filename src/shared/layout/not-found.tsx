@@ -7,17 +7,22 @@ import Result from "antd/es/result"
 import Space from "antd/es/space"
 import { type FC } from "react"
 
-type NotFoundProps = Omit<FlexProps, "children"> & NotFoundRouteProps
+interface NotFoundProps
+	extends Omit<FlexProps, "children">,
+		Partial<NotFoundRouteProps> {
+	title?: string
+	subTitle?: string
+}
 
-const NotFound: FC<NotFoundProps> = ({ data }) => {
+const NotFound: FC<NotFoundProps> = ({ data, title, subTitle }) => {
 	const router = useRouter()
 
 	return (
 		<Flex align={"center"} flex={1} justify={"center"}>
 			<Result
 				status={"404"}
-				title={"404"}
-				subTitle={"Страница, которую вы посетили, не существует."}
+				title={title || "404"}
+				subTitle={subTitle || "Страница, которую вы посетили, не существует."}
 				children={typeof data === "string" ? data : JSON.stringify(data)}
 				extra={
 					<Space>

@@ -3,8 +3,8 @@ import { Link, useParams, useSearch } from "@tanstack/react-router"
 import { Breadcrumb, Card, Col, Flex, Row, Space } from "antd"
 import dayjs from "dayjs"
 import { type FC, useCallback, useState } from "react"
-import { OrdersContext } from "src/pages/hotel/context"
-import { HotelRoom, useGetHotelsBySlugQuery } from "src/services/hotels"
+import { OrdersContext, OrdersContextValues } from "src/pages/hotel/context"
+import { type HotelRoom, useGetHotelsBySlugQuery } from "src/services/hotels"
 import { useGetLocationBySlugQuery } from "src/services/locations"
 import { useTranslation } from "src/shared/hooks"
 import { Container } from "src/shared/ui"
@@ -22,12 +22,7 @@ import {
 } from "./cards"
 
 const Hotel: FC = () => {
-	const [rooms, setRooms] = useState<
-		{
-			quantity: number
-			room: HotelRoom
-		}[]
-	>([])
+	const [rooms, setRooms] = useState<OrdersContextValues["rooms"]>([])
 	const search = useSearch({ strict: false })
 	const { hotelSlug, citySlug = "" } = useParams({
 		strict: false

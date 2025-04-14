@@ -57,8 +57,9 @@ export const useCrudQuery = <
 				error || {
 					description:
 						e?.response?.data?.message ||
-						e?.response?.data?.detail ||
-						e?.message
+						typeof e?.response?.data?.detail === "string"
+							? e?.response?.data?.detail
+							: e?.message
 				}
 			if (customError) {
 				message.error({
@@ -136,7 +137,10 @@ export const useCrudMutation = <
 			const customError = renderError?.(e) ||
 				error || {
 					description:
-						e.response?.data?.message || e.response?.data?.detail || e.message
+						e.response?.data?.message ||
+						typeof e.response?.data?.detail === "string"
+							? e.response?.data?.detail
+							: e.message
 				}
 			if (customError) {
 				message.error({

@@ -1,7 +1,12 @@
-import { type DependencyList, useEffect, useRef } from "react"
+import {
+	type DependencyList,
+	type EffectCallback,
+	useEffect,
+	useRef
+} from "react"
 
 export function useDebounceEffect(
-	fn: () => void,
+	fn: EffectCallback,
 	deps: DependencyList = [],
 	waitTime: number = 500
 ) {

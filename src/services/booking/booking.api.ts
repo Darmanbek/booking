@@ -1,9 +1,9 @@
-import type { ParamId } from "src/services/shared"
+import type { GetParams, ParamId } from "src/services/shared"
 import { useCrudMutation, useCrudQuery } from "src/shared/api"
 import { bookingService } from "./booking.service"
-import type { BookingInitialChange } from "./booking.types"
+import type { BookingFinalChange, BookingInitialChange } from "./booking.types"
 
-const useGetBookingQuery = (params: Record<string, unknown>) => {
+const useGetBookingQuery = (params: GetParams = {}) => {
 	return useCrudQuery({
 		queryFn: () => bookingService.get(params),
 		queryKey: ["booking", ...Object.values(params)]
@@ -30,8 +30,11 @@ const useCreateBookingInitialMutation = (hotelSlug: ParamId) => {
 
 const useCreateBookingFinalMutation = (hotelSlug: ParamId) => {
 	return useCrudMutation({
-		mutationFn: (form: BookingInitialChange) =>
+		mutationFn: (form: BookingFinalChange) =>
 			bookingService.createFinal(hotelSlug, form),
+		renderSuccess: () => ({
+			description: "Ваше бронирование прошло успешно"
+		}),
 		invalidate: {
 			queryKey: ["booking", hotelSlug]
 		}
