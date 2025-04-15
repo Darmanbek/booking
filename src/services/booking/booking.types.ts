@@ -18,7 +18,7 @@ export type Booking = {
 	created_at: string
 	updated_at: string | null
 	hotel_info: BookingHotel
-	booking_rooms: BookingRoom[]
+	booking_rooms: HotelRoom[]
 }
 
 export type BookingHotel = {

@@ -1,18 +1,18 @@
 import { List } from "antd"
 import { type FC } from "react"
-import type { BookingRoom } from "src/services/booking"
+import type { HotelRoom } from "src/services/hotels"
 import { OrdersRoomListItem } from "./orders-room-list-item"
 
 interface OrdersRoomListProps {
-	data?: BookingRoom[]
+	data?: HotelRoom[]
 }
 
 const OrdersRoomList: FC<OrdersRoomListProps> = ({ data: rooms }) => {
 	return (
 		<>
-			<List<BookingRoom>
+			<List<HotelRoom>
 				dataSource={rooms}
-				renderItem={(item) => <OrdersRoomListItem data={item?.room} />}
+				renderItem={(item) => <OrdersRoomListItem data={item} />}
 			/>
 		</>
 	)

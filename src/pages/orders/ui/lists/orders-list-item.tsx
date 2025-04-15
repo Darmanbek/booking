@@ -7,6 +7,7 @@ import {
 	formatCustomDate,
 	formatPriceWithCurrency
 } from "src/shared/utils/format.utils"
+import { RatingTag } from "src/widgets/rating-tag"
 import { OrdersRoomList } from "./orders-room-list"
 
 interface HotelListItemProps {
@@ -33,19 +34,22 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 				<Collapse
 					ghost={true}
 					expandIconPosition={"end"}
+					style={{ width: "100%" }}
 					items={[
 						{
 							key: "hotel",
 							label: (
-								<Flex align={"stretch"}>
+								<Flex align={"stretch"} flex={1}>
 									<Flex style={{ position: "relative", padding: 12 }}>
 										<Image.PreviewGroup>
 											{booking?.hotel_info?.images?.length ? (
 												booking?.hotel_info?.images?.map((image, index) => (
 													<Image
+														onClick={(e) => e.stopPropagation()}
 														key={index}
 														hidden={index !== 0}
 														width={164}
+														height={164}
 														style={{
 															aspectRatio: 1,
 															borderRadius: token.borderRadiusLG,
@@ -59,7 +63,9 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 												))
 											) : (
 												<Image
-													width={256}
+													onClick={(e) => e.stopPropagation()}
+													width={164}
+													height={164}
 													style={{
 														aspectRatio: 1,
 														borderRadius: token.borderRadiusLG,
@@ -79,39 +85,82 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 										gap={20}
 										style={{ padding: 20, paddingLeft: 8, flexGrow: 1 }}
 									>
-										<Flex vertical={true} align={"start"}>
-											<Title level={4}>{t(booking?.hotel_info?.name)}</Title>
-											<a
-												href={`https://www.google.com/maps?q=${booking?.hotel_info?.location?.latitude} ${booking?.hotel_info?.location?.longitude}`}
-												target={"_blank"}
-												rel={"nofollow"}
-											>
-												<Space split={<Text>•</Text>}>
-													{t(booking?.hotel_info?.location?.city)}
-													{"Показать на карте"}
-												</Space>
-											</a>
-											<Text type={"secondary"}>
-												{booking?.hotel_info?.location?.address}
-											</Text>
-										</Flex>
-										<Flex justify={"space-between"} align={"end"}>
-											<Flex vertical={true}>
+										<Flex justify={"space-between"}>
+											<Flex vertical={true} align={"start"}>
+												<Title level={4}>{t(booking?.hotel_info?.name)}</Title>
+												<a
+													href={`https://www.google.com/maps?q=${booking?.hotel_info?.location?.latitude} ${booking?.hotel_info?.location?.longitude}`}
+													target={"_blank"}
+													onClick={(e) => e.stopPropagation()}
+													rel={"nofollow"}
+												>
+													<Space split={<Text>•</Text>}>
+														{t(booking?.hotel_info?.location?.city)}
+														{"Показать на карте"}
+													</Space>
+												</a>
 												<Text type={"secondary"}>
-													Дата заезда:{" "}
-													{formatCustomDate(
-														booking?.check_in_date,
-														"dddd, D MMMM"
-													)}
-												</Text>
-												<Text type={"secondary"}>
-													Дата отъезда:{" "}
-													{formatCustomDate(
-														booking?.check_out_date,
-														"dddd, D MMMM"
-													)}
+													{booking?.hotel_info?.location?.address}
 												</Text>
 											</Flex>
+											<Space>
+												{[
+													{
+														title: "Заезд",
+														date: booking?.check_in_date
+													},
+													{
+														title: "Выезд",
+														date: booking?.check_out_date
+													}
+												].map((item, index) => (
+													<Flex vertical={true} gap={4} key={index}>
+														<Text
+															type={"secondary"}
+															style={{
+																textAlign: "center"
+															}}
+														>
+															{item?.title}
+														</Text>
+														<RatingTag
+															color={"blue"}
+															style={{
+																fontSize: 14
+															}}
+														>
+															<Title
+																level={4}
+																style={{
+																	color: "inherit",
+																	textAlign: "center"
+																}}
+															>
+																{formatCustomDate(item?.date, "D")}
+															</Title>
+															<Text
+																style={{
+																	color: "inherit",
+																	textAlign: "center",
+																	textTransform: "capitalize"
+																}}
+															>
+																{formatCustomDate(item?.date, "MMMM YYYY")}
+															</Text>
+														</RatingTag>
+														<Text
+															style={{
+																textTransform: "capitalize",
+																textAlign: "center"
+															}}
+														>
+															{formatCustomDate(item?.date, "dddd")}
+														</Text>
+													</Flex>
+												))}
+											</Space>
+										</Flex>
+										<Flex justify={"space-between"} align={"end"}>
 											<Title level={3} style={{ margin: 0 }}>
 												{formatPriceWithCurrency(booking?.total_price)}
 											</Title>

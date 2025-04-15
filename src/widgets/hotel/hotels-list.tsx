@@ -1,7 +1,7 @@
 import { List, type ListProps } from "antd"
 import { type FC } from "react"
 import { type Hotel } from "src/services/hotels"
-import { HotelListItem } from "./hotel-list-item"
+import { HotelsListItem } from "./hotels-list-item"
 
 interface HotelsListProps {
 	data: Hotel[]
@@ -22,7 +22,7 @@ const HotelsList: FC<HotelsListProps> = ({
 				pagination={pagination}
 				loading={loading}
 				dataSource={data}
-				renderItem={(item, index) => <HotelListItem data={item} key={index} />}
+				renderItem={(item, index) => <HotelsListItem data={item} key={index} />}
 			/>
 		</>
 	)

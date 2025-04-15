@@ -1,8 +1,4 @@
-import {
-	ArrowRightOutlined,
-	HeartOutlined,
-	StarFilled
-} from "@ant-design/icons"
+import { ArrowRightOutlined, StarFilled } from "@ant-design/icons"
 import { Link } from "@tanstack/react-router"
 import { Button, Card, Flex, Image, Space } from "antd"
 import { type FC } from "react"
@@ -14,6 +10,7 @@ import {
 	formatPrice,
 	formatPriceWithCurrency
 } from "src/shared/utils"
+import { FavoriteButton } from "src/widgets/favorite-button"
 import { RatingTag } from "src/widgets/rating-tag"
 
 interface HotelCardProps {
@@ -25,9 +22,8 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 	const { t } = useTranslation()
 	return (
 		<div style={{ position: "relative" }}>
-			<Button
-				icon={<HeartOutlined />}
-				shape={"circle"}
+			<FavoriteButton
+				data={hotel?.slug}
 				style={{ position: "absolute", top: 20, right: 20, zIndex: 10 }}
 			/>
 			<Link
@@ -77,7 +73,7 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 							<Flex vertical={true} gap={2} style={{ width: "100%" }}>
 								<Flex gap={2} justify={"space-between"} align={"center"}>
 									<Title level={4}>{t(hotel.name)}</Title>
-									<RatingTag>{hotel.rating}</RatingTag>
+									<RatingTag>{formatNumber(hotel.rating).toFixed(1)}</RatingTag>
 								</Flex>
 								<Space split={"•"}>
 									<Text type={"secondary"} style={{ fontSize: 12 }}>

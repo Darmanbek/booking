@@ -1,4 +1,4 @@
-import { EnvironmentFilled, HeartOutlined } from "@ant-design/icons"
+import { EnvironmentFilled } from "@ant-design/icons"
 import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import { Button, Card, Divider, Flex, Space } from "antd"
 import { type FC } from "react"
@@ -10,6 +10,7 @@ import { useGetLocationBySlugQuery } from "src/services/locations"
 import { useTranslation } from "src/shared/hooks"
 import { Text, Title } from "src/shared/ui"
 import { formatPriceWithCurrency } from "src/shared/utils/format.utils"
+import { FavoriteButton } from "src/widgets/favorite-button"
 
 const HotelTopCard: FC = () => {
 	const { hotelSlug, citySlug = "" } = useParams({
@@ -30,7 +31,7 @@ const HotelTopCard: FC = () => {
 	return (
 		<Card loading={cityLoading || hotelLoading || locationLoading}>
 			<Flex align={"center"}>
-				<Button icon={<HeartOutlined />} size={"large"} shape={"circle"} />
+				<FavoriteButton data={hotel?.data?.slug} size={"large"} />
 				<Divider
 					type={"vertical"}
 					style={{ maxHeight: "100%", height: 50, display: "block" }}

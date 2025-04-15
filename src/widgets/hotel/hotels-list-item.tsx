@@ -1,4 +1,4 @@
-import { ArrowRightOutlined, HeartOutlined } from "@ant-design/icons"
+import { ArrowRightOutlined } from "@ant-design/icons"
 import { Link, useParams } from "@tanstack/react-router"
 import { Badge, Button, Card, Flex, Image, List, Space } from "antd"
 import { type FC } from "react"
@@ -9,12 +9,13 @@ import {
 	formatNumber,
 	formatPriceWithCurrency
 } from "src/shared/utils/format.utils"
+import { FavoriteButton } from "src/widgets/favorite-button"
 
 interface HotelListItemProps {
 	data?: Hotel
 }
 
-const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
+const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 	const { t } = useTranslation()
 	const { citySlug = "" } = useParams({ strict: false })
 
@@ -55,9 +56,8 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 								/>
 							))}
 						</Image.PreviewGroup>
-						<Button
-							shape={"circle"}
-							icon={<HeartOutlined />}
+						<FavoriteButton
+							data={hotel?.slug}
 							style={{ position: "absolute", top: 20, left: 20 }}
 						/>
 					</Flex>
@@ -128,4 +128,4 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 	)
 }
 
-export { HotelListItem }
+export { HotelsListItem }

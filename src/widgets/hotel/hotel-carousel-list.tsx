@@ -22,7 +22,7 @@ const HotelCarouselList: FC<HotelCarouselListProps> = ({
 
 	const size = useMemo(() => {
 		if (formatNumber(hotels?.length) > 4) return 4
-		return formatNumber(hotels?.length) || 1
+		return formatNumber(hotels?.length) || 4
 	}, [hotels])
 
 	return (

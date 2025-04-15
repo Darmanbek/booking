@@ -9,9 +9,9 @@ import { useGetLocationBySlugQuery } from "src/services/locations"
 import { useSearchStore } from "src/shared/store/use-search-store"
 import { Container, Title } from "src/shared/ui"
 import { formatDate, formatGuests } from "src/shared/utils"
+import { HotelsList } from "src/widgets/hotel"
 import { HotelsMapCard } from "./cards/hotels-map-card"
 import { HotelsForm } from "./forms/hotels-form"
-import { HotelsList } from "./lists/hotels-list"
 
 const Hotels: FC = () => {
 	const { citySlug } = useParams({

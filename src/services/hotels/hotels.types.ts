@@ -81,10 +81,13 @@ export type HotelRoom = {
 	quantity: number
 	available_quantity: number
 	max_guests: number
+	guest_quantity: number
+	guest_name: number
 	room_area: number
 	room_type_id: number
 	room_type: string
 	base_price: number
+	price: number
 	images: HotelImage[]
 	amenities: HotelAmenity[]
 	price_per_guest: number | null
