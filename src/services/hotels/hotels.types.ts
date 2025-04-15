@@ -1,3 +1,4 @@
+import type { HotelAmenity } from "src/services/amenities"
 import type { TranslateName } from "src/services/shared"
 import type { User } from "src/services/users"
 
@@ -6,7 +7,7 @@ export type Hotel = {
 	name: TranslateName
 	description: TranslateName
 	slug: string
-	images: string[]
+	images: HotelImage[]
 	category: TranslateName
 	location: HotelLocation
 	reviews_count: number
@@ -14,11 +15,13 @@ export type Hotel = {
 	min_price: number
 	guests: number
 	available_rooms: HotelAvailableRoom[]
+	hotel_rating: HotelRating
 }
 
 export type HotelLocation = {
 	address: string
 	city: string
+	city_slug: string
 	coordinates: HotelCoordinates
 	latitude: number
 	longitude: number
@@ -44,12 +47,6 @@ export type HotelRule = {
 	check_in_until: string | null
 	check_out_from: string
 	check_out_until: string | null
-}
-
-export type HotelAmenity = {
-	id: number
-	name: TranslateName
-	hotel_amenities: Amenity[]
 }
 
 export type HotelImage = {
@@ -97,13 +94,6 @@ export type HotelAvailableRoom = {
 	room_id: number
 	max_guests: number
 	type: string
-}
-
-export type Amenity = {
-	id: number
-	name: TranslateName
-	icon: string | null
-	hotel_amenity_category_id: number
 }
 
 export type HotelCoordinates = {

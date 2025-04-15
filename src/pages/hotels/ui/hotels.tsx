@@ -34,7 +34,18 @@ const Hotels: FC = () => {
 		city: citySlug,
 		check_in: searchParams?.from_date || formatDate(dates[0]),
 		check_out: searchParams?.to_date || formatDate(dates[1]),
-		guests: formatGuests(searchParams?.guests) || guests
+		guests: formatGuests(searchParams?.guests) || guests,
+		price_min: searchParams?.from_price,
+		price_max: searchParams?.to_price,
+		max_distance_to_center: searchParams?.distance,
+		amenities:
+			searchParams?.amenities
+				?.split("-")
+				.map((el) => {
+					const [, value] = el.split(":").map(Number)
+					return value
+				})
+				.filter(Boolean) || []
 	})
 
 	useEffect(() => {

@@ -1,3 +1,4 @@
+import type { HotelAmenity } from "src/services/amenities"
 import type {
 	GetParams,
 	ParamId,
@@ -8,7 +9,6 @@ import type {
 import { api } from "src/shared/api"
 import type {
 	Hotel,
-	HotelAmenity,
 	HotelImage,
 	HotelInfo,
 	HotelLocation,
@@ -21,6 +21,26 @@ import type {
 class HotelsService {
 	getSearch = async (params: GetParams = {}): Promise<Response<Hotel>> => {
 		const response = await api.post(`/hotels/search`, params)
+		return response.data
+	}
+
+	getPopular = async (params: GetParams = {}): Promise<ResponseData<Hotel>> => {
+		const response = await api.get(`/hotels/popular`, {
+			params
+		})
+		return response.data
+	}
+
+	getCount = async (
+		params: GetParams = {}
+	): Promise<
+		ResponseSingleData<{
+			count: number
+		}>
+	> => {
+		const response = await api.get(`/hotels/count`, {
+			params
+		})
 		return response.data
 	}
 

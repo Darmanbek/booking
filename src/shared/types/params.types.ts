@@ -3,4 +3,8 @@ export type GetSearchParams = {
 	to_date?: string
 	guests?: string
 	coordinates?: string
+	from_price?: number
+	to_price?: number
+	distance?: number
+	amenities?: string
 }

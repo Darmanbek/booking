@@ -6,10 +6,14 @@ import {
 import { Link } from "@tanstack/react-router"
 import { Button, Card, Flex, Image, Space } from "antd"
 import { type FC } from "react"
-import { type Hotel } from "src/shared/data/hotel.data"
-import { useToken } from "src/shared/hooks"
+import { type Hotel } from "src/services/hotels"
+import { useToken, useTranslation } from "src/shared/hooks"
 import { Text, Title } from "src/shared/ui"
-import { formatPriceWithCurrency } from "src/shared/utils/format.utils"
+import {
+	formatNumber,
+	formatPrice,
+	formatPriceWithCurrency
+} from "src/shared/utils"
 import { RatingTag } from "src/widgets/rating-tag"
 
 interface HotelCardProps {
@@ -18,6 +22,7 @@ interface HotelCardProps {
 
 const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 	const { token } = useToken()
+	const { t } = useTranslation()
 	return (
 		<div style={{ position: "relative" }}>
 			<Button
@@ -29,7 +34,7 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 				to={"/hotels/$citySlug/$hotelSlug"}
 				target={"_blank"}
 				params={{
-					citySlug: hotel?.city?.slug,
+					citySlug: hotel?.location?.city_slug,
 					hotelSlug: hotel?.slug
 				}}
 			>
@@ -61,7 +66,7 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 									borderRadius: token.borderRadiusLG
 								}}
 								role={"presentation"}
-								src={hotel.image}
+								src={hotel?.images?.[0]?.image}
 								alt={""}
 							/>
 						</Flex>
@@ -71,15 +76,15 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 						<Flex align={"start"} justify={"space-between"} gap={12}>
 							<Flex vertical={true} gap={2} style={{ width: "100%" }}>
 								<Flex gap={2} justify={"space-between"} align={"center"}>
-									<Title level={4}>{hotel.name}</Title>
+									<Title level={4}>{t(hotel.name)}</Title>
 									<RatingTag>{hotel.rating}</RatingTag>
 								</Flex>
 								<Space split={"•"}>
 									<Text type={"secondary"} style={{ fontSize: 12 }}>
-										{hotel.city?.city}
+										{hotel.location?.city}
 									</Text>
 									<Text style={{ fontSize: 12 }}>
-										{hotel.distance} км от центра
+										{formatNumber(hotel?.location?.to_city_center)} км от центра
 									</Text>
 								</Space>
 							</Flex>
@@ -87,12 +92,14 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 						<Space>
 							<StarFilled style={{ color: "orange" }} />
 							<Text type={"secondary"} style={{ fontSize: 12 }}>
-								8 089 отзывов
+								{formatPrice(hotel?.reviews_count)} отзывов
 							</Text>
 						</Space>
 						<Flex align={"end"} justify={"space-between"} gap={12}>
 							<Flex vertical={true} justify={"space-between"}>
-								<Title level={5}>{formatPriceWithCurrency(hotel.price)}</Title>
+								<Title level={5}>
+									{formatPriceWithCurrency(hotel?.min_price)}
+								</Title>
 								<Text type={"secondary"} style={{ fontSize: 12 }}>
 									за ночь для 1 гостя
 								</Text>

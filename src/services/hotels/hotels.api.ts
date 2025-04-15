@@ -9,6 +9,20 @@ const useGetHotelsSearchQuery = (params: GetParams = {}) => {
 	})
 }
 
+const useGetHotelsPopularQuery = (params: GetParams = {}) => {
+	return useCrudQuery({
+		queryFn: () => hotelsService.getPopular(params),
+		queryKey: ["hotels", "popular", ...Object.values(params)]
+	})
+}
+
+const useGetHotelsCountQuery = (params: GetParams = {}) => {
+	return useCrudQuery({
+		queryFn: () => hotelsService.getCount(params),
+		queryKey: ["hotels", "count", ...Object.values(params)]
+	})
+}
+
 const useGetHotelsBySlugQuery = (slug: ParamId) => {
 	return useCrudQuery({
 		queryFn: () => hotelsService.getBySlug(slug),
@@ -97,6 +111,8 @@ const useGetHotelsBySlugRoomsByIdQuery = (slug: ParamId, id: ParamId) => {
 
 export {
 	useGetHotelsSearchQuery,
+	useGetHotelsPopularQuery,
+	useGetHotelsCountQuery,
 	useGetHotelsBySlugQuery,
 	useGetHotelsBySlugLocationQuery,
 	useGetHotelsBySlugInfoQuery,

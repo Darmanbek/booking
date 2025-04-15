@@ -21,3 +21,7 @@ body {
 	font-family: "Open Sans", sans-serif;
 	min-height: 100%;
 }
+
+.ant-skeleton {
+	width: 100% !important;
+}

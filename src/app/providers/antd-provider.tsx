@@ -48,6 +48,11 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 						width: "100%"
 					}
 				}}
+				skeleton={{
+					style: {
+						width: "100%"
+					}
+				}}
 			>
 				<App>{children}</App>
 			</ConfigProvider>

@@ -26,7 +26,7 @@ dayjs.locale("ru")
 
 const NavbarSearch: FC = () => {
 	const [form] = Form.useForm<SearchChange>()
-	const { md } = useResponsive()
+	const { md = true } = useResponsive()
 	const { pathname } = useLocation()
 	const navigate = useNavigate()
 	const { citySlug } = useParams({ strict: false })

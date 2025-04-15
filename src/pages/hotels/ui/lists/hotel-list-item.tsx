@@ -5,7 +5,10 @@ import { type FC } from "react"
 import { type Hotel } from "src/services/hotels"
 import { useToken, useTranslation } from "src/shared/hooks"
 import { Text, Title } from "src/shared/ui"
-import { formatPriceWithCurrency } from "src/shared/utils/format.utils"
+import {
+	formatNumber,
+	formatPriceWithCurrency
+} from "src/shared/utils/format.utils"
 
 interface HotelListItemProps {
 	data?: Hotel
@@ -48,7 +51,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 										alignItems: "center"
 									}}
 									alt={t(hotel?.name)}
-									src={image}
+									src={image?.image}
 								/>
 							))}
 						</Image.PreviewGroup>
@@ -77,9 +80,9 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 									{hotel?.location?.city}
 									{"Показать на карте"}
 									<Text>
-										{Math.round(
-											(hotel?.location?.distance_to_center || 0) / 1000
-										).toFixed(1)}
+										{formatNumber(hotel?.location?.distance_to_center).toFixed(
+											1
+										)}
 										км от центра
 									</Text>
 								</Space>
@@ -91,7 +94,7 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 									{formatPriceWithCurrency(hotel?.min_price)}
 								</Title>
 								<Text type={"secondary"}>
-									за ночь для {hotel?.guests || 0} гостя
+									за ночь для {formatNumber(hotel?.guests)} гостя
 								</Text>
 							</Flex>
 							<Link
@@ -101,7 +104,11 @@ const HotelListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 									hotelSlug: hotel?.slug || ""
 								}}
 								target={"_blank"}
-								search={(prev) => prev}
+								search={(prev) => ({
+									from_date: prev?.from_date,
+									to_date: prev?.to_date,
+									guests: prev?.guests
+								})}
 							>
 								<Button
 									iconPosition={"end"}

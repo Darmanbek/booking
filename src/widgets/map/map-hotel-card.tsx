@@ -29,7 +29,7 @@ const MapHotelCard: FC<MapHotelCardProps> = ({ data: hotel }) => {
 					width={75}
 					height={75}
 					style={{ borderRadius: 8 }}
-					src={hotel?.images?.[0]}
+					src={hotel?.images?.[0]?.image}
 				/>
 				<Flex vertical={true} gap={8} justify={"space-between"}>
 					<Flex gap={16} align={"start"} justify={"space-between"}>

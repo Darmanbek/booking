@@ -1,8 +1,11 @@
 import { useLocation, useParams } from "@tanstack/react-router"
 import { Flex, Space } from "antd"
 import { type FC } from "react"
+import CountUp from "react-countup"
+import { useGetHotelsCountQuery } from "src/services/hotels"
 import { useToken } from "src/shared/hooks"
 import { Container, Paragraph, Title } from "src/shared/ui"
+import { formatNumber } from "src/shared/utils"
 import { NavbarSearch } from "./navbar-search"
 
 const Navbar: FC = () => {
@@ -11,6 +14,8 @@ const Navbar: FC = () => {
 	const { orderId, hotelSlug } = useParams({
 		strict: false
 	})
+
+	const { data: hotels } = useGetHotelsCountQuery()
 
 	const isHome = pathname === "/"
 
@@ -55,8 +60,9 @@ const Navbar: FC = () => {
 								<Paragraph
 									style={{ color: "inherit", fontSize: token.fontSizeHeading4 }}
 								>
-									Введите свои даты и выбирайте из 818 отелей и других вариантов
-									жилья!
+									Введите свои даты и выбирайте из{" "}
+									<CountUp end={formatNumber(hotels?.data?.count)} /> отелей и
+									других вариантов жилья!
 								</Paragraph>
 							</>
 						)}

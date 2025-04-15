@@ -1,0 +1,56 @@
+import { useNavigate } from "@tanstack/react-router"
+import { Col, Form, type FormInstance, InputNumber, Row, Slider } from "antd"
+import { type FC } from "react"
+import type { FilterChange } from "src/pages/hotels/types"
+import { useDebounceEffect } from "src/shared/hooks"
+import { formatNumber } from "src/shared/utils"
+
+interface DistanceFormItemProps {
+	form: FormInstance<FilterChange>
+}
+
+const DistanceFormItem: FC<DistanceFormItemProps> = ({ form }) => {
+	const distance = Form.useWatch("distance", form)
+	const navigate = useNavigate()
+
+	useDebounceEffect(() => {
+		navigate({
+			to: ".",
+			resetScroll: false,
+			search: (prev) => ({
+				...prev,
+				distance: formatNumber(distance)
+			})
+		})
+	}, [navigate, distance])
+	return (
+		<>
+			<Form.Item label={"Расположение от центра города"}>
+				<Row gutter={16}>
+					<Col xs={24} sm={18}>
+						<Form.Item name={"distance"} initialValue={30}>
+							<Slider
+								tooltip={{
+									formatter: (value) => `${formatNumber(value)}км`
+								}}
+								min={1}
+								max={30}
+							/>
+						</Form.Item>
+					</Col>
+					<Col xs={24} sm={6}>
+						<Form.Item name={"distance"}>
+							<InputNumber
+								formatter={(value) => `${value}км`}
+								min={1}
+								max={30}
+							/>
+						</Form.Item>
+					</Col>
+				</Row>
+			</Form.Item>
+		</>
+	)
+}
+
+export { DistanceFormItem }

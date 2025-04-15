@@ -1,8 +1,8 @@
 import dayjs, { type Dayjs } from "dayjs"
 
-export const formatNumber = <T>(value: T) => {
-	if (isNaN(Number(value))) return 0
-	return Number(value) || 0
+export const formatNumber = <T>(value: T, defaultValue: number = 0) => {
+	if (isNaN(Number(value))) return defaultValue
+	return Number(value) || defaultValue
 }
 
 export const formatPrice = (price?: number | string): string => {

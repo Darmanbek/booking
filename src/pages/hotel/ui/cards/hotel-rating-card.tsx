@@ -1,6 +1,6 @@
 import { LeftOutlined, RightOutlined, UserOutlined } from "@ant-design/icons"
 import { Link, useParams } from "@tanstack/react-router"
-import { Avatar, Button, Card, Flex, Space } from "antd"
+import { Avatar, Button, Card, Empty, Flex, Space } from "antd"
 import { type CarouselRef } from "antd/es/carousel"
 import { type FC, useRef } from "react"
 import {
@@ -21,7 +21,11 @@ const HotelRatingCard: FC = () => {
 
 	return (
 		<RatingContainer
-			text={Number(Number(hotelRating?.data?.average_rating) || 0).toFixed(1)}
+			text={
+				hotelRating?.data?.average_rating
+					? Number(Number(hotelRating?.data?.average_rating) || 0).toFixed(1)
+					: null
+			}
 		>
 			<Card
 				title={
@@ -46,49 +50,62 @@ const HotelRatingCard: FC = () => {
 					style={{ minHeight: 250 }}
 					justify={"space-between"}
 				>
-					<Carousel
-						autoplay={true}
-						dots={false}
-						style={{ height: "100%" }}
-						ref={carouselRef}
-						slidesToShow={1}
-						arrows={false}
-					>
-						{reviews?.data?.map((review, index) => (
-							<div key={index}>
-								<Flex
-									vertical={true}
-									gap={4}
-									style={{ padding: 8, paddingInline: 12 }}
-								>
-									<Space>
-										<Avatar icon={<UserOutlined />} />
-										{review?.hotel_id}
-									</Space>
-									<Paragraph
-										style={{ height: "100%" }}
-										ellipsis={{
-											rows: 7,
-											expandable: "collapsible"
-										}}
-									>
-										{review?.comment}
-									</Paragraph>
-								</Flex>
-							</div>
-						))}
-					</Carousel>
+					{reviews?.data?.length ? (
+						<>
+							<Carousel
+								autoplay={true}
+								dots={false}
+								style={{ height: "100%" }}
+								ref={carouselRef}
+								slidesToShow={1}
+								arrows={false}
+							>
+								{reviews?.data?.map((review, index) => (
+									<div key={index}>
+										<Flex
+											vertical={true}
+											gap={4}
+											style={{ padding: 8, paddingInline: 12 }}
+										>
+											<Space>
+												<Avatar icon={<UserOutlined />} />
+												{review?.hotel_id}
+											</Space>
+											<Paragraph
+												style={{ height: "100%" }}
+												ellipsis={{
+													rows: 7,
+													expandable: "collapsible"
+												}}
+											>
+												{review?.comment}
+											</Paragraph>
+										</Flex>
+									</div>
+								))}
+							</Carousel>
+						</>
+					) : (
+						<>
+							<Flex justify={"center"} align={"center"}>
+								<Empty />
+							</Flex>
+						</>
+					)}
+
 					<Flex justify={"space-between"}>
 						<Space>
 							<Button
 								shape={"circle"}
 								type={"primary"}
+								disabled={reviews?.data?.length === 0}
 								onClick={() => carouselRef?.current?.prev()}
 								icon={<LeftOutlined />}
 							/>
 							<Button
 								shape={"circle"}
 								type={"primary"}
+								disabled={reviews?.data?.length === 0}
 								onClick={() => carouselRef?.current?.next()}
 								icon={<RightOutlined />}
 							/>
