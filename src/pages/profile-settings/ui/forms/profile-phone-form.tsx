@@ -5,7 +5,7 @@ import {
 	useGetMeQuery,
 	type UserPhoneChange
 } from "src/services/users"
-import { formatFormReversePhone, formatPhone } from "src/shared/utils"
+import { formatFormPhone, formatFormReversePhone } from "src/shared/utils"
 import { ProfilePhoneVerifyForm } from "./profile-phone-verify-form"
 
 const ProfilePhoneForm: FC = () => {
@@ -19,7 +19,7 @@ const ProfilePhoneForm: FC = () => {
 
 	const onFinish: FormProps<UserPhoneChange>["onFinish"] = (values) => {
 		if (values.phone_number) {
-			values.phone_number = formatPhone(values.phone_number)
+			values.phone_number = formatFormPhone(values.phone_number)
 		}
 		editProfilePhone(values, {
 			onSuccess: () => {
