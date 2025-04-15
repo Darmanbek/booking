@@ -35,7 +35,13 @@ export const formatPhone = (value?: string | null) => {
 
 export const formatFormPhone = (phone?: string) => {
 	if (!phone) return ""
+	if (!phone) return ""
 	return `998` + phone
+}
+
+export const formatFormReversePhone = (phone?: string) => {
+	if (!phone) return ""
+	return phone?.slice(3)
 }
 
 export const formatInputPrice = <T>(value?: T) =>

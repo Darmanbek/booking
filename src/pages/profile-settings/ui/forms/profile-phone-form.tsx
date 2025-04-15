@@ -1,24 +1,48 @@
 import { Button, Col, Flex, Form, type FormProps, Input, Row } from "antd"
-import { type FC, useEffect } from "react"
-import { useGetMeQuery, type UserPhoneChange } from "src/services/users"
+import { type FC, useEffect, useState } from "react"
+import {
+	useEditPhoneUsersMutation,
+	useGetMeQuery,
+	type UserPhoneChange
+} from "src/services/users"
+import { formatFormReversePhone, formatPhone } from "src/shared/utils"
+import { ProfilePhoneVerifyForm } from "./profile-phone-verify-form"
 
 const ProfilePhoneForm: FC = () => {
 	const [form] = Form.useForm<UserPhoneChange>()
 	const { data: profile } = useGetMeQuery()
+	const phoneNumber = Form.useWatch("phone_number", form)
+	const [isVerify, setIsVerify] = useState(false)
+
+	const { mutate: editProfilePhone, isPending: editLoading } =
+		useEditPhoneUsersMutation()
 
 	const onFinish: FormProps<UserPhoneChange>["onFinish"] = (values) => {
-		console.log(values)
+		if (values.phone_number) {
+			values.phone_number = formatPhone(values.phone_number)
+		}
+		editProfilePhone(values, {
+			onSuccess: () => {
+				setIsVerify(true)
+			}
+		})
 	}
 
 	useEffect(() => {
 		if (profile) {
 			form.setFieldsValue({
-				...profile?.data
+				...profile?.data,
+				phone_number: formatFormReversePhone(profile?.data?.phone_number)
 			})
 		}
 	}, [form, profile])
 	return (
 		<>
+			<ProfilePhoneVerifyForm
+				isVerify={isVerify}
+				setIsVerify={setIsVerify}
+				phoneNumber={phoneNumber}
+			/>
 			<Form
 				form={form}
 				onFinish={onFinish}
@@ -27,7 +51,7 @@ const ProfilePhoneForm: FC = () => {
 				name={"profile-phone-form"}
 			>
 				<Row gutter={16} style={{ rowGap: 16 }}>
-					<Col span={12}>
+					<Col xs={24} md={12}>
 						<Form.Item<UserPhoneChange>
 							label={"Телефон номер"}
 							name={"phone_number"}
@@ -39,7 +63,16 @@ const ProfilePhoneForm: FC = () => {
 				</Row>
 				<Flex justify={"end"}>
 					<Form.Item noStyle={true}>
-						<Button htmlType={"submit"} type={"primary"}>
+						<Button
+							loading={editLoading}
+							disabled={
+								editLoading ||
+								formatFormReversePhone(profile?.data?.phone_number) ===
+									phoneNumber
+							}
+							htmlType={"submit"}
+							type={"primary"}
+						>
 							Сохранить
 						</Button>
 					</Form.Item>

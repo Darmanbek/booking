@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router"
 import { Form, type FormProps, Input, Modal } from "antd"
-import { type FC, useEffect } from "react"
+import { type FC, useCallback, useEffect } from "react"
 import { useVerifyMutation, type VerifyChange } from "src/services/users"
 import { useAuth } from "src/shared/hooks"
 import { formatFormPhone } from "src/shared/utils"
@@ -36,10 +36,10 @@ const Verify: FC<VerifyProps> = ({
 		})
 	}
 
-	const onCloseVerify = () => {
+	const onCloseVerify = useCallback(() => {
 		form.resetFields()
 		setIsVerify(false)
-	}
+	}, [form, setIsVerify])
 
 	useEffect(() => {
 		if (isSuccess && verifyData) {

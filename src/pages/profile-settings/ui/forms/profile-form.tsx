@@ -11,14 +11,20 @@ import {
 } from "antd"
 import dayjs from "dayjs"
 import { type FC, useEffect } from "react"
-import { useGetMeQuery, type UserChange } from "src/services/users"
+import {
+	useEditUsersMutation,
+	useGetMeQuery,
+	type UserChange
+} from "src/services/users"
 
 const ProfileForm: FC = () => {
 	const [form] = Form.useForm<UserChange>()
 	const { data: profile } = useGetMeQuery()
 
+	const { mutate: editProfile, isPending: editLoading } = useEditUsersMutation()
+
 	const onFinish: FormProps<UserChange>["onFinish"] = (values) => {
-		console.log(values)
+		editProfile(values)
 	}
 
 	useEffect(() => {
@@ -60,20 +66,12 @@ const ProfileForm: FC = () => {
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item<UserChange>
-							label={"День рождения"}
-							name={"birthday"}
-							rules={[{ required: true }]}
-						>
+						<Form.Item<UserChange> label={"День рождения"} name={"birthday"}>
 							<DatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item<UserChange>
-							label={"Пол"}
-							name={"gender"}
-							rules={[{ required: true }]}
-						>
+						<Form.Item<UserChange> label={"Пол"} name={"gender"}>
 							<Radio.Group
 								options={[
 									{
@@ -91,7 +89,12 @@ const ProfileForm: FC = () => {
 				</Row>
 				<Flex justify={"end"}>
 					<Form.Item noStyle={true}>
-						<Button htmlType={"submit"} type={"primary"}>
+						<Button
+							loading={editLoading}
+							disabled={editLoading}
+							htmlType={"submit"}
+							type={"primary"}
+						>
 							Сохранить
 						</Button>
 					</Form.Item>

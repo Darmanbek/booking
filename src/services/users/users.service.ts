@@ -48,14 +48,14 @@ class UsersService {
 	editMePhone = async (
 		form: UserPhoneChange
 	): Promise<ResponseSingleData<User>> => {
-		const response = await api.put(`/users/me/phone-number`, form)
+		const response = await api.patch(`/users/me/phone-number`, form)
 		return response.data
 	}
 
 	verifyMePhone = async (
 		form: VerifyChange
 	): Promise<ResponseSingleData<User>> => {
-		const response = await api.put(`/users/me/phone-number/verify`, form)
+		const response = await api.post(`/users/me/phone-number/verify`, form)
 		return response.data
 	}
 

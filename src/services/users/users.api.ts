@@ -52,6 +52,9 @@ const useLogoutMutation = () => {
 const useEditUsersMutation = () => {
 	return useCrudMutation({
 		mutationFn: usersService.editMe,
+		renderSuccess: () => ({
+			description: "Ваш профиль успешно изменён"
+		}),
 		invalidate: {
 			queryKey: ["users"]
 		}
@@ -60,10 +63,7 @@ const useEditUsersMutation = () => {
 
 const useEditPhoneUsersMutation = () => {
 	return useCrudMutation({
-		mutationFn: usersService.editMePhone,
-		invalidate: {
-			queryKey: ["users"]
-		}
+		mutationFn: usersService.editMePhone
 	})
 }
 

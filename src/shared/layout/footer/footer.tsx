@@ -1,11 +1,10 @@
 import { useLocation } from "@tanstack/react-router"
 import { Divider, Flex, Layout } from "antd"
 import { type FC } from "react"
-import { FooterContent } from "src/shared/layout/footer/footer-content"
-import { FooterCopyright } from "src/shared/layout/footer/footer-copyright"
-import { FooterHeader } from "src/shared/layout/footer/footer-header"
-import { FooterPayments } from "src/shared/layout/footer/footer-payments"
 import { Container } from "src/shared/ui"
+import { FooterContent } from "./footer-content"
+import { FooterCopyright } from "./footer-copyright"
+import { FooterHeader } from "./footer-header"
 
 const Footer: FC = () => {
 	const { pathname } = useLocation()
@@ -27,8 +26,6 @@ const Footer: FC = () => {
 								<FooterHeader />
 								<Divider />
 								<FooterContent />
-								<Divider />
-								<FooterPayments />
 								<Divider />
 							</>
 						)}
