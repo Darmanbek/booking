@@ -10,12 +10,14 @@ interface AmenitiesFormItemProps {
 	data?: HotelAmenity[]
 	loading: boolean
 	form: FormInstance<FilterChange>
+	isLocal?: boolean
 }
 
 const AmenitiesFormItem: FC<AmenitiesFormItemProps> = ({
 	form,
 	data,
-	loading
+	loading,
+	isLocal
 }) => {
 	const { t } = useTranslation()
 	const amenities = Form.useWatch("amenities", form)
@@ -42,6 +44,7 @@ const AmenitiesFormItem: FC<AmenitiesFormItemProps> = ({
 	}, [data])
 
 	useDebounceEffect(() => {
+		if (isLocal) return
 		navigate({
 			to: ".",
 			resetScroll: false,
@@ -50,7 +53,7 @@ const AmenitiesFormItem: FC<AmenitiesFormItemProps> = ({
 				amenities: filterAmenities
 			})
 		})
-	}, [navigate, filterAmenities])
+	}, [navigate, filterAmenities, isLocal])
 	if (loading) return <Skeleton active={true} />
 
 	return (

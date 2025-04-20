@@ -1,5 +1,4 @@
 import {
-	ArrowRightOutlined,
 	HomeOutlined,
 	LoadingOutlined,
 	SearchOutlined
@@ -123,17 +122,12 @@ const NavbarSearch: FC = () => {
 					activeKey={"hotels"}
 					style={{ width: "auto", margin: 0 }}
 					tabBarStyle={{ margin: 0, border: 0 }}
-					tabBarExtraContent={
-						<Button
-							size={md ? "large" : "middle"}
-							style={{ marginLeft: 8, marginBottom: 8 }}
-							icon={<ArrowRightOutlined rotate={-45} />}
-							iconPosition={"end"}
-						>
-							Для командировок
-						</Button>
-					}
-					items={[{ key: "hotels", label: "Отели и квартиры" }]}
+					items={[
+						{
+							key: "hotels",
+							label: "Отели и квартиры"
+						}
+					]}
 				/>
 			)}
 			<Card style={isHome ? { borderTopLeftRadius: 0 } : {}}>

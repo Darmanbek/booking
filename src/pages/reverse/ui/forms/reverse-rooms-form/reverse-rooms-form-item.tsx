@@ -37,6 +37,11 @@ const ReverseRoomsFormItem: FC<ReverseRoomFormItemProps> = ({
 	const { form } = useReverse()
 	const { t } = useTranslation()
 	const roomId = form.getFieldValue(["rooms_info", field.name, "room_id"])
+	const guestQuantity = form.getFieldValue([
+		"rooms_info",
+		field.name,
+		"guest_quantity"
+	])
 	const { data: room, isLoading } = useGetHotelsBySlugRoomsByIdQuery(
 		hotelSlug,
 		roomId
@@ -59,7 +64,7 @@ const ReverseRoomsFormItem: FC<ReverseRoomFormItemProps> = ({
 					<Space style={{ paddingBlock: 16 }}>
 						<>{`${t(room?.data?.room_type)}:`}</>
 						<Avatar.Group>
-							{Array.from({ length: formatNumber(room?.data?.max_guests) }).map(
+							{Array.from({ length: formatNumber(guestQuantity) }).map(
 								(_, index) => (
 									<Avatar key={index} icon={<UserOutlined />} />
 								)
@@ -98,9 +103,10 @@ const ReverseRoomsFormItem: FC<ReverseRoomFormItemProps> = ({
 					<Form.Item
 						label={"Кол-во гостей"}
 						name={[field.name, "guest_quantity"]}
+						hidden={room?.data?.use_dinamic_price}
 					>
 						<Counter
-							max={2}
+							max={guestQuantity}
 							formatter={(value) => `Гостей: ${value}`}
 							style={{ width: "100%", maxWidth: "100%" }}
 						/>

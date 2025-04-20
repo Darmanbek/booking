@@ -33,7 +33,7 @@ const Header: FC = () => {
 							<>
 								<ProfileAvatar />
 							</>
-						) : (
+						) : md ? (
 							<>
 								<Button
 									type={"primary"}
@@ -56,7 +56,7 @@ const Header: FC = () => {
 									Войти
 								</Button>
 							</>
-						)}
+						) : null}
 						<MenuButton />
 					</Space>
 				</Flex>

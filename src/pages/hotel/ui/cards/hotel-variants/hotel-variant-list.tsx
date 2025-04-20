@@ -50,7 +50,25 @@ const HotelVariantList: FC<HotelVariantListProps> = ({ data: room }) => {
 					scrollbarWidth: "thin"
 				}}
 			>
-				<HotelVariantCard data={room} />
+				{room?.prices?.length ? (
+					room?.prices?.map((el, index) => (
+						<HotelVariantCard
+							key={index}
+							data={{
+								room,
+								roomPrice: el
+							}}
+						/>
+					))
+				) : (
+					<>
+						<HotelVariantCard
+							data={{
+								room
+							}}
+						/>
+					</>
+				)}
 			</Flex>
 		</div>
 	)

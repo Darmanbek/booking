@@ -1,9 +1,11 @@
 import { ArrowRightOutlined } from "@ant-design/icons"
 import { Link, useParams } from "@tanstack/react-router"
 import { Badge, Button, Card, Flex, Image, List, Space } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import { type Hotel } from "src/services/hotels"
 import { useToken, useTranslation } from "src/shared/hooks"
+import { useMenuStore } from "src/shared/store"
 import { Text, Title } from "src/shared/ui"
 import {
 	formatNumber,
@@ -18,6 +20,8 @@ interface HotelListItemProps {
 const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 	const { t } = useTranslation()
 	const { citySlug = "" } = useParams({ strict: false })
+	const { md = true, sm = true } = useResponsive()
+	const { toggleMap } = useMenuStore()
 
 	const { token } = useToken()
 	return (
@@ -43,7 +47,7 @@ const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 								<Image
 									key={index}
 									hidden={index !== 0}
-									width={256}
+									width={sm ? 256 : "100%"}
 									style={{
 										aspectRatio: 1,
 										borderRadius: token.borderRadiusLG,
@@ -71,12 +75,14 @@ const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 							<Title level={4}>{t(hotel?.name)}</Title>
 							<Link
 								to={"."}
+								onClick={md ? undefined : toggleMap}
+								resetScroll={md}
 								search={(prev) => ({
 									...prev,
 									coordinates: `${hotel?.location?.coordinates?.latitude}-${hotel?.location?.coordinates?.longitude}`
 								})}
 							>
-								<Space split={<Text>•</Text>}>
+								<Space split={<Text>•</Text>} wrap={true}>
 									{hotel?.location?.city}
 									{"Показать на карте"}
 									<Text>
@@ -88,9 +94,14 @@ const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 								</Space>
 							</Link>
 						</Flex>
-						<Flex justify={"space-between"} align={"end"}>
+						<Flex
+							vertical={!sm}
+							justify={"space-between"}
+							gap={16}
+							align={sm ? "end" : "normal"}
+						>
 							<Flex vertical={true}>
-								<Title level={3} style={{ margin: 0 }}>
+								<Title level={md ? 3 : 4} style={{ margin: 0 }}>
 									{formatPriceWithCurrency(hotel?.min_price)}
 								</Title>
 								<Text type={"secondary"}>
@@ -112,6 +123,7 @@ const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 							>
 								<Button
 									iconPosition={"end"}
+									block={!sm}
 									type={"primary"}
 									icon={<ArrowRightOutlined />}
 									key={"link"}

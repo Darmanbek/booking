@@ -1,12 +1,12 @@
 import { HeartFilled, HeartOutlined, LoadingOutlined } from "@ant-design/icons"
-import { Button, type ButtonProps } from "antd"
+import { Button, type ButtonProps, Tooltip } from "antd"
 import { type FC } from "react"
 import {
 	useCreateFavoritesMutation,
 	useDeleteFavoritesMutation,
 	useGetFavoritesByIdQuery
 } from "src/services/favorites"
-import { useToken } from "src/shared/hooks"
+import { useAuth, useToken } from "src/shared/hooks"
 
 interface FavoriteButtonProps extends ButtonProps {
 	data?: string
@@ -16,6 +16,7 @@ const FavoriteButton: FC<FavoriteButtonProps> = ({
 	data: hotelSlug,
 	...props
 }) => {
+	const { isAuth } = useAuth()
 	const { mutate: addFavorite, isPending: addLoading } =
 		useCreateFavoritesMutation()
 	const { mutate: deleteFavorite, isPending: deleteLoading } =
@@ -36,9 +37,10 @@ const FavoriteButton: FC<FavoriteButtonProps> = ({
 	}
 
 	return (
-		<>
+		<Tooltip title={isAuth ? "" : "Пройдите авторизацию"}>
 			<Button
 				shape={"circle"}
+				disabled={!isAuth}
 				icon={
 					addLoading || deleteLoading || isLoading ? (
 						<LoadingOutlined />
@@ -50,8 +52,9 @@ const FavoriteButton: FC<FavoriteButtonProps> = ({
 				}
 				onClick={onFavorite}
 				{...props}
+				style={{ background: token?.colorBgContainer, ...props?.style }}
 			/>
-		</>
+		</Tooltip>
 	)
 }
 

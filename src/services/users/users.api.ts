@@ -2,11 +2,20 @@ import { useQueryClient } from "@tanstack/react-query"
 import type { GetParams } from "src/services/shared"
 import { usersService } from "src/services/users/users.service"
 import { useCrudMutation, useCrudQuery } from "src/shared/api"
+import { useAuth } from "src/shared/hooks"
 
 const useGetMeQuery = (params: GetParams = {}) => {
+	const auth = useAuth()
+	const queryClient = useQueryClient()
 	return useCrudQuery({
 		queryFn: () => usersService.getMe(params),
-		queryKey: ["users", ...Object.values(params)]
+		queryKey: ["users", ...Object.values(params)],
+		onError: () => {
+			auth.logout()
+			queryClient.removeQueries({
+				queryKey: ["users"]
+			})
+		}
 	})
 }
 

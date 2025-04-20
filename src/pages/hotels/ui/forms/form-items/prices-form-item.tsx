@@ -8,13 +8,15 @@ import { formatNumber, formatPrice } from "src/shared/utils"
 
 interface PricesFormItemProps {
 	form: FormInstance<FilterChange>
+	isLocal?: boolean
 }
 
-const PricesFormItem: FC<PricesFormItemProps> = ({ form }) => {
+const PricesFormItem: FC<PricesFormItemProps> = ({ form, isLocal }) => {
 	const prices = Form.useWatch("prices", form)
 	const navigate = useNavigate()
 
 	useDebounceEffect(() => {
+		if (isLocal) return
 		const [min, max] = prices
 		navigate({
 			to: ".",
@@ -25,7 +27,7 @@ const PricesFormItem: FC<PricesFormItemProps> = ({ form }) => {
 				to_price: formatNumber(max)
 			})
 		})
-	}, [navigate, prices])
+	}, [isLocal, navigate, prices])
 	return (
 		<>
 			<Form.Item label={"Цена за ночь"}>

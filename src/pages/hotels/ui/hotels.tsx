@@ -1,9 +1,12 @@
-import { AimOutlined, FilterFilled, HomeOutlined } from "@ant-design/icons"
+import { HomeOutlined } from "@ant-design/icons"
 import { Link, useNavigate, useParams, useSearch } from "@tanstack/react-router"
-import { Breadcrumb, Button, Card, Col, Flex, Row, Space } from "antd"
+import { Breadcrumb, Card, Col, Flex, Row, Space } from "antd"
 import { useResponsive } from "antd-style"
 import dayjs from "dayjs"
 import { type FC, useEffect } from "react"
+import { HotelsMapDrawerCard } from "src/pages/hotels/ui/cards"
+import { FilterButton, MapButton } from "src/pages/hotels/ui/features"
+import { HotelsDrawerForm } from "src/pages/hotels/ui/forms"
 import { useGetHotelsSearchQuery } from "src/services/hotels"
 import { useGetLocationBySlugQuery } from "src/services/locations"
 import { useSearchStore } from "src/shared/store/use-search-store"
@@ -17,11 +20,10 @@ const Hotels: FC = () => {
 	const { citySlug } = useParams({
 		strict: false
 	})
-	const { md } = useResponsive()
+	const { md = true, sm = true } = useResponsive()
 	const { search, setSearch } = useSearchStore()
 	const navigate = useNavigate()
 	const { data: city } = useGetLocationBySlugQuery(citySlug)
-
 	const { dates, guests } = useSearchStore((state) => state.search)
 	const searchParams = useSearch({
 		strict: false
@@ -103,24 +105,22 @@ const Hotels: FC = () => {
 									<HotelsForm />
 								</Flex>
 							) : (
-								<Card>
-									<Flex justify={"center"}>
-										<Space>
-											<Button type={"primary"} icon={<FilterFilled />}>
-												Фильтры
-											</Button>
-											<Button type={"primary"} icon={<AimOutlined />}>
-												Карта
-											</Button>
-										</Space>
-									</Flex>
-								</Card>
+								<>
+									<HotelsMapDrawerCard data={hotels?.data || []} />
+									<HotelsDrawerForm />
+									<Card>
+										<Flex justify={"center"}>
+											<FilterButton />
+											<MapButton />
+										</Flex>
+									</Card>
+								</>
 							)}
 						</Col>
 						<Col xs={24} md={16}>
 							<Flex vertical={true} gap={20}>
 								<Card>
-									<Title level={4}>
+									<Title level={sm ? 4 : 5}>
 										{city ? city?.data?.name : "Загрузка"}, доступно вариантов:{" "}
 										{hotels?.pagination?.total || 0}
 									</Title>

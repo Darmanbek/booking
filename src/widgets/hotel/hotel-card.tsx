@@ -44,7 +44,7 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 					hoverable={true}
 					style={{
 						minWidth: 302,
-						maxWidth: 628,
+						maxWidth: 302,
 						width: "100%",
 						overflow: "hidden",
 						cursor: "pointer"
@@ -80,7 +80,8 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 										{hotel.location?.city}
 									</Text>
 									<Text style={{ fontSize: 12 }}>
-										{formatNumber(hotel?.location?.to_city_center)} км от центра
+										{formatNumber(hotel?.location?.distance_to_center)} км от
+										центра
 									</Text>
 								</Space>
 							</Flex>

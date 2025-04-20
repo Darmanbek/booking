@@ -7,13 +7,15 @@ import { formatNumber } from "src/shared/utils"
 
 interface DistanceFormItemProps {
 	form: FormInstance<FilterChange>
+	isLocal?: boolean
 }
 
-const DistanceFormItem: FC<DistanceFormItemProps> = ({ form }) => {
+const DistanceFormItem: FC<DistanceFormItemProps> = ({ form, isLocal }) => {
 	const distance = Form.useWatch("distance", form)
 	const navigate = useNavigate()
 
 	useDebounceEffect(() => {
+		if (isLocal) return
 		navigate({
 			to: ".",
 			resetScroll: false,
@@ -22,7 +24,7 @@ const DistanceFormItem: FC<DistanceFormItemProps> = ({ form }) => {
 				distance: formatNumber(distance)
 			})
 		})
-	}, [navigate, distance])
+	}, [isLocal, navigate, distance])
 	return (
 		<>
 			<Form.Item label={"Расположение от центра города"}>

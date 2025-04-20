@@ -1,6 +1,7 @@
 import { EnvironmentFilled } from "@ant-design/icons"
 import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import { Button, Card, Divider, Flex, Space } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import {
 	useGetHotelsBySlugLocationQuery,
@@ -19,6 +20,7 @@ const HotelTopCard: FC = () => {
 	const navigate = useNavigate({
 		from: "/hotels/$citySlug/$hotelSlug"
 	})
+	const { sm = true } = useResponsive()
 
 	const { t } = useTranslation()
 	const { data: city, isLoading: cityLoading } =
@@ -30,13 +32,18 @@ const HotelTopCard: FC = () => {
 
 	return (
 		<Card loading={cityLoading || hotelLoading || locationLoading}>
-			<Flex align={"center"}>
+			<Flex align={"center"} vertical={!sm}>
 				<FavoriteButton data={hotel?.data?.slug} size={"large"} />
 				<Divider
-					type={"vertical"}
-					style={{ maxHeight: "100%", height: 50, display: "block" }}
+					type={sm ? "vertical" : "horizontal"}
+					style={{
+						maxHeight: "100%",
+						height: "inherit",
+						display: "block",
+						marginBlock: 4
+					}}
 				/>
-				<Flex justify={"space-between"} style={{ width: "100%" }}>
+				<Flex justify={"space-between"} style={{ width: "100%" }} wrap={true}>
 					<Flex vertical={true} gap={6}>
 						<Title level={4}>{t(hotel?.data?.name)}</Title>
 						<Text type={"secondary"}>
@@ -53,7 +60,7 @@ const HotelTopCard: FC = () => {
 					</Flex>
 					<Flex vertical={true} gap={6}>
 						<Title level={4} style={{ textAlign: "end" }}>
-							{formatPriceWithCurrency(hotel?.data?.min_price)}
+							От {formatPriceWithCurrency(hotel?.data?.min_price)}
 						</Title>
 						<Button
 							type={"primary"}

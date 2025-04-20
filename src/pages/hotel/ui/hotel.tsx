@@ -1,10 +1,11 @@
 import { HomeOutlined } from "@ant-design/icons"
 import { Link, useParams, useSearch } from "@tanstack/react-router"
 import { Breadcrumb, Card, Col, Flex, Row, Space } from "antd"
+import { useResponsive } from "antd-style"
 import dayjs from "dayjs"
-import { type FC, useCallback, useState } from "react"
-import { OrdersContext, OrdersContextValues } from "src/pages/hotel/context"
-import { type HotelRoom, useGetHotelsBySlugQuery } from "src/services/hotels"
+import { type FC } from "react"
+import { OrdersProvider } from "src/pages/hotel/providers"
+import { useGetHotelsBySlugQuery } from "src/services/hotels"
 import { useGetLocationBySlugQuery } from "src/services/locations"
 import { useTranslation } from "src/shared/hooks"
 import { Container } from "src/shared/ui"
@@ -22,42 +23,19 @@ import {
 } from "./cards"
 
 const Hotel: FC = () => {
-	const [rooms, setRooms] = useState<OrdersContextValues["rooms"]>([])
 	const search = useSearch({ strict: false })
 	const { hotelSlug, citySlug = "" } = useParams({
 		strict: false
 	})
+	const { sm = true } = useResponsive()
 	const { t } = useTranslation()
 	const { data: city, isLoading: cityLoading } =
 		useGetLocationBySlugQuery(citySlug)
 	const { data: hotel, isLoading: hotelLoading } =
 		useGetHotelsBySlugQuery(hotelSlug)
 
-	const addRoom = useCallback((room: HotelRoom, quantity: number) => {
-		setRooms((prev) => {
-			const existing = prev.find((el) => el?.room?.id === room?.id)
-
-			if (quantity === 0) {
-				return prev.filter((el) => el?.room?.id !== room?.id)
-			}
-
-			if (existing) {
-				return prev.map((el) =>
-					el?.room?.id === room?.id ? { ...el, quantity } : el
-				)
-			}
-
-			return [...prev, { room, quantity }]
-		})
-	}, [])
-
 	return (
-		<OrdersContext.Provider
-			value={{
-				rooms,
-				addRoom
-			}}
-		>
+		<OrdersProvider>
 			<section>
 				<Container>
 					<Flex vertical={true} gap={20}>
@@ -69,7 +47,7 @@ const Hotel: FC = () => {
 											<Link to={"/"}>
 												<Space>
 													<HomeOutlined />
-													Главная
+													{sm ? "Главная" : ""}
 												</Space>
 											</Link>
 										)
@@ -130,7 +108,7 @@ const Hotel: FC = () => {
 					</Flex>
 				</Container>
 			</section>
-		</OrdersContext.Provider>
+		</OrdersProvider>
 	)
 }
 

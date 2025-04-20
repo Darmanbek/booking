@@ -37,16 +37,14 @@ const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
 
 		const [currentValue, setCurrentValue] = useState(Number(value) || minLength)
 		const { styles, cx } = useCounterStyles()
-		
+
 		const decrement = () => {
 			if (currentValue < minLength + 1) return
 			setCurrentValue((prev) => prev - 1)
 		}
-		
+
 		const increment = () => {
-			setCurrentValue((prev) =>
-				max && prev >= Number(max) ? prev : prev + 1
-			)
+			setCurrentValue((prev) => (max && prev >= Number(max) ? prev : prev + 1))
 		}
 
 		useEffect(() => {
@@ -71,11 +69,13 @@ const Counter = forwardRef<HTMLInputElement, InputNumberProps>(
 						className={cx(styles.input, className)}
 						value={currentValue}
 						ref={ref}
+						max={max}
 						{...rest}
 					/>
 					<Button
 						icon={<PlusOutlined />}
 						onClick={increment}
+						disabled={currentValue === max}
 						{...buttonProps?.increment}
 					/>
 				</Space.Compact>

@@ -3,7 +3,7 @@ import type { HotelRoom } from "src/services/hotels"
 
 export type OrdersContextValues = {
 	rooms: {
-		quantity: number,
+		quantity: number
 		room: HotelRoom
 	}[]
 	addRoom: (room: HotelRoom, quantity: number) => void

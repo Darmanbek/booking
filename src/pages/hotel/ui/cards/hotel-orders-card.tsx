@@ -1,10 +1,11 @@
 import { CloseOutlined } from "@ant-design/icons"
 import { useNavigate, useParams } from "@tanstack/react-router"
-import { Button, Card, Flex, Form, List, Space } from "antd"
+import { Button, Card, Flex, Form, List, Space, Tooltip } from "antd"
 import { type FC, useEffect } from "react"
 import type { OrdersContextValues } from "src/pages/hotel/context"
 import { useOrders } from "src/pages/hotel/hooks"
 import { useCreateBookingInitialMutation } from "src/services/booking"
+import { useAuth } from "src/shared/hooks"
 import {
 	type SearchChange,
 	useSearchStore
@@ -22,6 +23,7 @@ const HotelOrdersCard: FC = () => {
 	const [form] = Form.useForm<SearchChange>()
 	const navigate = useNavigate()
 	const { rooms } = useOrders()
+	const { isAuth } = useAuth()
 
 	const guests = Form.useWatch("guests", form)
 
@@ -41,10 +43,7 @@ const HotelOrdersCard: FC = () => {
 				check_out_date: formatDate(search?.dates?.[1]),
 				rooms_info: duplicatedRooms.map((el) => ({
 					room_id: el?.id,
-					guest_quantity: search?.guests.reduce(
-						(total, guest) => total + guest,
-						0
-					)
+					guest_quantity: el?.max_guests
 				}))
 			},
 			{
@@ -131,7 +130,12 @@ const HotelOrdersCard: FC = () => {
 				dataSource={rooms}
 				renderItem={(item, index) => (
 					<List.Item key={index}>
-						<Flex justify={"space-between"} gap={8} style={{ width: "100%" }}>
+						<Flex
+							justify={"space-between"}
+							align={"center"}
+							gap={8}
+							style={{ width: "100%" }}
+						>
 							<Space
 								split={
 									<Text type={"secondary"}>
@@ -141,9 +145,9 @@ const HotelOrdersCard: FC = () => {
 								align={"center"}
 							>
 								<Text>{item?.room?.room_type}</Text>
-								<Text>{item?.quantity}</Text>
+								<Text style={{ whiteSpace: "nowrap" }}>{item?.quantity}</Text>
 							</Space>
-							<Text>
+							<Text style={{ whiteSpace: "nowrap" }}>
 								{formatPriceWithCurrency(
 									item?.room?.base_price * item?.quantity
 								)}
@@ -152,17 +156,19 @@ const HotelOrdersCard: FC = () => {
 					</List.Item>
 				)}
 			/>
-			<Button
-				style={{ marginTop: 16 }}
-				block={true}
-				type={"primary"}
-				size={"large"}
-				disabled={rooms?.length === 0 || bookingLoading}
-				onClick={onBooking}
-				loading={bookingLoading}
-			>
-				Забронировать
-			</Button>
+			<Tooltip title={isAuth ? "" : "Вы должна сначала авторизоваться"}>
+				<Button
+					style={{ marginTop: 16 }}
+					block={true}
+					type={"primary"}
+					size={"large"}
+					disabled={rooms?.length === 0 || bookingLoading || !isAuth}
+					onClick={onBooking}
+					loading={bookingLoading}
+				>
+					Забронировать
+				</Button>
+			</Tooltip>
 		</Card>
 	)
 }

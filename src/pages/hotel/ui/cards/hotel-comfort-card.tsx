@@ -1,6 +1,7 @@
 import { BankOutlined, ExclamationCircleOutlined } from "@ant-design/icons"
 import { useParams } from "@tanstack/react-router"
 import { Card, Descriptions, Divider, Flex, Space } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import {
 	useGetHotelsBySlugAmenitiesQuery,
@@ -12,6 +13,7 @@ const HotelComfortCard: FC = () => {
 	const { hotelSlug } = useParams({
 		from: "/_layout/hotels/$citySlug/$hotelSlug"
 	})
+	const { sm = true } = useResponsive()
 	const { t } = useTranslation()
 	const { data: hotelAmenities, isLoading: amenitiesLoading } =
 		useGetHotelsBySlugAmenitiesQuery(hotelSlug)
@@ -23,7 +25,7 @@ const HotelComfortCard: FC = () => {
 			style={{ height: "100%" }}
 			loading={amenitiesLoading || locationLoading}
 		>
-			<Flex>
+			<Flex vertical={!sm}>
 				<Descriptions
 					title={"Популярные удобства"}
 					column={1}
@@ -37,7 +39,10 @@ const HotelComfortCard: FC = () => {
 						)
 					}))}
 				/>
-				<Divider type={"vertical"} style={{ height: "inherit" }} />
+				<Divider
+					type={sm ? "vertical" : "horizontal"}
+					style={{ height: "inherit" }}
+				/>
 				<Descriptions
 					title={"Расположение"}
 					column={1}

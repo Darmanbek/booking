@@ -78,9 +78,11 @@ export type HotelRating = {
 
 export type HotelRoom = {
 	id: number
+	room_price_id?: number
 	quantity: number
 	available_quantity: number
 	max_guests: number
+	use_dinamic_price: boolean
 	guest_quantity: number
 	guest_name: number
 	room_area: number
@@ -90,13 +92,20 @@ export type HotelRoom = {
 	price: number
 	images: HotelImage[]
 	amenities: HotelAmenity[]
-	price_per_guest: number | null
+	prices: HotelRoomPrice[]
 }
 
 export type HotelAvailableRoom = {
 	room_id: number
 	max_guests: number
 	type: string
+}
+
+export type HotelRoomPrice = {
+	guest_quantity: number
+	price: number
+	id: number
+	room_id: 5
 }
 
 export type HotelCoordinates = {
