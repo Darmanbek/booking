@@ -68,6 +68,12 @@ export type HotelReview = {
 	review_category_ratings: CategoryRating[]
 }
 
+export type HotelReviewChange = {
+	rating: number
+	comment: string
+	category_ratings: CategoryRatingChange[]
+}
+
 export type HotelRating = {
 	reviews_count: number
 	hotel_id: number
@@ -119,6 +125,11 @@ export type CategoryRating = {
 	hotel_rating_id: number
 	review_category_id: number
 	review_category: ReviewCategory
+}
+
+export type CategoryRatingChange = {
+	rating: number
+	review_category_id: number
 }
 
 export type ReviewCategory = {

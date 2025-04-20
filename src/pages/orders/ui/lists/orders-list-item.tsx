@@ -1,7 +1,9 @@
-import { Card, Collapse, Flex, Image, List, Space } from "antd"
+import { MessageOutlined } from "@ant-design/icons"
+import { Button, Card, Collapse, Flex, Image, List, Space, Tag } from "antd"
 import { type FC } from "react"
 import { type Booking } from "src/services/booking"
 import { useToken, useTranslation } from "src/shared/hooks"
+import { useModalStore } from "src/shared/store"
 import { Text, Title } from "src/shared/ui"
 import {
 	formatCustomDate,
@@ -16,6 +18,7 @@ interface HotelListItemProps {
 
 const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 	const { t } = useTranslation()
+	const { setParams } = useModalStore()
 
 	const { token } = useToken()
 	return (
@@ -86,7 +89,7 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 										style={{ padding: 20, paddingLeft: 8, flexGrow: 1 }}
 									>
 										<Flex justify={"space-between"}>
-											<Flex vertical={true} align={"start"}>
+											<Flex vertical={true} align={"start"} gap={4}>
 												<Title level={4}>{t(booking?.hotel_info?.name)}</Title>
 												<a
 													href={`https://www.google.com/maps?q=${booking?.hotel_info?.location?.latitude} ${booking?.hotel_info?.location?.longitude}`}
@@ -102,6 +105,7 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 												<Text type={"secondary"}>
 													{booking?.hotel_info?.location?.address}
 												</Text>
+												<Tag color={"blue"}>{t(booking?.status)}</Tag>
 											</Flex>
 											<Space>
 												{[
@@ -164,6 +168,18 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 											<Title level={3} style={{ margin: 0 }}>
 												{formatPriceWithCurrency(booking?.total_price)}
 											</Title>
+											<Button
+												type={"primary"}
+												onClick={(e) => {
+													e.stopPropagation()
+													if (booking) {
+														setParams(booking)
+													}
+												}}
+												icon={<MessageOutlined />}
+											>
+												Оставить отзыв
+											</Button>
 										</Flex>
 									</Flex>
 								</Flex>

@@ -70,7 +70,7 @@ function RouteComponent() {
 						/>
 					</Card>
 					<Row gutter={20} style={{ rowGap: 20 }}>
-						<Col xs={24} md={8}>
+						<Col xs={24} md={7}>
 							<Card
 								title={
 									isLoading
@@ -87,7 +87,7 @@ function RouteComponent() {
 								/>
 							</Card>
 						</Col>
-						<Col xs={24} md={16}>
+						<Col xs={24} md={17}>
 							<Flex vertical={true} gap={20}>
 								<Outlet />
 							</Flex>

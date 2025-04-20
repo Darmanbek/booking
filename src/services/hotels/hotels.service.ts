@@ -14,6 +14,7 @@ import type {
 	HotelLocation,
 	HotelRating,
 	HotelReview,
+	HotelReviewChange,
 	HotelRoom,
 	HotelRule
 } from "./hotels.types"
@@ -91,6 +92,14 @@ class HotelsService {
 		const response = await api.get(`/hotels/${slug}/reviews`, {
 			params
 		})
+		return response.data
+	}
+
+	createBySlugReviews = async (
+		slug: ParamId,
+		form: HotelReviewChange
+	): Promise<ResponseData<HotelReview>> => {
+		const response = await api.post(`/hotels/${slug}/reviews`, form)
 		return response.data
 	}
 

@@ -1,5 +1,6 @@
+import type { HotelReviewChange } from "src/services/hotels/hotels.types"
 import type { GetParams, ParamId } from "src/services/shared"
-import { useCrudQuery } from "src/shared/api"
+import { useCrudMutation, useCrudQuery } from "src/shared/api"
 import { hotelsService } from "./hotels.service"
 
 const useGetHotelsSearchQuery = (params: GetParams = {}) => {
@@ -82,6 +83,16 @@ const useGetHotelsBySlugReviewsQuery = (
 	})
 }
 
+const useCreateHotelsBySlugReviewsMutation = (slug: ParamId) => {
+	return useCrudMutation({
+		mutationFn: (form: HotelReviewChange) =>
+			hotelsService.createBySlugReviews(slug, form),
+		invalidate: {
+			queryKey: ["hotels", slug, "reviews"]
+		}
+	})
+}
+
 const useGetHotelsBySlugRatingQuery = (slug: ParamId) => {
 	return useCrudQuery({
 		queryFn: () => hotelsService.getBySlugRating(slug),
@@ -120,6 +131,7 @@ export {
 	useGetHotelsBySlugAmenitiesQuery,
 	useGetHotelsBySlugImagesQuery,
 	useGetHotelsBySlugReviewsQuery,
+	useCreateHotelsBySlugReviewsMutation,
 	useGetHotelsBySlugRatingQuery,
 	useGetHotelsBySlugRoomsSearchQuery,
 	useGetHotelsBySlugRoomsByIdQuery
