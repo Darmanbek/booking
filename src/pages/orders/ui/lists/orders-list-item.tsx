@@ -1,4 +1,4 @@
-import { MessageOutlined } from "@ant-design/icons"
+import { MailOutlined, MessageOutlined } from "@ant-design/icons"
 import { Button, Card, Collapse, Flex, Image, List, Space, Tag } from "antd"
 import { useResponsive } from "antd-style"
 import { type FC } from "react"
@@ -94,7 +94,16 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 									>
 										<Flex vertical={!sm} gap={16} justify={"space-between"}>
 											<Flex vertical={true} align={"start"} gap={4}>
-												<Title level={4}>{t(booking?.hotel_info?.name)}</Title>
+												<Space align={"center"}>
+													<Title level={4}>
+														{t(booking?.hotel_info?.name)}
+													</Title>
+													{booking?.booking_type === "business" && (
+														<Tag icon={<MailOutlined />} color={"blue-inverse"}>
+															Командировка
+														</Tag>
+													)}
+												</Space>
 												<a
 													href={`https://www.google.com/maps?q=${booking?.hotel_info?.location?.latitude} ${booking?.hotel_info?.location?.longitude}`}
 													target={"_blank"}

@@ -12,7 +12,7 @@ export type Booking = {
 	check_out_date: string
 	special_requests: string
 	payment_method_id: number
-	booking_type: string
+	booking_type: "personal" | "business"
 	hotel_id: number
 	user_id: number
 	created_at: string

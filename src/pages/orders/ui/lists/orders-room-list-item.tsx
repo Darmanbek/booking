@@ -38,7 +38,7 @@ const OrdersRoomListItem: FC<OrdersRoomListItemProps> = ({ data: room }) => {
 							) : (
 								<Image
 									height={100}
-									width={175}
+									width={sm ? 175 : "100%"}
 									src={""}
 									alt={"Нет фото"}
 									onClick={(e) => e.stopPropagation()}
