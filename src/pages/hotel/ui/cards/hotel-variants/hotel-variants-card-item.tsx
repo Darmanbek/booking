@@ -1,5 +1,5 @@
-import { CheckOutlined, RightOutlined } from "@ant-design/icons"
-import { Button, Collapse, Flex, Image, List, Space, Typography } from "antd"
+import { RightOutlined } from "@ant-design/icons"
+import { Button, Collapse, Flex, Image, List, Tag, Typography } from "antd"
 import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import { type HotelRoom } from "src/services/hotels"
@@ -79,14 +79,20 @@ const HotelVariantsCardItem: FC<HotelVariantsCardItemProps> = ({
 										item?.room_amenities
 											?.map((el) => el)
 											.map((el, index) => (
-												<Space
+												<Tag
+													color={"blue-inverse"}
 													key={index}
-													size={2}
-													style={{ paddingRight: 16 }}
+													bordered={false}
+													style={{
+														marginRight: 8,
+														marginBottom: 8,
+														border: 0,
+														backgroundColor: "rgb(218, 231, 242)",
+														color: "rgb(36,47,77)"
+													}}
 												>
-													<CheckOutlined style={{ color: "green" }} />{" "}
 													{t(el?.name)}
-												</Space>
+												</Tag>
 											))
 									)}
 								</Typography.Paragraph>

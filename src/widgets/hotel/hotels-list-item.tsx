@@ -1,9 +1,22 @@
 import { ArrowRightOutlined } from "@ant-design/icons"
 import { Link, useParams } from "@tanstack/react-router"
-import { Badge, Button, Card, Flex, Image, List, Space } from "antd"
+import {
+	Badge,
+	Button,
+	Card,
+	Flex,
+	Image,
+	List,
+	Space,
+	Tag,
+	Typography
+} from "antd"
 import { useResponsive } from "antd-style"
 import { type FC } from "react"
-import { type Hotel } from "src/services/hotels"
+import {
+	type Hotel,
+	useGetHotelsBySlugAmenitiesQuery
+} from "src/services/hotels"
 import { useToken, useTranslation } from "src/shared/hooks"
 import { useMenuStore } from "src/shared/store"
 import { Text, Title } from "src/shared/ui"
@@ -22,6 +35,7 @@ const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 	const { citySlug = "" } = useParams({ strict: false })
 	const { md = true, sm = true } = useResponsive()
 	const { toggleMap } = useMenuStore()
+	const { data: amenities } = useGetHotelsBySlugAmenitiesQuery(hotel?.slug)
 
 	const { token } = useToken()
 	return (
@@ -94,6 +108,33 @@ const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 								</Space>
 							</Link>
 						</Flex>
+						<Typography.Paragraph
+							ellipsis={{
+								rows: 2,
+								expandable: "collapsible"
+							}}
+						>
+							{amenities?.data?.flatMap((item) =>
+								item?.hotel_amenities
+									?.map((el) => el)
+									.map((el, index) => (
+										<Tag
+											color={"blue-inverse"}
+											key={index}
+											bordered={false}
+											style={{
+												marginRight: 8,
+												marginBottom: 8,
+												border: 0,
+												backgroundColor: "rgb(218, 231, 242)",
+												color: "rgb(36,47,77)"
+											}}
+										>
+											{t(el?.name)}
+										</Tag>
+									))
+							)}
+						</Typography.Paragraph>
 						<Flex
 							vertical={!sm}
 							justify={"space-between"}

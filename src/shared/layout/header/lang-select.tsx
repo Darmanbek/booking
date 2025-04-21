@@ -1,6 +1,6 @@
 import { Select, Space } from "antd"
 import { type FC } from "react"
-import { TranslateKeys } from "src/services/shared"
+import type { TranslateKeys } from "src/services/shared"
 import { useLangStore } from "src/shared/store"
 
 const LangSelect: FC = () => {
@@ -10,7 +10,7 @@ const LangSelect: FC = () => {
 			<Select
 				variant={"borderless"}
 				popupMatchSelectWidth={false}
-				onChange={(lang) => {
+				onChange={async (lang) => {
 					setLang(lang as TranslateKeys)
 				}}
 				value={lang}
