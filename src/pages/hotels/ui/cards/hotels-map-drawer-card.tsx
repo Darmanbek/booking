@@ -7,7 +7,7 @@ import MarkerClusterGroup from "react-leaflet-cluster"
 import type { Hotel } from "src/services/hotels"
 import { useGetLocationBySlugQuery } from "src/services/locations"
 import { useMenuStore } from "src/shared/store"
-import { Map, type MapRef } from "src/widgets/map"
+import { Map, type MapRef, ResizeMap } from "src/widgets/map"
 import { MapHotelCard } from "src/widgets/map/map-hotel-card"
 import { RedMarker } from "src/widgets/map/red-marker"
 
@@ -80,9 +80,9 @@ const HotelsMapDrawerCard: FC<HotelsMapDrawerCardProps> = ({
 						<Map
 							style={{ height: "calc(100vh - 57px)" }}
 							center={center}
-							fullscreenControl={false}
 							ref={mapRef}
 						>
+							<ResizeMap open={map} />
 							<MarkerClusterGroup>
 								{hotels.map((hotel, index) => (
 									<Marker

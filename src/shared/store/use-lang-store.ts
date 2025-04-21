@@ -1,4 +1,6 @@
+import i18n from "i18next"
 import type { TranslateKeys } from "src/services/shared"
+import { langStorage } from "src/shared/utils"
 import { create } from "zustand"
 
 interface LangStore {
@@ -7,8 +9,12 @@ interface LangStore {
 }
 
 const useLangStore = create<LangStore>()((set) => ({
-	lang: "ru",
-	setLang: (lang) => set({ lang })
+	lang: langStorage.get(),
+	setLang: (lang) => {
+		console.log(lang.toUpperCase())
+		i18n.changeLanguage(lang.toUpperCase())
+		set({ lang })
+	}
 }))
 
 export { useLangStore }

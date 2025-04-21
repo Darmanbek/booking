@@ -1,8 +1,13 @@
 import Cookies from "js-cookie"
+import type { TranslateKeys } from "src/services/shared"
 
 export const TokenKeys = {
 	ACCESS_TOKEN: "access-token",
 	REFRESH_TOKEN: "refresh-token"
+} as const
+
+export const LangKeys = {
+	LANG: "lang"
 } as const
 
 export const tokenStorage = {
@@ -28,4 +33,14 @@ export const tokenStorage = {
 		Cookies.remove(TokenKeys.ACCESS_TOKEN)
 		Cookies.remove(TokenKeys.REFRESH_TOKEN)
 	}
+}
+
+export const langStorage = {
+	get: (): TranslateKeys =>
+		(Cookies.get(LangKeys.LANG) as TranslateKeys) || "ru",
+	set: (lang: TranslateKeys) =>
+		Cookies.set(LangKeys.LANG, lang, {
+			expires: 30
+		}),
+	clear: () => Cookies.remove(LangKeys.LANG)
 }

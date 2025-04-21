@@ -1,5 +1,6 @@
 import { MessageOutlined } from "@ant-design/icons"
 import { Button, Card, Collapse, Flex, Image, List, Space, Tag } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import { type Booking } from "src/services/booking"
 import { useToken, useTranslation } from "src/shared/hooks"
@@ -18,6 +19,7 @@ interface HotelListItemProps {
 
 const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 	const { t } = useTranslation()
+	const { sm = true } = useResponsive()
 	const { setParams } = useModalStore()
 
 	const { token } = useToken()
@@ -37,12 +39,13 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 				<Collapse
 					ghost={true}
 					expandIconPosition={"end"}
+					expandIcon={sm ? undefined : () => null}
 					style={{ width: "100%" }}
 					items={[
 						{
 							key: "hotel",
 							label: (
-								<Flex align={"stretch"} flex={1}>
+								<Flex vertical={!sm} align={"stretch"} flex={1}>
 									<Flex style={{ position: "relative", padding: 12 }}>
 										<Image.PreviewGroup>
 											{booking?.hotel_info?.images?.length ? (
@@ -51,14 +54,15 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 														onClick={(e) => e.stopPropagation()}
 														key={index}
 														hidden={index !== 0}
-														width={164}
-														height={164}
+														width={sm ? 164 : "100%"}
+														height={sm ? 164 : "100%"}
 														style={{
 															aspectRatio: 1,
 															borderRadius: token.borderRadiusLG,
 															display: "flex",
 															justifyContent: "center",
-															alignItems: "center"
+															alignItems: "center",
+															objectFit: "cover"
 														}}
 														alt={t(booking?.hotel_info?.name)}
 														src={image?.image}
@@ -88,7 +92,7 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 										gap={20}
 										style={{ padding: 20, paddingLeft: 8, flexGrow: 1 }}
 									>
-										<Flex justify={"space-between"}>
+										<Flex vertical={!sm} gap={16} justify={"space-between"}>
 											<Flex vertical={true} align={"start"} gap={4}>
 												<Title level={4}>{t(booking?.hotel_info?.name)}</Title>
 												<a
@@ -107,69 +111,80 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 												</Text>
 												<Tag color={"blue"}>{t(booking?.status)}</Tag>
 											</Flex>
-											<Space>
-												{[
-													{
-														title: "Заезд",
-														date: booking?.check_in_date
-													},
-													{
-														title: "Выезд",
-														date: booking?.check_out_date
-													}
-												].map((item, index) => (
-													<Flex vertical={true} gap={4} key={index}>
-														<Text
-															type={"secondary"}
-															style={{
-																textAlign: "center"
-															}}
-														>
-															{item?.title}
-														</Text>
-														<RatingTag
-															color={"blue"}
-															style={{
-																fontSize: 14
-															}}
-														>
-															<Title
-																level={4}
+											<Flex
+												justify={"center"}
+												style={{ width: sm ? "auto" : "100%" }}
+											>
+												<Space>
+													{[
+														{
+															title: "Заезд",
+															date: booking?.check_in_date
+														},
+														{
+															title: "Выезд",
+															date: booking?.check_out_date
+														}
+													].map((item, index) => (
+														<Flex vertical={true} gap={4} key={index}>
+															<Text
+																type={"secondary"}
 																style={{
-																	color: "inherit",
 																	textAlign: "center"
 																}}
 															>
-																{formatCustomDate(item?.date, "D")}
-															</Title>
-															<Text
+																{item?.title}
+															</Text>
+															<RatingTag
+																color={"blue"}
 																style={{
-																	color: "inherit",
-																	textAlign: "center",
-																	textTransform: "capitalize"
+																	fontSize: 14
 																}}
 															>
-																{formatCustomDate(item?.date, "MMMM YYYY")}
+																<Title
+																	level={4}
+																	style={{
+																		color: "inherit",
+																		textAlign: "center"
+																	}}
+																>
+																	{formatCustomDate(item?.date, "D")}
+																</Title>
+																<Text
+																	style={{
+																		color: "inherit",
+																		textAlign: "center",
+																		textTransform: "capitalize"
+																	}}
+																>
+																	{formatCustomDate(item?.date, "MMMM YYYY")}
+																</Text>
+															</RatingTag>
+															<Text
+																style={{
+																	textTransform: "capitalize",
+																	textAlign: "center"
+																}}
+															>
+																{formatCustomDate(item?.date, "dddd")}
 															</Text>
-														</RatingTag>
-														<Text
-															style={{
-																textTransform: "capitalize",
-																textAlign: "center"
-															}}
-														>
-															{formatCustomDate(item?.date, "dddd")}
-														</Text>
-													</Flex>
-												))}
-											</Space>
+														</Flex>
+													))}
+												</Space>
+											</Flex>
 										</Flex>
-										<Flex justify={"space-between"} align={"end"}>
+										<Flex
+											vertical={!sm}
+											gap={16}
+											justify={"space-between"}
+											align={sm ? "end" : "start"}
+										>
 											<Title level={3} style={{ margin: 0 }}>
 												{formatPriceWithCurrency(booking?.total_price)}
 											</Title>
 											<Button
 												type={"primary"}
+												block={!sm}
 												onClick={(e) => {
 													e.stopPropagation()
 													if (booking) {

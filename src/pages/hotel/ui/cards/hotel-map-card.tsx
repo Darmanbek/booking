@@ -8,7 +8,7 @@ import {
 	useGetHotelsBySlugQuery
 } from "src/services/hotels"
 import { Text, Title } from "src/shared/ui"
-import { Map } from "src/widgets/map"
+import { Map } from "src/widgets/map/map"
 import { MapHotelCard } from "src/widgets/map/map-hotel-card"
 
 const HotelMapCard: FC = () => {

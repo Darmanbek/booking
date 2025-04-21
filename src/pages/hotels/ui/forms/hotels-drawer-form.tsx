@@ -1,5 +1,5 @@
 import { useNavigate, useSearch } from "@tanstack/react-router"
-import { Button, Divider, Drawer, Form, FormProps } from "antd"
+import { Button, Divider, Drawer, Form, type FormProps } from "antd"
 import { type FC } from "react"
 import type { FilterChange } from "src/pages/hotels/types"
 import {
