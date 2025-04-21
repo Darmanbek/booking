@@ -1,5 +1,6 @@
 import { useParams } from "@tanstack/react-router"
 import { Card, Carousel, Col, Empty, Image, Row, Spin } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC, useMemo } from "react"
 import { useGetHotelsBySlugImagesQuery } from "src/services/hotels"
 import { CarouselNextButton, CarouselPrevButton } from "src/shared/ui/carousel"
@@ -10,7 +11,7 @@ const HotelPreviewCard: FC = () => {
 	const { hotelSlug } = useParams({
 		from: "/_layout/hotels/$citySlug/$hotelSlug"
 	})
-
+	const { sm = true } = useResponsive()
 	const { data: hotelImages, isLoading } =
 		useGetHotelsBySlugImagesQuery(hotelSlug)
 
@@ -56,56 +57,97 @@ const HotelPreviewCard: FC = () => {
 							dots={false}
 							infinite={false}
 							className={styles.carousel}
-							slidesToShow={4}
+							slidesToShow={sm ? 4 : 1}
+							slidesToScroll={1}
 							draggable={true}
 							arrows={true}
-							centerMode={false}
+							centerMode={!sm}
 							prevArrow={<CarouselPrevButton />}
 							nextArrow={<CarouselNextButton />}
 						>
 							{mainImage && (
 								<div>
 									<Image
-										style={{ height: 300, width: 300, objectFit: "cover" }}
+										style={{
+											height: 300,
+											width: sm ? 300 : "100%",
+											objectFit: "cover"
+										}}
 										height={300}
-										width={300}
+										width={sm ? 300 : "100%"}
 										src={mainImage?.image}
 										alt={`Фото ${mainImage?.position}`}
 									/>
 								</div>
 							)}
-							<div>
-								<Row style={{ rowGap: 2 }}>
-									{secondImage?.map((item, index) => (
-										<Col key={index} span={24} style={{ height: 150 }}>
-											<Image
-												style={{ height: "100%", objectFit: "cover" }}
-												height={150}
-												width={300}
-												src={item?.image}
-												alt={`Фото ${item?.position}`}
-											/>
-										</Col>
-									))}
-								</Row>
-							</div>
-							{otherImages?.map((item, index) => (
-								<div key={index}>
-									<Row gutter={2} style={{ rowGap: 2 }}>
-										{item?.map((child, index) => (
-											<Col key={index} span={12} style={{ height: 150 }}>
+							{sm ? (
+								<div>
+									<Row style={{ rowGap: 2, width: "100%" }}>
+										{secondImage?.map((item, index) => (
+											<Col key={index} span={24} style={{ height: 150 }}>
 												<Image
 													style={{ height: "100%", objectFit: "cover" }}
 													height={150}
-													width={150}
-													src={child?.image}
-													alt={`Фото ${child.position}`}
+													width={sm ? 300 : "100%"}
+													src={item?.image}
+													alt={`Фото ${item?.position}`}
 												/>
 											</Col>
 										))}
 									</Row>
 								</div>
-							))}
+							) : (
+								secondImage?.map((item, index) => (
+									<div key={index}>
+										<Image
+											style={{
+												height: 300,
+												width: sm ? 300 : "100%",
+												objectFit: "cover"
+											}}
+											height={300}
+											width={sm ? 300 : "100%"}
+											src={item?.image}
+											alt={`Фото ${item?.position}`}
+										/>
+									</div>
+								))
+							)}
+							{sm
+								? otherImages?.map((item, index) => (
+										<div key={index}>
+											<Row gutter={2} style={{ rowGap: 2 }}>
+												{item?.map((child, index) => (
+													<Col key={index} span={12} style={{ height: 150 }}>
+														<Image
+															style={{ height: "100%", objectFit: "cover" }}
+															height={150}
+															width={150}
+															src={child?.image}
+															alt={`Фото ${child.position}`}
+														/>
+													</Col>
+												))}
+											</Row>
+										</div>
+									))
+								: otherImages?.flatMap((item, index) =>
+										item?.map((child) => (
+											<div key={index}>
+												<Image
+													style={{
+														height: 300,
+														width: sm ? 300 : "100%",
+														objectFit: "cover"
+													}}
+													height={300}
+													width={sm ? 300 : "100%"}
+													src={child?.image}
+													alt={`Фото ${child?.position}`}
+												/>
+											</div>
+										))
+									)}
 						</Carousel>
 					</Image.PreviewGroup>
 				) : (

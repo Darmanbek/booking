@@ -1,5 +1,6 @@
 import { useParams } from "@tanstack/react-router"
 import { Card, Empty, Flex, Spin } from "antd"
+import { useResponsive } from "antd-style"
 import type L from "leaflet"
 import { type FC, useEffect, useRef } from "react"
 import { Marker, Popup } from "react-leaflet"
@@ -16,6 +17,7 @@ const HotelMapCard: FC = () => {
 	const { hotelSlug } = useParams({
 		from: "/_layout/hotels/$citySlug/$hotelSlug"
 	})
+	const { sm = true } = useResponsive()
 
 	const { data: hotel, isLoading: hotelLoading } =
 		useGetHotelsBySlugQuery(hotelSlug)
@@ -44,6 +46,15 @@ const HotelMapCard: FC = () => {
 							: hotelLocation?.data?.address || "Нейзвестный адресс"}
 					</Text>
 				</Flex>
+			}
+			styles={
+				sm
+					? {}
+					: {
+							body: {
+								padding: 0
+							}
+						}
 			}
 		>
 			<Spin spinning={hotelLoading || hotelLocationLoading}>

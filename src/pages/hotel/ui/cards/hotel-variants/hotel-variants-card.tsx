@@ -1,5 +1,6 @@
 import { useParams } from "@tanstack/react-router"
 import { Card, List } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import {
 	type HotelRoom,
@@ -14,6 +15,7 @@ const HotelVariantsCard: FC = () => {
 		from: "/_layout/hotels/$citySlug/$hotelSlug"
 	})
 	const { search } = useSearchStore()
+	const { sm = true } = useResponsive()
 
 	const { data: hotelRooms } = useGetHotelsBySlugRoomsSearchQuery(hotelSlug, {
 		guests: search.guests,
@@ -22,7 +24,15 @@ const HotelVariantsCard: FC = () => {
 	})
 
 	return (
-		<Card title={"Доступные варианты"} id={"rooms"}>
+		<Card
+			title={"Доступные варианты"}
+			id={"rooms"}
+			styles={{
+				body: {
+					padding: sm ? 24 : 16
+				}
+			}}
+		>
 			<List<HotelRoom>
 				dataSource={hotelRooms?.data || []}
 				renderItem={(item) => <HotelVariantsCardItem data={item} />}

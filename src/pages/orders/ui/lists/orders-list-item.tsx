@@ -179,8 +179,8 @@ const OrdersListItem: FC<HotelListItemProps> = ({ data: booking }) => {
 											justify={"space-between"}
 											align={sm ? "end" : "start"}
 										>
-											<Title level={3} style={{ margin: 0 }}>
-												{formatPriceWithCurrency(booking?.total_price)}
+											<Title level={sm ? 3 : 4} style={{ margin: 0 }}>
+												Всего {formatPriceWithCurrency(booking?.total_price)}
 											</Title>
 											<Button
 												type={"primary"}

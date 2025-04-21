@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client"
 import { Providers } from "src/app/providers"
 import { App } from "./app"
 import "./styles/index.css"
+import "./i18next"
 
 import "leaflet/dist/leaflet.css"
 import "leaflet.fullscreen/Control.FullScreen" // Подключаем плагин

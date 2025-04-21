@@ -1,5 +1,6 @@
 import { RightOutlined } from "@ant-design/icons"
 import { Button, Collapse, Flex, Image, List, Space } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import { type HotelRoom } from "src/services/hotels"
 import { useToken, useTranslation } from "src/shared/hooks"
@@ -15,31 +16,34 @@ const HotelVariantsCardItem: FC<HotelVariantsCardItemProps> = ({
 }) => {
 	const { t } = useTranslation()
 	const { token } = useToken()
+	const { sm = true } = useResponsive()
 
 	return (
 		<List.Item>
 			<Collapse
-				expandIconPosition={"end"}
+				expandIconPosition={"right"}
 				ghost={true}
 				style={{
 					width: "100%"
 				}}
 				collapsible={"icon"}
-				expandIcon={({ isActive, style }) => (
-					<Button
-						type={"text"}
-						iconPosition={"end"}
-						icon={<RightOutlined style={style} rotate={isActive ? 90 : 0} />}
-					>
-						Подробнее
-					</Button>
-				)}
+				expandIcon={({ isActive, style }) =>
+					sm ? (
+						<Button
+							type={"text"}
+							iconPosition={"end"}
+							icon={<RightOutlined style={style} rotate={isActive ? 90 : 0} />}
+						>
+							Подробнее
+						</Button>
+					) : null
+				}
 				defaultActiveKey={["room"]}
 				items={[
 					{
 						key: "room",
 						label: (
-							<Flex align={"stretch"} gap={12}>
+							<Flex vertical={!sm} align={"stretch"} gap={12}>
 								<Flex>
 									<Image.PreviewGroup>
 										{room?.images?.map((image, index) => (
@@ -47,7 +51,7 @@ const HotelVariantsCardItem: FC<HotelVariantsCardItemProps> = ({
 												hidden={index !== 0}
 												key={index}
 												height={100}
-												width={175}
+												width={sm ? 175 : "100%"}
 												src={image?.image}
 												onClick={(e) => e.stopPropagation()}
 												style={{

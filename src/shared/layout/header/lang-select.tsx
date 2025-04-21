@@ -5,7 +5,6 @@ import { useLangStore } from "src/shared/store"
 
 const LangSelect: FC = () => {
 	const { lang, setLang } = useLangStore()
-	console.log(lang)
 	return (
 		<>
 			<Select

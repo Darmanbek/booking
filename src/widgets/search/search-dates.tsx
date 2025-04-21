@@ -1,4 +1,5 @@
 import { DatePicker } from "antd"
+import { useResponsive } from "antd-style"
 import type { RangePickerProps } from "antd/es/date-picker"
 import localeRU from "antd/es/date-picker/locale/ru_RU"
 import dayjs from "dayjs"
@@ -9,6 +10,7 @@ dayjs.locale("ru")
 
 const SearchDates = forwardRef<PickerRef, RangePickerProps>(
 	({ style, ...props }, ref) => {
+		const { sm = true } = useResponsive()
 		return (
 			<DatePicker.RangePicker
 				ref={ref}
@@ -16,7 +18,7 @@ const SearchDates = forwardRef<PickerRef, RangePickerProps>(
 				inputReadOnly={true}
 				format={"dd, DD MMM"}
 				style={{
-					minWidth: 300,
+					minWidth: sm ? 300 : "100%",
 					minHeight: 50,
 					...style
 				}}

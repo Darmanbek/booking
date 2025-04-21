@@ -1,5 +1,6 @@
 import { UserOutlined } from "@ant-design/icons"
 import { Avatar, Flex, Image, List, Space } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import type { HotelRoom } from "src/services/hotels"
 import { useToken } from "src/shared/hooks"
@@ -12,10 +13,11 @@ interface OrdersRoomListItemProps {
 
 const OrdersRoomListItem: FC<OrdersRoomListItemProps> = ({ data: room }) => {
 	const { token } = useToken()
+	const { sm = true } = useResponsive()
 	return (
 		<>
 			<List.Item style={{ width: "100%" }}>
-				<Flex gap={12} flex={1} style={{ width: "100%" }}>
+				<Flex vertical={!sm} gap={12} flex={1} style={{ width: "100%" }}>
 					<Flex>
 						<Image.PreviewGroup>
 							{room?.images?.length ? (
@@ -24,7 +26,7 @@ const OrdersRoomListItem: FC<OrdersRoomListItemProps> = ({ data: room }) => {
 										hidden={index !== 0}
 										key={index}
 										height={100}
-										width={175}
+										width={sm ? 175 : "100%"}
 										src={image?.image}
 										onClick={(e) => e.stopPropagation()}
 										style={{
@@ -66,7 +68,7 @@ const OrdersRoomListItem: FC<OrdersRoomListItemProps> = ({ data: room }) => {
 							type={"secondary"}
 						>{`Количество гостей: ${room?.guest_quantity}`}</Text>
 						<Flex justify={"end"} style={{ marginTop: "auto" }}>
-							<Title level={4} style={{ margin: 0 }}>
+							<Title level={sm ? 4 : 5} style={{ margin: 0 }}>
 								{formatPriceWithCurrency(room?.price)}
 							</Title>
 						</Flex>

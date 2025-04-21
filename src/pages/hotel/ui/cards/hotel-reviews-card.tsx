@@ -1,14 +1,17 @@
 import { UserOutlined } from "@ant-design/icons"
 import { useParams } from "@tanstack/react-router"
 import { Avatar, Card, Col, Flex, List, Progress, Row } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC, useState } from "react"
+import { useGetCategoriesQuery } from "src/services/categories"
 import {
 	HotelReview,
+	useGetHotelsBySlugRatingQuery,
 	useGetHotelsBySlugReviewsQuery
 } from "src/services/hotels"
 import { useTranslation } from "src/shared/hooks"
 import { Text, Title } from "src/shared/ui"
-import { formatCustomDate } from "src/shared/utils"
+import { formatCustomDate, formatNumber } from "src/shared/utils"
 import { RatingContainer } from "src/widgets/rating-container"
 import { RatingTag } from "src/widgets/rating-tag"
 
@@ -21,14 +24,53 @@ const HotelReviewsCard: FC = () => {
 		page: 1,
 		pageSize: 5
 	})
+
+	const { sm = true } = useResponsive()
+	const { data: hotelRating } = useGetHotelsBySlugRatingQuery(hotelSlug)
 	const { data: hotelReviews, isLoading: reviewsLoading } =
 		useGetHotelsBySlugReviewsQuery(hotelSlug, {
 			page: params.page,
 			page_size: params.pageSize
 		})
+	const { data: categories } = useGetCategoriesQuery()
+
+	const ratings = (
+		<Row style={{ width: "100%" }} justify={"end"} gutter={24}>
+			{hotelRating?.data?.category_ratings?.map((item, index) => (
+				<Col sm={12} md={8} key={index}>
+					<Progress
+						size={"small"}
+						percent={formatNumber(item.rating) * 10}
+						showInfo={false}
+					/>
+					<Flex
+						gap={8}
+						style={{ width: "100%", fontSize: 12 }}
+						justify={"space-between"}
+					>
+						<span>
+							{t(
+								categories?.data?.find(
+									(el) => el.id === item?.review_category_id
+								)?.name
+							)}
+						</span>
+						<span>{formatNumber(item.rating).toFixed(1)}</span>
+					</Flex>
+				</Col>
+			))}
+		</Row>
+	)
 
 	return (
-		<RatingContainer placement={"start"} text={"7,1"}>
+		<RatingContainer
+			placement={"start"}
+			text={
+				hotelRating?.data?.average_rating
+					? formatNumber(hotelRating?.data?.average_rating).toFixed(1)
+					: ""
+			}
+		>
 			<Card
 				id={"reviews"}
 				title={
@@ -37,7 +79,8 @@ const HotelReviewsCard: FC = () => {
 							Очень хорошо
 						</Title>
 						<Text type={"secondary"} style={{ fontSize: 12 }}>
-							Основано на 11 отзывах гостей
+							Основано на {formatNumber(hotelRating?.data?.reviews_count)}{" "}
+							отзывах гостей
 						</Text>
 					</Flex>
 				}
@@ -53,23 +96,8 @@ const HotelReviewsCard: FC = () => {
 						paddingBlock: 12
 					}
 				}}
-				extra={
-					<Row style={{ width: "100%" }} gutter={24}>
-						{[85, 64, 84, 38, 68, 80, 75, 76].map((value, index) => (
-							<Col span={8} key={index}>
-								<Progress size={"small"} percent={value} showInfo={false} />
-								<Flex
-									gap={8}
-									style={{ width: "100%", fontSize: 12 }}
-									justify={"space-between"}
-								>
-									<span>Название</span>
-									<span>{(value || 0) / 10}</span>
-								</Flex>
-							</Col>
-						))}
-					</Row>
-				}
+				cover={sm ? null : <Flex style={{ padding: 16 }}>{ratings}</Flex>}
+				extra={sm ? ratings : null}
 			>
 				<List<HotelReview>
 					itemLayout={"vertical"}

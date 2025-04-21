@@ -1,6 +1,7 @@
 import { LeftOutlined, RightOutlined, UserOutlined } from "@ant-design/icons"
 import { Link, useParams } from "@tanstack/react-router"
 import { Avatar, Button, Card, Empty, Flex, Space } from "antd"
+import { useResponsive } from "antd-style"
 import { type CarouselRef } from "antd/es/carousel"
 import { type FC, useRef } from "react"
 import {
@@ -15,6 +16,7 @@ const HotelRatingCard: FC = () => {
 	const { hotelSlug } = useParams({
 		from: "/_layout/hotels/$citySlug/$hotelSlug"
 	})
+	const { sm = true } = useResponsive()
 
 	const { data: hotelRating } = useGetHotelsBySlugRatingQuery(hotelSlug)
 	const { data: reviews } = useGetHotelsBySlugReviewsQuery(hotelSlug)
@@ -115,7 +117,7 @@ const HotelRatingCard: FC = () => {
 							icon={`(+${hotelRating?.data?.reviews_count || 0})`}
 							iconPosition={"end"}
 						>
-							Посмотреть все отзывы
+							{sm ? "Посмотреть все отзывы" : "Все отзывы"}
 						</Button>
 					</Flex>
 				</Flex>

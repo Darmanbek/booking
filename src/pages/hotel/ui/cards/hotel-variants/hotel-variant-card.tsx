@@ -1,5 +1,6 @@
 import { UserOutlined } from "@ant-design/icons"
 import { Avatar, Card, Descriptions } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC, useState } from "react"
 import { useOrders } from "src/pages/hotel/hooks"
 import type { HotelRoom, HotelRoomPrice } from "src/services/hotels"
@@ -22,6 +23,7 @@ const HotelVariantCard: FC<HotelVariantCardProps> = ({
 }) => {
 	const [quantity, setQuantity] = useState(0)
 	const { addRoom } = useOrders()
+	const { sm = true } = useResponsive()
 	// const currentTotalQuantityRoom = useMemo(() => {
 	// 	return rooms
 	// 		?.filter((el) => el?.room?.id === room?.id)
@@ -49,8 +51,8 @@ const HotelVariantCard: FC<HotelVariantCardProps> = ({
 	return (
 		<Card
 			style={{
-				minWidth: 250,
-				maxWidth: 250
+				minWidth: sm ? 250 : 230,
+				maxWidth: sm ? 250 : 230
 			}}
 			actions={[
 				<Counter

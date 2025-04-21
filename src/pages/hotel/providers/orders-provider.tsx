@@ -23,8 +23,8 @@ const OrdersProvider: FC<PropsWithChildren> = ({ children }) => {
 				return prev.filter((el) => {
 					if (el?.room?.room_price_id !== undefined)
 						return (
-							el?.room?.id === room?.id &&
-							el?.room?.room_price_id === room?.room_price_id
+							el?.room?.id !== room?.id &&
+							el?.room?.room_price_id !== room?.room_price_id
 						)
 					return el?.room?.id !== room?.id
 				})

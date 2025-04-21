@@ -33,14 +33,19 @@ const HotelTopCard: FC = () => {
 	return (
 		<Card loading={cityLoading || hotelLoading || locationLoading}>
 			<Flex align={"center"} vertical={!sm}>
-				<FavoriteButton data={hotel?.data?.slug} size={"large"} />
+				<FavoriteButton
+					data={hotel?.data?.slug}
+					shape={sm ? "circle" : "round"}
+					size={"large"}
+				>
+					{sm ? "" : "В избранное"}
+				</FavoriteButton>
 				<Divider
 					type={sm ? "vertical" : "horizontal"}
 					style={{
-						maxHeight: "100%",
+						minHeight: sm ? 50 : "100%",
 						height: "inherit",
-						display: "block",
-						marginBlock: 4
+						marginBlock: sm ? 0 : 8
 					}}
 				/>
 				<Flex justify={"space-between"} style={{ width: "100%" }} wrap={true}>
@@ -58,12 +63,13 @@ const HotelTopCard: FC = () => {
 							</Space>
 						</Text>
 					</Flex>
-					<Flex vertical={true} gap={6}>
+					<Flex vertical={true} gap={6} style={{ width: sm ? "auto" : "100%" }}>
 						<Title level={4} style={{ textAlign: "end" }}>
 							От {formatPriceWithCurrency(hotel?.data?.min_price)}
 						</Title>
 						<Button
 							type={"primary"}
+							block={!sm}
 							onClick={() =>
 								navigate({ to: ".", hash: "rooms", search: (prev) => prev })
 							}

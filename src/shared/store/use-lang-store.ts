@@ -11,7 +11,6 @@ interface LangStore {
 const useLangStore = create<LangStore>()((set) => ({
 	lang: langStorage.get(),
 	setLang: (lang) => {
-		console.log(lang.toUpperCase())
 		i18n.changeLanguage(lang.toUpperCase())
 		set({ lang })
 	}

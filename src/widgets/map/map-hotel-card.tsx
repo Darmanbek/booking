@@ -13,7 +13,6 @@ interface MapHotelCardProps {
 
 const MapHotelCard: FC<MapHotelCardProps> = ({ data: hotel }) => {
 	const { t } = useTranslation()
-
 	return (
 		<Link
 			to={"/hotels/$citySlug/$hotelSlug"}
