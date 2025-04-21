@@ -1,5 +1,5 @@
-import { RightOutlined } from "@ant-design/icons"
-import { Button, Collapse, Flex, Image, List, Space } from "antd"
+import { CheckOutlined, RightOutlined } from "@ant-design/icons"
+import { Button, Collapse, Flex, Image, List, Space, Typography } from "antd"
 import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import { type HotelRoom } from "src/services/hotels"
@@ -43,35 +43,53 @@ const HotelVariantsCardItem: FC<HotelVariantsCardItemProps> = ({
 					{
 						key: "room",
 						label: (
-							<Flex vertical={!sm} align={"stretch"} gap={12}>
-								<Flex>
-									<Image.PreviewGroup>
-										{room?.images?.map((image, index) => (
-											<Image
-												hidden={index !== 0}
-												key={index}
-												height={100}
-												width={sm ? 175 : "100%"}
-												src={image?.image}
-												onClick={(e) => e.stopPropagation()}
-												style={{
-													borderRadius: token.borderRadius,
-													objectFit: "cover"
-												}}
-											/>
-										))}
-									</Image.PreviewGroup>
+							<Flex vertical={true} gap={16}>
+								<Flex vertical={!sm} align={"stretch"} gap={12}>
+									<Flex>
+										<Image.PreviewGroup>
+											{room?.images?.map((image, index) => (
+												<Image
+													hidden={index !== 0}
+													key={index}
+													height={100}
+													width={sm ? 175 : "100%"}
+													src={image?.image}
+													onClick={(e) => e.stopPropagation()}
+													style={{
+														borderRadius: token.borderRadius,
+														objectFit: "cover"
+													}}
+												/>
+											))}
+										</Image.PreviewGroup>
+									</Flex>
+									<Flex vertical={true} flex={1} style={{ height: "100%" }}>
+										<Title level={4} style={{ fontSize: 16 }}>
+											{room?.room_type}
+										</Title>
+									</Flex>
 								</Flex>
-								<Flex vertical={true} flex={1} style={{ height: "100%" }}>
-									<Title level={4} style={{ fontSize: 16 }}>
-										{room?.room_type}
-									</Title>
-									<Space>
-										{room?.amenities?.[0]?.hotel_amenities?.map((el) =>
-											t(el.name)
-										)}
-									</Space>
-								</Flex>
+								<Typography.Paragraph
+									ellipsis={{
+										rows: 2,
+										expandable: "collapsible"
+									}}
+								>
+									{room?.amenities?.flatMap((item) =>
+										item?.room_amenities
+											?.map((el) => el)
+											.map((el, index) => (
+												<Space
+													key={index}
+													size={2}
+													style={{ paddingRight: 16 }}
+												>
+													<CheckOutlined style={{ color: "green" }} />{" "}
+													{t(el?.name)}
+												</Space>
+											))
+									)}
+								</Typography.Paragraph>
 							</Flex>
 						),
 						children: <HotelVariantList data={room} />
