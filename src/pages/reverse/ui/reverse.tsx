@@ -15,6 +15,7 @@ import {
 	Steps,
 	Tabs
 } from "antd"
+import { useResponsive } from "antd-style"
 import { type Dayjs } from "dayjs"
 import { type FC, useEffect, useState } from "react"
 import { ReverseContext } from "src/pages/reverse/context"
@@ -52,6 +53,7 @@ const Reverse: FC = () => {
 	const { orderId, hotelSlug } = useParams({
 		from: "/_layout/orders/$orderId/reverse/$hotelSlug"
 	})
+	const { sm = true } = useResponsive()
 	const navigate = useNavigate()
 
 	const { data: booking, isLoading } = useGetBookingByIdQuery(orderId)
@@ -167,7 +169,7 @@ const Reverse: FC = () => {
 							]}
 						/>
 						<Row gutter={20} style={{ rowGap: 20 }}>
-							<Col span={16}>
+							<Col xs={24} md={16}>
 								<Tabs
 									animated={true}
 									activeKey={`${step}`}
@@ -216,7 +218,7 @@ const Reverse: FC = () => {
 										onClick={onPrevStep}
 										icon={<ArrowLeftOutlined />}
 									>
-										Назад
+										{sm ? "Назад" : ""}
 									</Button>
 									<Button
 										size={"large"}
@@ -236,7 +238,7 @@ const Reverse: FC = () => {
 									</Button>
 								</Flex>
 							</Col>
-							<Col span={8}>
+							<Col xs={24} md={8}>
 								<Flex vertical={true} gap={20}>
 									<ReverseInfoCard />
 									<ReversePricesCard />

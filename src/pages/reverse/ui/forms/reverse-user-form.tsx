@@ -1,4 +1,4 @@
-import { Card, Col, Form, Input, Row } from "antd"
+import { Card, Col, Form, Input, Radio, Row, Space } from "antd"
 import { type FC } from "react"
 import { useReverse } from "src/pages/reverse/hooks"
 
@@ -17,7 +17,7 @@ const ReverseUserForm: FC = () => {
 				onFinish={onFinish}
 			>
 				<Row gutter={16}>
-					<Col span={12}>
+					<Col xs={24} sm={12}>
 						<Form.Item
 							label={"Имя"}
 							name={"first_name"}
@@ -30,7 +30,7 @@ const ReverseUserForm: FC = () => {
 							<Input />
 						</Form.Item>
 					</Col>
-					<Col span={12}>
+					<Col xs={24} sm={12}>
 						<Form.Item
 							label={"Фамилия"}
 							name={"last_name"}
@@ -44,6 +44,18 @@ const ReverseUserForm: FC = () => {
 						</Form.Item>
 					</Col>
 				</Row>
+				<Form.Item
+					label={"Путешествуете по работе?"}
+					name={"booking_type"}
+					initialValue={"personal"}
+				>
+					<Radio.Group buttonStyle={"solid"}>
+						<Space>
+							<Radio.Button value={"business"}>Да</Radio.Button>
+							<Radio.Button value={"personal"}>Нет</Radio.Button>
+						</Space>
+					</Radio.Group>
+				</Form.Item>
 			</Form>
 		</Card>
 	)

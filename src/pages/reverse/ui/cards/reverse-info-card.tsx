@@ -13,6 +13,7 @@ const ReverseInfoCard: FC = () => {
 	const roomsInfo = Form.useWatch("rooms_info", form) || []
 
 	const { data: order } = useGetBookingByIdQuery(orderId)
+
 	return (
 		<Card title={"Данные бронирования"}>
 			<Descriptions

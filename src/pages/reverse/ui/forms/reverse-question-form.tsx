@@ -1,9 +1,10 @@
 import { useParams } from "@tanstack/react-router"
 import { Alert, Card, DatePicker, Form, Input } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import { useReverse } from "src/pages/reverse/hooks"
 import {
-	BookingFinalChange,
+	type BookingFinalChange,
 	useGetBookingByIdQuery
 } from "src/services/booking"
 import { useGetHotelsBySlugRulesQuery } from "src/services/hotels"
@@ -13,6 +14,7 @@ const ReverseQuestionForm: FC = () => {
 	const { hotelSlug, orderId } = useParams({
 		from: "/_layout/orders/$orderId/reverse/$hotelSlug"
 	})
+	const { sm = true } = useResponsive()
 	const { data: hotelRules } = useGetHotelsBySlugRulesQuery(hotelSlug)
 	const { data: order } = useGetBookingByIdQuery(orderId)
 	const { form, onFinish } = useReverse()
@@ -56,7 +58,7 @@ const ReverseQuestionForm: FC = () => {
 				>
 					<DatePicker
 						mode={"time"}
-						style={{ minWidth: 300 }}
+						style={{ minWidth: sm ? 300 : "100%" }}
 						picker={"time"}
 						format={{
 							format: "HH:mm",

@@ -11,13 +11,14 @@ import {
 } from "antd"
 import { type FC } from "react"
 import { useReverse } from "src/pages/reverse/hooks"
-import { BookingFinalChange } from "src/services/booking"
+import { type BookingFinalChange } from "src/services/booking"
 import { useGetMeQuery } from "src/services/users"
 import { useToken } from "src/shared/hooks"
 import { formatPhone } from "src/shared/utils"
 
 const ReversePaymentForm: FC = () => {
 	const { token } = useToken()
+
 	const { form, onFinish } = useReverse()
 	const { data: profile, isLoading } = useGetMeQuery()
 	return (
@@ -36,7 +37,7 @@ const ReversePaymentForm: FC = () => {
 			>
 				<Flex vertical={true} gap={20}>
 					<Row gutter={16} style={{ rowGap: 16 }}>
-						<Col span={16}>
+						<Col xs={24} md={16}>
 							<Form.Item<BookingFinalChange>
 								label={"Номер телефона"}
 								name={"phone_number"}
@@ -54,7 +55,7 @@ const ReversePaymentForm: FC = () => {
 								<Input addonBefore={"+998"} />
 							</Form.Item>
 						</Col>
-						<Col span={8}>
+						<Col xs={24} md={8}>
 							<Card type={"inner"} loading={isLoading}>
 								<Descriptions
 									column={1}

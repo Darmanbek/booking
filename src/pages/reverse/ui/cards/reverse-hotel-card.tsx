@@ -1,6 +1,7 @@
 import { EnvironmentOutlined } from "@ant-design/icons"
 import { useParams } from "@tanstack/react-router"
 import { Card, Flex, Image, Space } from "antd"
+import { useResponsive } from "antd-style"
 import { type FC } from "react"
 import {
 	useGetHotelsBySlugImagesQuery,
@@ -14,6 +15,7 @@ const ReverseHotelCard: FC = () => {
 	const { token } = useToken()
 	const { t } = useTranslation()
 
+	const { sm = true } = useResponsive()
 	const { hotelSlug } = useParams({ strict: false })
 	const { data: hotel } = useGetHotelsBySlugQuery(hotelSlug)
 	const { data: hotelLocation } = useGetHotelsBySlugLocationQuery(hotelSlug)
@@ -27,10 +29,10 @@ const ReverseHotelCard: FC = () => {
 				}
 			}}
 		>
-			<Flex gap={12}>
+			<Flex vertical={!sm} gap={12}>
 				<Flex>
 					<Image
-						width={192}
+						width={sm ? 192 : "100%"}
 						style={{
 							aspectRatio: 1,
 							borderRadius: token.borderRadiusLG,
