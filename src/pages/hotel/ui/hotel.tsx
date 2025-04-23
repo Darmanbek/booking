@@ -60,9 +60,9 @@ const Hotel: FC = () => {
 												search={search}
 											>
 												{cityLoading
-													? "Загрузка"
+													? t("Загрузка")
 													: city
-														? city?.data?.name
+														? t(city?.data?.name)
 														: ""}
 											</Link>
 										)

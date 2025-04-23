@@ -77,7 +77,7 @@ const HotelCard: FC<HotelCardProps> = ({ data: hotel }) => {
 								</Flex>
 								<Space split={"•"}>
 									<Text type={"secondary"} style={{ fontSize: 12 }}>
-										{hotel.location?.city}
+										{t(hotel.location?.city)}
 									</Text>
 									<Text style={{ fontSize: 12 }}>
 										{formatNumber(hotel?.location?.distance_to_center)} км от

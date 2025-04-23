@@ -51,7 +51,7 @@ const ReverseHotelCard: FC = () => {
 							<EnvironmentOutlined />
 							{hotelLocation?.data?.address}
 						</Space>
-						{hotelLocation?.data?.city}
+						{t(hotelLocation?.data?.city)}
 						<Text>
 							{Number(Number(hotelLocation?.data?.to_city_center) || 0)}км от
 							центра
