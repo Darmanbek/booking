@@ -1,10 +1,12 @@
 import { FilterFilled } from "@ant-design/icons"
 import { Button } from "antd"
 import { type FC } from "react"
+import { useTranslation } from "src/shared/hooks"
 import { useMenuStore } from "src/shared/store"
 
 const FilterButton: FC = () => {
 	const { toggleFilter } = useMenuStore()
+	const { t } = useTranslation()
 
 	return (
 		<>
@@ -14,7 +16,7 @@ const FilterButton: FC = () => {
 				onClick={toggleFilter}
 				icon={<FilterFilled />}
 			>
-				Фильтры
+				{t("Фильтры")}
 			</Button>
 		</>
 	)

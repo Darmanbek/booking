@@ -2,7 +2,7 @@ import { useNavigate } from "@tanstack/react-router"
 import { Form, type FormInstance, Slider, Space } from "antd"
 import { type FC } from "react"
 import { type FilterChange } from "src/pages/hotels/types"
-import { useDebounceEffect } from "src/shared/hooks"
+import { useDebounceEffect, useTranslation } from "src/shared/hooks"
 import { InputPrice } from "src/shared/ui"
 import { formatNumber, formatPrice } from "src/shared/utils"
 
@@ -13,6 +13,7 @@ interface PricesFormItemProps {
 
 const PricesFormItem: FC<PricesFormItemProps> = ({ form, isLocal }) => {
 	const prices = Form.useWatch("prices", form)
+	const { t } = useTranslation()
 	const navigate = useNavigate()
 
 	useDebounceEffect(() => {
@@ -30,8 +31,8 @@ const PricesFormItem: FC<PricesFormItemProps> = ({ form, isLocal }) => {
 	}, [isLocal, navigate, prices])
 	return (
 		<>
-			<Form.Item label={"Цена за ночь"}>
-				<Space split={"до"} align={"baseline"}>
+			<Form.Item label={t("Цена за ночь")}>
+				<Space split={t("до")} align={"baseline"}>
 					<Form.Item name={["prices", 0]} initialValue={0}>
 						<InputPrice min={0} max={10_000_000} />
 					</Form.Item>

@@ -1,10 +1,13 @@
 import { AimOutlined } from "@ant-design/icons"
 import { Button } from "antd"
 import { type FC } from "react"
+import { useTranslation } from "src/shared/hooks"
 import { useMenuStore } from "src/shared/store"
 
 const MapButton: FC = () => {
 	const { toggleMap } = useMenuStore()
+	const { t } = useTranslation()
+
 	return (
 		<>
 			<Button
@@ -13,7 +16,7 @@ const MapButton: FC = () => {
 				block={true}
 				icon={<AimOutlined />}
 			>
-				Карта
+				{t("Карта")}
 			</Button>
 		</>
 	)

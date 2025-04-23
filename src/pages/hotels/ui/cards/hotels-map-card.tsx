@@ -6,6 +6,7 @@ import { Marker, Popup } from "react-leaflet"
 import MarkerClusterGroup from "react-leaflet-cluster"
 import type { Hotel } from "src/services/hotels"
 import { useGetLocationBySlugQuery } from "src/services/locations"
+import { useTranslation } from "src/shared/hooks"
 import { Map, type MapRef } from "src/widgets/map"
 import { MapHotelCard } from "src/widgets/map/map-hotel-card"
 import { RedMarker } from "src/widgets/map/red-marker"
@@ -16,6 +17,7 @@ interface HotelsMapCardProps {
 
 const HotelsMapCard: FC<HotelsMapCardProps> = ({ data: hotels }) => {
 	const mapRef = useRef<MapRef>(null)
+	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const { citySlug } = useParams({
 		strict: false
@@ -82,7 +84,7 @@ const HotelsMapCard: FC<HotelsMapCardProps> = ({ data: hotels }) => {
 							{cityCenter && (
 								<RedMarker position={cityCenter}>
 									<Popup>
-										<b>{city?.data?.name}</b>
+										<b>{t(city?.data?.name)}</b>
 									</Popup>
 								</RedMarker>
 							)}

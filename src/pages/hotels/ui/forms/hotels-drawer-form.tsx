@@ -8,12 +8,13 @@ import {
 	PricesFormItem
 } from "src/pages/hotels/ui/forms/form-items"
 import { useGetAmenitiesQuery } from "src/services/amenities"
-import { useDebounceEffect } from "src/shared/hooks"
+import { useDebounceEffect, useTranslation } from "src/shared/hooks"
 import { useMenuStore } from "src/shared/store"
 import { formatNumber } from "src/shared/utils"
 
 const HotelsDrawerForm: FC = () => {
 	const { filter, toggleFilter } = useMenuStore()
+	const { t } = useTranslation()
 	const [form] = Form.useForm<FilterChange>()
 	const searchParams = useSearch({
 		from: "/_layout/hotels/$citySlug/"
@@ -68,7 +69,7 @@ const HotelsDrawerForm: FC = () => {
 					toggleFilter()
 				}
 			}}
-			title={"Все фильтры"}
+			title={t("Все фильтры")}
 			footer={
 				<Button
 					onClick={form.submit}

@@ -9,6 +9,7 @@ import { FilterButton, MapButton } from "src/pages/hotels/ui/features"
 import { HotelsDrawerForm } from "src/pages/hotels/ui/forms"
 import { useGetHotelsSearchQuery } from "src/services/hotels"
 import { useGetLocationBySlugQuery } from "src/services/locations"
+import { useTranslation } from "src/shared/hooks"
 import { useSearchStore } from "src/shared/store/use-search-store"
 import { Container, Title } from "src/shared/ui"
 import { formatDate, formatGuests } from "src/shared/utils"
@@ -21,6 +22,7 @@ const Hotels: FC = () => {
 		strict: false
 	})
 	const { md = true, sm = true } = useResponsive()
+	const { t } = useTranslation()
 	const { search, setSearch } = useSearchStore()
 	const navigate = useNavigate()
 	const { data: city } = useGetLocationBySlugQuery(citySlug)
@@ -86,13 +88,13 @@ const Hotels: FC = () => {
 										<Link to={"/"}>
 											<Space>
 												<HomeOutlined />
-												Главная
+												{t("Главная")}
 											</Space>
 										</Link>
 									)
 								},
 								{
-									title: city ? city?.data?.name : "Загрузка"
+									title: city ? t(city?.data?.name) : t("Загрузка")
 								}
 							]}
 						/>
@@ -121,8 +123,8 @@ const Hotels: FC = () => {
 							<Flex vertical={true} gap={20}>
 								<Card>
 									<Title level={sm ? 4 : 5}>
-										{city ? city?.data?.name : "Загрузка"}, доступно вариантов:{" "}
-										{hotels?.pagination?.total || 0}
+										{city ? t(city?.data?.name) : t("Загрузка")},{" "}
+										{t("доступно вариантов:")} {hotels?.pagination?.total || 0}
 									</Title>
 								</Card>
 								<HotelsList

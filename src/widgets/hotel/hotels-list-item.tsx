@@ -97,13 +97,13 @@ const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 								})}
 							>
 								<Space split={<Text>•</Text>} wrap={true}>
-									{hotel?.location?.city}
+									{t(hotel?.location?.city)}
 									{"Показать на карте"}
 									<Text>
 										{formatNumber(hotel?.location?.distance_to_center).toFixed(
 											1
 										)}
-										км от центра
+										{t("км от центра")}
 									</Text>
 								</Space>
 							</Link>
@@ -170,7 +170,7 @@ const HotelsListItem: FC<HotelListItemProps> = ({ data: hotel }) => {
 									key={"link"}
 									// onClick={onNavigateToHotel}
 								>
-									Показать номера
+									{t("Показать номера")}
 								</Button>
 							</Link>
 						</Flex>

@@ -1,5 +1,7 @@
+import { type TranslateName } from "src/services/shared"
+
 export type LocationCity = {
-	name: string
+	name: TranslateName
 	country_id: number
 	id: number
 	slug: string

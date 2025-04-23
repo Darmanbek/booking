@@ -2,13 +2,16 @@ import { Link } from "@tanstack/react-router"
 import { Card, Flex, Image } from "antd"
 import { type FC } from "react"
 import type { LocationCity } from "src/services/locations"
-import { Text, Title } from "src/shared/ui"
+import { useTranslation } from "src/shared/hooks"
+import { Title } from "src/shared/ui"
 
 interface CityCardProps {
 	data: LocationCity
 }
 
 const CityCard: FC<CityCardProps> = ({ data: city }) => {
+	const { t } = useTranslation()
+
 	return (
 		<Link
 			to={"/hotels/$citySlug"}
@@ -42,11 +45,11 @@ const CityCard: FC<CityCardProps> = ({ data: city }) => {
 			>
 				<Flex vertical={true} gap={2}>
 					<Title level={5} style={{ fontSize: 14 }}>
-						{city.name}
+						{t(city.name)}
 					</Title>
-					<Text type={"secondary"} style={{ fontSize: 12 }}>
-						{city.slug}
-					</Text>
+					{/*<Text type={"secondary"} style={{ fontSize: 12 }}>*/}
+					{/*	{city.slug}*/}
+					{/*</Text>*/}
 				</Flex>
 			</Card>
 		</Link>
