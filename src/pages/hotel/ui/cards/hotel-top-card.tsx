@@ -55,17 +55,17 @@ const HotelTopCard: FC = () => {
 							<Space wrap={true} split={<Text>•</Text>}>
 								<Space>
 									<EnvironmentFilled />
-									{`${locationLoading ? "Загрузка" : hotelLocation?.data?.address || "Неизвестный адрес"}, ${cityLoading ? "Загрузка" : city?.data?.name || "Неизвестный город"}`}
+									{`${locationLoading ? t("Загрузка") : hotelLocation?.data?.address || "Адрес не указан"}, ${cityLoading ? "Загрузка" : t(city?.data?.name) || t("Город не указан")}`}
 								</Space>
 								<Link to={"."} search={(prev) => prev} hash={"location"}>
-									Показать на карте
+									{t("Показать на карте")}
 								</Link>
 							</Space>
 						</Text>
 					</Flex>
 					<Flex vertical={true} gap={6} style={{ width: sm ? "auto" : "100%" }}>
 						<Title level={4} style={{ textAlign: "end" }}>
-							От {formatPriceWithCurrency(hotel?.data?.min_price)}
+							{t("От")} {formatPriceWithCurrency(hotel?.data?.min_price)}
 						</Title>
 						<Button
 							type={"primary"}
@@ -74,7 +74,7 @@ const HotelTopCard: FC = () => {
 								navigate({ to: ".", hash: "rooms", search: (prev) => prev })
 							}
 						>
-							Посмотреть цены
+							{t("Посмотреть цены")}
 						</Button>
 					</Flex>
 				</Flex>

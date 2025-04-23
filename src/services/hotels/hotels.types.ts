@@ -20,7 +20,7 @@ export type Hotel = {
 
 export type HotelLocation = {
 	address: string
-	city: string
+	city: TranslateName
 	city_slug: string
 	coordinates: HotelCoordinates
 	latitude: number
