@@ -14,7 +14,8 @@ import { Button, Card, Flex, Form, type FormProps, Select, Tabs } from "antd"
 import { useResponsive } from "antd-style"
 import dayjs from "dayjs"
 import { type FC, useEffect, useMemo } from "react"
-import { cityData } from "src/shared/data"
+import { useGetLocationsQuery } from "src/services/locations"
+import { useTranslation } from "src/shared/hooks"
 import { type SearchChange, useSearchStore } from "src/shared/store"
 import { formatDate } from "src/shared/utils"
 import { SearchDates, SearchGuests } from "src/widgets/search"
@@ -27,6 +28,7 @@ const NavbarSearch: FC = () => {
 	const [form] = Form.useForm<SearchChange>()
 	const { md = true } = useResponsive()
 	const { pathname } = useLocation()
+	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const { citySlug } = useParams({ strict: false })
 	const { search, setSearch } = useSearchStore()
@@ -42,6 +44,11 @@ const NavbarSearch: FC = () => {
 	const params = match({
 		to: "/hotels/$citySlug",
 		pending: true
+	})
+
+	const { data: locations, isLoading } = useGetLocationsQuery({
+		limit: 10000,
+		page_size: 10000
 	})
 
 	// Объединённая memo-логика
@@ -141,10 +148,12 @@ const NavbarSearch: FC = () => {
 					<Flex gap={8} style={{ width: "100%" }} wrap={true}>
 						<Form.Item name={"search"} noStyle={true}>
 							<Select
-								options={cityData.map(({ slug, city }) => ({
-									value: slug,
-									label: city
+								options={locations?.data?.map((item) => ({
+									value: item?.slug,
+									label: t(item?.name)
 								}))}
+								loading={isLoading}
+								disabled={isLoading}
 								showSearch={true}
 								optionFilterProp={"label"}
 								prefix={<HomeOutlined />}

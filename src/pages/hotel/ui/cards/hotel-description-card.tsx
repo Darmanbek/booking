@@ -22,7 +22,7 @@ const HotelDescriptionCard: FC = () => {
 		<Card title={"Описание отеля"} loading={isLoading || infoLoading}>
 			<Flex vertical={true} gap={20}>
 				<Flex vertical={true} gap={12}>
-					{t(hotel?.data.description)
+					{t(hotel?.data?.description)
 						.split("\n")
 						.map((item, index) => (
 							<Paragraph key={index}>{item}</Paragraph>
