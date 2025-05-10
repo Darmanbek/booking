@@ -37,12 +37,12 @@ const items: MenuProps["items"] = [
 
 const authItems: MenuProps["items"] = [
 	{
-		key: "/auth/login",
+		key: "/login",
 		icon: <LoginOutlined />,
 		label: "Войти"
 	},
 	{
-		key: "/auth/register",
+		key: "/register",
 		icon: <TeamOutlined />,
 		label: "Регистрация"
 	}
